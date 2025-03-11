@@ -26,10 +26,11 @@ class HomeController extends Controller
 
 
         try {
-            $response = Prism::text()
-                ->using(Provider::OpenAI, 'gpt-4')
-                ->withPrompt('Generate text to make me happy')
-                ->generate();
+//            $response = Prism::text()
+//                ->using(Provider::OpenAI, 'gpt-4')
+//                ->withPrompt('Generate text to make me happy')
+//                ->generate();
+            $response['text'] = "$systemPrompt";
             return view('home', compact('response'));
         } catch (PrismException $e) {
             Log::error('Text generation failed:', ['error' => $e->getMessage()]);

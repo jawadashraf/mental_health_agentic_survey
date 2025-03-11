@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\HomeController;
+use App\Livewire\AiAssistant;
 use Illuminate\Support\Facades\Route;
 
 //Route::get('/', function () {
@@ -9,3 +10,4 @@ use Illuminate\Support\Facades\Route;
 
 
 Route::get('/', [HomeController::class , 'index'])->name('home');
+Route::get('/chat', AiAssistant::class)->name('chat');
