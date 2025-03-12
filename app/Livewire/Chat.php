@@ -30,6 +30,9 @@ class Chat extends Component
         ]
     ];
 
+    public string $greetings = "Hi there! I'm here to chat about mental health awareness.
+    Would you be interested in taking a short survey to help us understand your perspective better?";
+
     public $systemPrompt = null;
 
 
@@ -59,8 +62,6 @@ class Chat extends Component
         $this->messages[] = ['role' => 'system', 'content' => $this->systemPrompt];
 
 
-        $this->messages[] = ['role' => 'assistant', 'content' => '<>'];
-
         // Check if user has an ongoing thread, else create a new one
         if (!Session::has('openai_thread_id')) {
             $response = app('openai')->threads()->create([]);
@@ -76,7 +77,7 @@ class Chat extends Component
         $this->validate();
 
         $this->messages[] = ['role' => 'user', 'content' => $this->body];
-        $this->messages[] = ['role' => 'assistant', 'content' => ''];
+        $this->messages[] = ['role' => 'assistant', 'content' => '', 'type' => null ];
 
         $this->body = '';
     }

@@ -8,6 +8,7 @@ use Livewire\Component;
 use Prism\Prism\Prism;
 use Request;
 use Session;
+use function Termwind\ask;
 
 class ChatResponse extends Component
 {
@@ -36,21 +37,16 @@ class ChatResponse extends Component
     public array $messages;
 
     public ?string $response = null;
-
-    public string $greetings;
     public function mount()
     {
-        $this->greetings = "I am here to help";
 
         $this->js('$wire.getResponse()');
     }
 
     public function getResponse(): void
     {
-        if(count($this->messages) == 2) {
-
-            return;
-        }
+        $this->askQuestion($this->questions[0]);
+        return;
 
         $intent = $this->detectIntentWithAI($this->prompt["content"]);
 
@@ -85,6 +81,16 @@ class ChatResponse extends Component
         }
     }
 
+    public function displayGreeting(): void
+    {
+        $this->messages[] = [
+            'role' => 'assistant',
+            'content' => $this->greetings,
+            'type' => 'normal'
+        ];
+
+    }
+
     public function render()
     {
         return view('livewire.chat-response');
@@ -101,18 +107,27 @@ class ChatResponse extends Component
         ]);
     }
 
-    function askQuestion($question) {
-        $aiAgent = Prism::text()->using('openai', 'gpt-4');
-
-        if ($question['type'] === 'radio') {
-            $options = implode(", ", $question['options']);
-            $prompt = "{$question['question']} (Options: $options)";
-        } else {
-            $prompt = $question['question'];
-        }
-
-        return $aiAgent->withPrompt($prompt)->generate()->text;
+    function askQuestion($question): void
+    {
+        $this->messages[] = [
+            'role' => 'assistant',
+            'content' => $question,
+            'type' => 'question'
+        ];
     }
+
+//    function askQuestion($question) {
+//        $aiAgent = Prism::text()->using('openai', 'gpt-4');
+//
+//        if ($question['type'] === 'radio') {
+//            $options = implode(", ", $question['options']);
+//            $prompt = "{$question['question']} (Options: $options)";
+//        } else {
+//            $prompt = $question['question'];
+//        }
+//
+//        return $aiAgent->withPrompt($prompt)->generate()->text;
+//    }
 
     public function submitResponse()
     {
