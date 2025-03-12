@@ -93,7 +93,7 @@ class AiAssistant extends Component
         }
     }
 
-    #[Layout('layouts.minimal')]
+//    #[Layout('layouts.minimal')]
     public function render()
     {
         return view('livewire.ai-assistant');
