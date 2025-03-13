@@ -37,6 +37,7 @@ class Chat extends Component
 
 
     public $currentIndex;
+    public $surveyStarted = false;
     public $response = "";
     public $responses;
     public $summary = "";
@@ -45,6 +46,8 @@ class Chat extends Component
     public string $body = '';
 
     public array $messages = [];
+    public array $metadata = [];
+
 
     public function mount()
     {
@@ -60,16 +63,31 @@ class Chat extends Component
     EOT;
 
         $this->messages[] = ['role' => 'system', 'content' => $this->systemPrompt];
+        $this->metadata[] = ['role' => 'system', 'content' => $this->systemPrompt, 'type' => null];
+        $this->messages[] = ['role' => 'assistant', 'content' => $this->greetings];
+        $this->metadata[] = ['role' => 'assistant', 'content' => $this->greetings, 'type' => 'greetings'];
 
 
         // Check if user has an ongoing thread, else create a new one
-        if (!Session::has('openai_thread_id')) {
-            $response = app('openai')->threads()->create([]);
-            Session::put('openai_thread_id', $response['id']);
+//        if (!Session::has('openai_thread_id')) {
+//            $response = app('openai')->threads()->create([]);
+//            Session::put('openai_thread_id', $response['id']);
+//        }
+
+        if(!Session::has('survey_index')){
+            Session::put('survey_index', 0);
+            $this->currentIndex = Session::get('survey_index');
         }
 
-        $this->currentIndex = Session::get('survey_index', 0);
-        $this->responses = Session::get('survey_responses', []);
+        if(!Session::has('survey_responses')){
+            Session::put('survey_responses', []);
+            $this->responses = Session::get('survey_responses');
+        }
+
+        if(!Session::has('survey_started')){
+            Session::put('survey_started', false);
+            $this->surveyStarted = Session::get('survey_started');
+        }
     }
 
     public function send()
@@ -77,7 +95,10 @@ class Chat extends Component
         $this->validate();
 
         $this->messages[] = ['role' => 'user', 'content' => $this->body];
-        $this->messages[] = ['role' => 'assistant', 'content' => '', 'type' => null ];
+        $this->metadata[] = ['role' => 'user', 'content' => $this->body];
+
+        $this->messages[] = ['role' => 'assistant', 'content' => ''];
+        $this->metadata[] = ['role' => 'assistant', 'content' => '', 'type'=>'stream'];
 
         $this->body = '';
     }

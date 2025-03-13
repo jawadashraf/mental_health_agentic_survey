@@ -32,30 +32,51 @@ class ChatResponse extends Component
         ]
     ];
 
+    public $currentIndex = 0;
+    public $surveyStarted = false;
+
     public array $prompt;
 
     public array $messages;
+    public $metadata = []; // Metadata for the current message
 
     public ?string $response = null;
     public function mount()
     {
+        $this->currentIndex = Session::get('survey_index');
+        $this->surveyStarted = Session::get('survey_index');
+
+        $message = end($this->messages);
+
+
+        // If the content is already provided, display it
+        if (!empty($message['content'])) {
+            $this->response = $message['content'];
+            return;
+        }
+
 
         $this->js('$wire.getResponse()');
     }
 
     public function getResponse(): void
     {
+
         $this->askQuestion($this->questions[0]);
         return;
 
         $intent = $this->detectIntentWithAI($this->prompt["content"]);
 
         $promptForAssistant = "";
-        switch($intent) {
+        switch ($intent) {
 //            case 'consent': $this->askQuestion($this->questions[0]); break;
 //            case 'refused': $this->generateEncouragingResponse(); break;
-            case 'consent': $promptForAssistant = "Cheer the user for consent"; break;
-            case 'refused': $promptForAssistant = "Encourage the user to take survey"; break;
+            case 'consent':
+                $promptForAssistant = "Cheer the user for consent";
+                break;
+            case 'refused':
+                $promptForAssistant = "Encourage the user to take survey";
+                break;
         }
 
         $this->messages[] = ['role' => 'user', 'content' => $promptForAssistant];
@@ -81,15 +102,8 @@ class ChatResponse extends Component
         }
     }
 
-    public function displayGreeting(): void
-    {
-        $this->messages[] = [
-            'role' => 'assistant',
-            'content' => $this->greetings,
-            'type' => 'normal'
-        ];
 
-    }
+
 
     public function render()
     {
@@ -110,6 +124,10 @@ class ChatResponse extends Component
     function askQuestion($question): void
     {
         $this->messages[] = [
+            'role' => 'assistant',
+            'content' => $question,
+        ];
+        $this->metadata[] = [
             'role' => 'assistant',
             'content' => $question,
             'type' => 'question'

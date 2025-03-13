@@ -1,12 +1,6 @@
 <div class="max-w-xl mx-auto my-16 border border-slate-200 rounded-xl overflow-hidden">
     <div class="h-[80vh] bg-gradient-to-t from-slate-100 p-6 flex space-y-1.5 overflow-scroll flex-col-reverse">
         <div class="flex flex-col">
-            <div class="w-3/4 space-y-0.5 has-[.stream:empty]:hidden">
-                <div class="text-xs">Assist</div>
-                <div class="bg-slate-200 rounded-xl rounded-tl-none px-3 py-1.5 text-sm">
-                    <div>{{ $greetings }}</div>
-                </div>
-            </div>
             @foreach($messages as $key => $message)
                 @if ($message['role'] === 'user')
                     <div class="w-3/4 space-y-0.5 self-end">
@@ -18,7 +12,7 @@
                 @endif
 
                 @if ($message['role'] === 'assistant')
-                    <livewire:chat-response :key="$key" :messages="$messages" :prompt="$messages[$key - 1]" />
+                    <livewire:chat-response :key="$key" :messages="$messages" :metadata="$metadata" :prompt="$messages[$key - 1]" />
                 @endif
             @endforeach
         </div>
