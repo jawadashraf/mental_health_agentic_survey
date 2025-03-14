@@ -41,17 +41,27 @@ class ChatResponse extends Component
     public $metadata = []; // Metadata for the current message
 
     public ?string $response = null;
+
+    public $selectedOption = null; // For radio button responses
+    public $textResponse = ''; // For text responses
     public function mount()
     {
         $this->currentIndex = Session::get('survey_index');
-        $this->surveyStarted = Session::get('survey_index');
 
         $message = end($this->messages);
+        $metadata = end($this->metadata);
+
 
 
         // If the content is already provided, display it
-        if (!empty($message['content'])) {
+        if (!empty($message['content']) && $metadata['type'] != 'question') {
             $this->response = $message['content'];
+//            dd($message['content']);
+            return;
+        }
+
+        if (!empty($message['content']) && $metadata['type'] == 'question') {
+//            dd($message['content']);
             return;
         }
 
@@ -62,24 +72,35 @@ class ChatResponse extends Component
     public function getResponse(): void
     {
 
-        $this->askQuestion($this->questions[0]);
-        return;
 
         $intent = $this->detectIntentWithAI($this->prompt["content"]);
 
+        $intent = str_replace("'", "", $intent);
         $promptForAssistant = "";
         switch ($intent) {
-//            case 'consent': $this->askQuestion($this->questions[0]); break;
-//            case 'refused': $this->generateEncouragingResponse(); break;
+
             case 'consent':
-                $promptForAssistant = "Cheer the user for consent";
-                break;
+            case 'repeat':
+                $this->dispatch('askQuestion');
+                return;
+            case 'off-topic':
+                $promptForAssistant = $this->getOffTopicPrompt(); break;
             case 'refused':
-                $promptForAssistant = "Encourage the user to take survey";
+
+                $promptForAssistant = $this->generateEncouragingPrompt(); break;
+
+            case 'clarify':
+                $promptForAssistant = $this->getClarifyPrompt($this->questions[$this->currentIndex]['question']);
+                ds($promptForAssistant);
                 break;
+
+                default:  $promptForAssistant = $this->generateEncouragingPrompt();
+
         }
 
         $this->messages[] = ['role' => 'user', 'content' => $promptForAssistant];
+        $this->messages[] = ['role' => 'assistant', 'content' => ''];
+        ds($this->messages);
 
         $stream = app('openai')->chat()->createStreamed([
             'model' => 'gpt-4',
@@ -103,8 +124,6 @@ class ChatResponse extends Component
     }
 
 
-
-
     public function render()
     {
         return view('livewire.chat-response');
@@ -121,31 +140,11 @@ class ChatResponse extends Component
         ]);
     }
 
-    function askQuestion($question): void
+    function askQuestion(): void
     {
-        $this->messages[] = [
-            'role' => 'assistant',
-            'content' => $question,
-        ];
-        $this->metadata[] = [
-            'role' => 'assistant',
-            'content' => $question,
-            'type' => 'question'
-        ];
-    }
 
-//    function askQuestion($question) {
-//        $aiAgent = Prism::text()->using('openai', 'gpt-4');
-//
-//        if ($question['type'] === 'radio') {
-//            $options = implode(", ", $question['options']);
-//            $prompt = "{$question['question']} (Options: $options)";
-//        } else {
-//            $prompt = $question['question'];
-//        }
-//
-//        return $aiAgent->withPrompt($prompt)->generate()->text;
-//    }
+        $this->dispatch('askQuestion');
+    }
 
     public function submitResponse()
     {
@@ -160,24 +159,10 @@ class ChatResponse extends Component
         ];
         Session::put('survey_responses', $this->responses);
 
-        // Move to the next question or generate a summary
-        if ($this->currentIndex < count($this->questions) - 1) {
-            $this->currentIndex++;
-            Session::put('survey_index', $this->currentIndex);
-        } else {
-//            $this->generateSummary();
-            Session::forget('survey_index'); // Clear session after survey completion
-        }
 
         // Clear input field
         $this->response = "";
     }
-
-//    public function exitSurveyStatement()
-//    {
-//        $ai = Prism::text()->using('openai', 'gpt-4');
-//        $this->summary = $ai->withPrompt("Summarize these responses empathetically: " . json_encode($this->responses))->generate()->text;
-//    }
 
     function generateEmpatheticSentimentResponse($sentiment) {
         if ($sentiment === 'negative') {
@@ -254,6 +239,18 @@ Classify it into one of these categories:
         return trim($aiAgent->withPrompt($prompt)->generate()->text);
     }
 
+    function getClarifyPrompt($question): string {
+
+        return "You are a compassionate AI conducting a mental health awareness survey.
+        user wants clarification about the question asked.
+    Your responses should be **two lines, warm, encouraging, and non-judgmental**.
+
+    The user was asked: \"$question\"
+
+    **Now generate an empathetic and comforting clarification of the question:**";
+
+    }
+
     function generateEncouragingResponse() {
         $aiAgent = Prism::text()->using('openai', 'gpt-4');
 
@@ -267,9 +264,22 @@ Classify it into one of these categories:
         return trim($aiAgent->withPrompt($prompt)->generate()->text);
     }
 
+    function generateEncouragingPrompt(): string
+    {
 
-    function handleOffTopicResponse() {
-        return "I’m here to assist with the survey. Let’s continue with the questions!";
+
+        return "You are a compassionate AI conducting a mental health awareness survey.
+    Your responses should be **two lines, warm, encouraging, and non-judgmental**.
+
+    The user refused to conduct survey
+
+    **Generate a comforting and encouraging statement to take survey.**";
+
+    }
+
+
+    function getOffTopicPrompt():string {
+        return "**Generate a comforting and encouraging statement to take survey, like: I’m here to assist with the survey. Let’s continue with the questions!**";
     }
 
 
@@ -296,19 +306,35 @@ Classify it into one of these categories:
     - 'Tell me a joke' → off-topic
 
     **User Input:** \"$userInput\"
-    **Response:** (only return 'consent', 'refused', 'repeat', 'clarify', 'answer', or 'off-topic')";
+    **Response:** (only return consent, refused, repeat, clarify, answer, or off-topic)";
 
         return strtolower(trim($aiAgent->withPrompt($prompt)->generate()->text));
     }
 
-    public function handleResponse(Request $request) {
-        $response = $request->input('response');
-        $sentiment = $this->detectSentiment($response);
 
-        $request->session()->push('survey_responses', ['question' => $this->questions[$request->session()->get('survey_index', 0)], 'response' => $response]);
 
-        $request->session()->increment('survey_index');
+    public function handleUserInput(Request $request) {
 
-        return redirect()->route('survey');
+        $response = $this->questions[$this->currentIndex]['type'] === 'radio' ? $this->selectedOption : $this->textResponse;
+
+        if (!$response) {
+            return; // Prevent empty submissions
+        }
+
+        // Save response logic (e.g., store in DB)
+        session()->flash('message', 'Response submitted!');
+
+        // Clear input after submission
+
+//        $response = $request->input('response');
+//        $sentiment = $this->detectSentiment($response);
+
+        session()->push('survey_responses', ['question' => $this->questions[session()->get('survey_index', 0)], 'response' => $response]);
+
+        $this->selectedOption = null;
+        $this->textResponse = '';
+
+        $this->dispatch('incrementCurrentIndex');
+
     }
 }

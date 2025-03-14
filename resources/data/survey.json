@@ -1,0 +1,422 @@
+[
+    {
+      "id": 1,
+      "question": "Mental illness does not affect people’s emotions.",
+      "options": [
+        "Strongly Disagree",
+        "Disagree",
+        "Undecided",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "reverse_scoring": true
+    },
+    {
+      "id": 2,
+      "question": "People with mental illness do not have a strong mind.",
+      "options": [
+        "Strongly Disagree",
+        "Disagree",
+        "Undecided",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "reverse_scoring": false
+    },
+    {
+      "id": 3,
+      "question": "Only grown-ups have mental illnesses.",
+      "options": [
+        "Strongly Disagree",
+        "Disagree",
+        "Undecided",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "reverse_scoring": true
+    },
+    {
+      "id": 4,
+      "question": "Those with mental illness should not get married.",
+      "options": [
+        "Strongly Disagree",
+        "Disagree",
+        "Undecided",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "reverse_scoring": true
+    },
+    {
+      "id": 5,
+      "question": "Anyone can be affected by a mental illness.",
+      "options": [
+        "Strongly Disagree",
+        "Disagree",
+        "Undecided",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "reverse_scoring": false
+    },
+    {
+      "id": 6,
+      "question": "Depression is not a true mental illness.",
+      "options": [
+        "Strongly Disagree",
+        "Disagree",
+        "Undecided",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "reverse_scoring": true
+    },
+    {
+      "id": 7,
+      "question": "A person with mental illness remains so lifelong.",
+      "options": [
+        "Strongly Disagree",
+        "Disagree",
+        "Undecided",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "reverse_scoring": true
+    },
+    {
+      "id": 8,
+      "question": "Person’s thoughts are affected by mental illnesses.",
+      "options": [
+        "Strongly Disagree",
+        "Disagree",
+        "Undecided",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "reverse_scoring": false
+    },
+    {
+      "id": 9,
+      "question": "People with mental illnesses come from low-income families.",
+      "options": [
+        "Strongly Disagree",
+        "Disagree",
+        "Undecided",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "reverse_scoring": true
+    },
+    {
+      "id": 10,
+      "question": "People with mental illness should hide it from other people.",
+      "options": [
+        "Strongly Disagree",
+        "Disagree",
+        "Undecided",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "reverse_scoring": true
+    },
+    {
+      "id": 11,
+      "question": "If I had a mental illness, I would seek help from a traditional healer.",
+      "options": [
+        "Strongly Disagree",
+        "Disagree",
+        "Undecided",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "reverse_scoring": true
+    },
+    {
+      "id": 12,
+      "question": "People with mental illness may find comfort from Ayurvedic medicine.",
+      "options": [
+        "Strongly Disagree",
+        "Disagree",
+        "Undecided",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "reverse_scoring": false
+    },
+    {
+      "id": 13,
+      "question": "Mental illnesses do not affect a person's own behavior.",
+      "options": [
+        "Strongly Disagree",
+        "Disagree",
+        "Undecided",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "reverse_scoring": true
+    },
+    {
+      "id": 14,
+      "question": "Impairment/problems in brain functioning may cause the development of mental illnesses.",
+      "options": [
+        "Strongly Disagree",
+        "Disagree",
+        "Undecided",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "reverse_scoring": false
+    },
+    {
+      "id": 15,
+      "question": "A person with Depression feels very unhappy.",
+      "options": [
+        "Strongly Disagree",
+        "Disagree",
+        "Undecided",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "reverse_scoring": false
+    },
+    {
+      "id": 16,
+      "question": "Alcohol use may cause mental illnesses.",
+      "options": [
+        "Strongly Disagree",
+        "Disagree",
+        "Undecided",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "reverse_scoring": false
+    },
+    {
+      "id": 17,
+      "question": "Drug addiction may cause mental illness.",
+      "options": [
+        "Strongly Disagree",
+        "Disagree",
+        "Undecided",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "reverse_scoring": false
+    },
+    {
+      "id": 18,
+      "question": "One of the symptoms of depression is the loss of interest or pleasure in most things.",
+      "options": [
+        "Strongly Disagree",
+        "Disagree",
+        "Undecided",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "reverse_scoring": false
+    },
+    {
+      "id": 19,
+      "question": "A person with anxiety disorder avoids situations that may cause her/him tension.",
+      "options": [
+        "Strongly Disagree",
+        "Disagree",
+        "Undecided",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "reverse_scoring": false
+    },
+    {
+      "id": 20,
+      "question": "High tension & pressure situations may cause mental illness.",
+      "options": [
+        "Strongly Disagree",
+        "Disagree",
+        "Undecided",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "reverse_scoring": false
+    },
+    {
+      "id": 21,
+      "question": "Family environment will affect the mental health of the members.",
+      "options": [
+        "Strongly Disagree",
+        "Disagree",
+        "Undecided",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "reverse_scoring": false
+    },
+    {
+      "id": 22,
+      "question": "Long-lasting symptoms are one of the important aspects to determine whether a person suffers from mental illness.",
+      "options": [
+        "Strongly Disagree",
+        "Disagree",
+        "Undecided",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "reverse_scoring": false
+    },
+    {
+      "id": 23,
+      "question": "People with mental illness can have physical symptoms/pain.",
+      "options": [
+        "Strongly Disagree",
+        "Disagree",
+        "Undecided",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "reverse_scoring": false
+    },
+    {
+      "id": 24,
+      "question": "Physical exercise helps to improve mental health.",
+      "options": [
+        "Strongly Disagree",
+        "Disagree",
+        "Undecided",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "reverse_scoring": false
+    },
+    {
+      "id": 25,
+      "question": "A good sleep helps to maintain mental health.",
+      "options": [
+        "Strongly Disagree",
+        "Disagree",
+        "Undecided",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "reverse_scoring": false
+    },
+    {
+      "id": 26,
+      "question": "Doing something enjoyable helps to improve mental health.",
+      "options": [
+        "Strongly Disagree",
+        "Disagree",
+        "Undecided",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "reverse_scoring": false
+    },
+    {
+      "id": 27,
+      "question": "Social service or service without any expectation promotes inner satisfaction and good mental health.",
+      "options": [
+        "Strongly Disagree",
+        "Disagree",
+        "Undecided",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "reverse_scoring": false
+    },
+    {
+      "id": 28,
+      "question": "A healthy diet helps to improve mental health.",
+      "options": [
+        "Strongly Disagree",
+        "Disagree",
+        "Undecided",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "reverse_scoring": false
+    },
+    {
+      "id": 29,
+      "question": "If a friend of mine developed a mental illness, I would advise her/him to look for a psychologist/psychiatrist.",
+      "options": [
+        "Strongly Disagree",
+        "Disagree",
+        "Undecided",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "reverse_scoring": false
+    },
+    {
+      "id": 30,
+      "question": "If I had a mental illness, I would seek professional help (psychologist and/or psychiatrist).",
+      "options": [
+        "Strongly Disagree",
+        "Disagree",
+        "Undecided",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "reverse_scoring": false
+    },
+    {
+      "id": 31,
+      "question": "Mental illness should be treated by taking medications prescribed by a doctor.",
+      "options": [
+        "Strongly Disagree",
+        "Disagree",
+        "Undecided",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "reverse_scoring": false
+    },
+    {
+      "id": 32,
+      "question": "If I had a mental illness, I would seek my family’s help.",
+      "options": [
+        "Strongly Disagree",
+        "Disagree",
+        "Undecided",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "reverse_scoring": false
+    },
+    {
+      "id": 33,
+      "question": "If someone close to me has a mental illness, I think the astrologer would be able to help them.",
+      "options": [
+        "Strongly Disagree",
+        "Disagree",
+        "Undecided",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "reverse_scoring": true
+    },
+    {
+      "id": 34,
+      "question": "Mental illness is caused by black magic or possession.",
+      "options": [
+        "Strongly Disagree",
+        "Disagree",
+        "Undecided",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "reverse_scoring": true
+    },
+    {
+      "id": 35,
+      "question": "The sooner mental illnesses are identified and treated, the better.",
+      "options": [
+        "Strongly Disagree",
+        "Disagree",
+        "Undecided",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "reverse_scoring": false
+    }
+  ]

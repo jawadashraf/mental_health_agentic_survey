@@ -30,6 +30,9 @@ class Chat extends Component
         ]
     ];
 
+    protected $listeners = ['incrementCurrentIndex' => 'incrementCurrentIndex', 'askQuestion' => 'askQuestion'];
+
+
     public string $greetings = "Hi there! I'm here to chat about mental health awareness.
     Would you be interested in taking a short survey to help us understand your perspective better?";
 
@@ -38,6 +41,7 @@ class Chat extends Component
 
     public $currentIndex;
     public $surveyStarted = false;
+    public $surveyCompleted = false;
     public $response = "";
     public $responses;
     public $summary = "";
@@ -51,8 +55,6 @@ class Chat extends Component
 
     public function mount()
     {
-
-
         $this->systemPrompt = <<<EOT
     You are a compassionate AI conducting a mental health awareness survey.
     Your responses should be **warm, encouraging, and non-judgmental**.
@@ -62,17 +64,17 @@ class Chat extends Component
     followed by some question that will help us understand your mental health awareness. ask politely to proceed**"
     EOT;
 
-        $this->messages[] = ['role' => 'system', 'content' => $this->systemPrompt];
-        $this->metadata[] = ['role' => 'system', 'content' => $this->systemPrompt, 'type' => null];
-        $this->messages[] = ['role' => 'assistant', 'content' => $this->greetings];
-        $this->metadata[] = ['role' => 'assistant', 'content' => $this->greetings, 'type' => 'greetings'];
-
-
-        // Check if user has an ongoing thread, else create a new one
-//        if (!Session::has('openai_thread_id')) {
-//            $response = app('openai')->threads()->create([]);
-//            Session::put('openai_thread_id', $response['id']);
-//        }
+        if(!Session::has('survey_messages')){
+            $this->messages[] = ['role' => 'system', 'content' => $this->systemPrompt];
+            $this->metadata[] = ['role' => 'system', 'content' => $this->systemPrompt, 'type' => null];
+            $this->messages[] = ['role' => 'assistant', 'content' => $this->greetings];
+            $this->metadata[] = ['role' => 'assistant', 'content' => $this->greetings, 'type' => 'greetings'];
+            Session::put('survey_messages', $this->messages);
+            Session::put('survey_metadata', $this->metadata);
+        } else {
+            $this->messages = Session::get('survey_messages', []);
+            $this->metadata = Session::get('survey_metadata', []);
+        }
 
         if(!Session::has('survey_index')){
             Session::put('survey_index', 0);
@@ -90,6 +92,68 @@ class Chat extends Component
         }
     }
 
+
+    public function incrementCurrentIndex()
+    {
+        session()->increment('survey_index');
+        $this->askQuestion();
+
+    }
+
+    public function askQuestion()
+    {
+        $this->currentIndex = Session::get('survey_index');
+        ds($this->currentIndex);
+
+        if($this->surveyStarted){
+            if ($this->currentIndex < count($this->questions) - 1) {
+
+            } else {
+                session()->flash('message', 'Survey completed!');
+                session()->flush();
+                return;
+            }
+
+        } else {
+            $this->surveyStarted = true;
+        }
+
+        $question = $this->questions[$this->currentIndex];
+        $this->metadata[] = [
+            'role' => 'assistant',
+            'content' => $question,
+            'type' => 'question'
+        ];
+
+        $plainQuestion = $this->convertQuestionToPlainText($question);
+
+        $this->messages[] = [
+            'role' => 'assistant',
+            'content' => $plainQuestion,
+        ];
+
+    }
+
+    function convertQuestionToPlainText($question): string  {
+
+        $questionText = "Question-" . $question['id'] . ": " . $question['question'];
+
+        if ($question['type'] === 'radio') {
+            // Add options as a numbered list
+            $optionsText = implode("\n", array_map(function ($option, $index) {
+                return ($index + 1) . ". " . $option;
+            }, $question['options'], array_keys($question['options'])));
+
+            return $questionText . " Please choose one of the following options:\n" . $optionsText;
+        } elseif ($question['type'] === 'text') {
+            // Return only the question
+            return $questionText;
+        } else {
+            // Handle unknown question types (optional)
+            return $questionText . " (Unknown question type)";
+        }
+    }
+
     public function send()
     {
         $this->validate();
@@ -102,6 +166,7 @@ class Chat extends Component
 
         $this->body = '';
     }
+
 
     public function render()
     {

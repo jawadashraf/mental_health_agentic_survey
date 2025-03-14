@@ -14,6 +14,7 @@
         </div>
     @else
         @if(($metadata['type'] ?? '')  === 'question')
+
             @php
                 $question = $metadata['content'];
             @endphp
@@ -21,28 +22,33 @@
                 <div class="text-xs">Assist#</div>
                 <div class="bg-slate-200 rounded-xl rounded-tl-none px-3 py-1.5 text-sm">
                     <div class="mb-2 font-medium">{{ $question['question'] }}</div>
-
                     @if($question['type'] === 'radio')
                         <div class="space-y-2">
                             @foreach($question['options'] as $index => $option)
                                 <div class="flex items-center">
-                                    <input type="radio" id="option-{{ $index }}-{{ $loop->index }}"
-                                           wire:click="handleUserInput('{{ $option }}')"
-                                           class="mr-2">
-                                    <label for="option-{{ $index }}-{{ $loop->index }}">{{ $option }}</label>
+                                    <input type="radio" id="option-{{ $index }}-{{$question['id']}}"
+                                           wire:model="selectedOption" value="{{ $option }}"
+                                           name="options" class="mr-2">
+                                    <label for="option-{{ $index }}-{{$question['id']}}">{{ $option }}</label>
                                 </div>
                             @endforeach
                         </div>
                     @elseif($question['type'] === 'text')
                         <div class="mt-2">
-                            <input type="text" wire:model="textResponse"
+                            <input type="text" wire:model.defer="textResponse"
                                    class="w-full border border-gray-300 rounded-md px-3 py-2"
                                    placeholder="Type your answer here...">
-                            <button wire:click="handleUserInput(textResponse)"
-                                    class="mt-2 bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600">
-                                Submit
-                            </button>
                         </div>
+
+                    @endif
+
+                    <button wire:click="handleUserInput" type="submit"
+                            class="mt-2 bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600">
+                        Submit
+                    </button>
+
+                    @if (session()->has('message'))
+                        <div class="mt-2 text-green-500">{{ session('message') }}</div>
                     @endif
                 </div>
 
