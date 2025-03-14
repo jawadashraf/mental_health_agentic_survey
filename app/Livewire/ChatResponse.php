@@ -12,25 +12,26 @@ use function Termwind\ask;
 
 class ChatResponse extends Component
 {
-    public $questions = [
-        [
-            "id" => 1,
-            "type" => "radio",
-            "question" => "How satisfied are you with our service?",
-            "options" => ["Very Satisfied", "Satisfied", "Neutral", "Dissatisfied", "Very Dissatisfied"]
-        ],
-        [
-            "id" => 2,
-            "type" => "text",
-            "question" => "What improvements would you like to see?"
-        ],
-        [
-            "id" => 3,
-            "type" => "radio",
-            "question" => "Would you recommend us to others?",
-            "options" => ["Yes", "No"]
-        ]
-    ];
+    public $questions = [];
+//    public $questions = [
+//        [
+//            "id" => 1,
+//            "type" => "radio",
+//            "question" => "How satisfied are you with our service?",
+//            "options" => ["Very Satisfied", "Satisfied", "Neutral", "Dissatisfied", "Very Dissatisfied"]
+//        ],
+//        [
+//            "id" => 2,
+//            "type" => "text",
+//            "question" => "What improvements would you like to see?"
+//        ],
+//        [
+//            "id" => 3,
+//            "type" => "radio",
+//            "question" => "Would you recommend us to others?",
+//            "options" => ["Yes", "No"]
+//        ]
+//    ];
 
     public $currentIndex = 0;
     public $surveyStarted = false;
@@ -46,6 +47,8 @@ class ChatResponse extends Component
     public $textResponse = ''; // For text responses
     public function mount()
     {
+        $this->questions = config('survey');
+
         $this->currentIndex = Session::get('survey_index');
 
         $message = end($this->messages);

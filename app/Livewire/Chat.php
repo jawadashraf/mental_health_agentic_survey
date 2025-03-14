@@ -10,25 +10,27 @@ use Session;
 
 class Chat extends Component
 {
-    public $questions = [
-        [
-            "id" => 1,
-            "type" => "radio",
-            "question" => "How satisfied are you with our service?",
-            "options" => ["Very Satisfied", "Satisfied", "Neutral", "Dissatisfied", "Very Dissatisfied"]
-        ],
-        [
-            "id" => 2,
-            "type" => "text",
-            "question" => "What improvements would you like to see?"
-        ],
-        [
-            "id" => 3,
-            "type" => "radio",
-            "question" => "Would you recommend us to others?",
-            "options" => ["Yes", "No"]
-        ]
-    ];
+//    public $questions = [
+//        [
+//            "id" => 1,
+//            "type" => "radio",
+//            "question" => "How satisfied are you with our service?",
+//            "options" => ["Very Satisfied", "Satisfied", "Neutral", "Dissatisfied", "Very Dissatisfied"]
+//        ],
+//        [
+//            "id" => 2,
+//            "type" => "text",
+//            "question" => "What improvements would you like to see?"
+//        ],
+//        [
+//            "id" => 3,
+//            "type" => "radio",
+//            "question" => "Would you recommend us to others?",
+//            "options" => ["Yes", "No"]
+//        ]
+//    ];
+
+        public $questions = [];
 
     protected $listeners = ['incrementCurrentIndex' => 'incrementCurrentIndex', 'askQuestion' => 'askQuestion'];
 
@@ -55,6 +57,7 @@ class Chat extends Component
 
     public function mount()
     {
+        $this->questions = config('survey');
         $this->systemPrompt = <<<EOT
     You are a compassionate AI conducting a mental health awareness survey.
     Your responses should be **warm, encouraging, and non-judgmental**.

@@ -1,0 +1,112 @@
+<?php
+
+return [
+    [
+        "id" => 1,
+        "question" => "What is your date of birth?",
+        "type" => "date",
+        "field" => "date_of_birth"
+    ],
+    [
+        "id" => 2,
+        "question" => "What is your gender?",
+        "type" => "multiple_choice",
+        "options" => ["Male", "Female", "Other"],
+        "field" => "gender"
+    ],
+    [
+        "id" => 3,
+        "question" => "What is your marital status?",
+        "type" => "multiple_choice",
+        "options" => ["Single", "Divorced", "Married", "Widowed"],
+        "field" => "marital_status"
+    ],
+    [
+        "id" => 4,
+        "question" => "What is your religion?",
+        "type" => "text",
+        "field" => "religion"
+    ],
+    [
+        "id" => 5,
+        "question" => "What is your category?",
+        "type" => "multiple_choice",
+        "options" => ["General", "OBC", "SC", "ST"],
+        "field" => "category"
+    ],
+    [
+        "id" => 6,
+        "question" => "What is your district/village/taluka?",
+        "type" => "text",
+        "field" => "district"
+    ],
+    [
+        "id" => 7,
+        "question" => "What is your municipality of residence?",
+        "type" => "text",
+        "field" => "municipality"
+    ],
+    [
+        "id" => 8,
+        "question" => "What is your academic qualification? (Select one or multiple)",
+        "type" => "multiple_choice",
+        "options" => [
+            "No Formal Education",
+            "Primary Education",
+            "Secondary Education",
+            "Bachelor's Degree",
+            "Master's Degree",
+            "PhD",
+            "Other"
+        ],
+        "field" => "academic_qualification"
+    ],
+    [
+        "id" => 9,
+        "question" => "What is your economic status?",
+        "type" => "multiple_choice",
+        "options" => [
+            "Low (Less than 15,000 per month)",
+            "Middle (15,000-50,000 per month)",
+            "High (More than 50,000 per month)"
+        ],
+        "field" => "economic_status"
+    ],
+    [
+        "id" => 10,
+        "question" => "What is your profession or occupation?",
+        "type" => "text",
+        "field" => "profession"
+    ],
+    [
+        "id" => 11,
+        "question" => "If you are a student, indicate your degree and year:",
+        "type" => "text",
+        "field" => "student_degree"
+    ],
+    [
+        "id" => 12,
+        "question" => "Do you know anyone who has or had a mental health problem?",
+        "type" => "multiple_choice",
+        "options" => ["Yes", "No", "I am not sure"],
+        "field" => "know_someone_mental_health"
+    ],
+    [
+        "id" => 13,
+        "question" => "If yes, what mental health problem?",
+        "type" => "text",
+        "field" => "mental_health_problem"
+    ],
+    [
+        "id" => 14,
+        "question" => "What is your relationship with that person?",
+        "type" => "multiple_choice",
+        "options" => [
+            "Relative",
+            "Friend",
+            "Myself",
+            "Someone else"
+        ],
+        "field" => "relationship"
+    ]
+];
