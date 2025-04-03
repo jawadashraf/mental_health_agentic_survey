@@ -4,6 +4,8 @@ return [
     [
         "id" => 1,
         "type" => "radio",
+        'category' => 'demographic',
+        'order' => 1,
         "question" => "Mental illness does not affect people’s emotions.",
         "options" => ["Strongly Disagree", "Disagree", "Undecided", "Agree", "Strongly Agree"]
     ],
