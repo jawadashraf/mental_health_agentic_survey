@@ -21,7 +21,7 @@
             <div class="w-3/4 space-y-0.5">
                 <div class="text-xs">Assist#</div>
                 <div class="bg-slate-200 rounded-xl rounded-tl-none px-3 py-1.5 text-sm">
-                    <div class="mb-2 font-medium">{{ $question['question'] }}</div>
+                    <div class="mb-2 font-medium">Q{{$question['id']}}: {{ $question['question'] }}</div>
                     @if($question['type'] === 'radio')
                         <div class="space-y-2">
                             @foreach($question['options'] as $index => $option)
