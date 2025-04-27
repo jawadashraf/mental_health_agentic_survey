@@ -108,7 +108,7 @@ class ChatResponse extends Component
         $stream = app('openai')->chat()->createStreamed([
             'model' => 'gpt-4',
             'messages' => $this->messages,
-            'temperature' => 0.5
+            'temperature' => 1.0
         ]);
 
 
@@ -132,15 +132,21 @@ class ChatResponse extends Component
         return view('livewire.chat-response');
     }
 
-    function storeResponse($questionId, $response, $threadId, $sessionId, $question) : void
+    function storeResponse($questionId, $response, $question) : void
     {
-        SurveyResponse::create([
-            'question_id' => $questionId,
-            'response' => $response,
-            'thread_id' => $threadId,
-            'session_id' => $sessionId,
-            'question' => $question
-        ]);
+
+        $sessionId = session()->getId();
+
+        SurveyResponse::updateOrCreate(
+            [
+                'question_id' => $questionId,
+                'session_id' => $sessionId,
+            ],
+            [
+                'response' => $response,
+                'question' => $question,
+            ]
+        );
     }
 
     function askQuestion(): void
@@ -318,12 +324,14 @@ Classify it into one of these categories:
 
     public function handleUserInput(Request $request) {
 
+        $question = $this->questions[session()->get('survey_index', 0)];
         $response = $this->questions[$this->currentIndex]['type'] === 'radio' ? $this->selectedOption : $this->textResponse;
 
         if (!$response) {
             return; // Prevent empty submissions
         }
 
+        $this->storeResponse($question['id'], $response, $question['question']);
         // Save response logic (e.g., store in DB)
         session()->flash('message', 'Response submitted!');
 
