@@ -7,13 +7,16 @@
     "license": "MIT",
     "require": {
         "php": "^8.3",
+        "calebporzio/sushi": "^2.5",
         "filament/filament": "^3.3",
         "laravel/framework": "^12.0",
         "laravel/tinker": "^2.10.1",
         "livewire/livewire": "^3.6",
+        "nwidart/laravel-modules": "^12.0",
         "openai-php/client": "^0.10.3",
         "openai-php/laravel": "^0.11.0",
-        "prism-php/prism": "^0.50.0"
+        "prism-php/prism": "^0.50.0",
+        "tomatophp/filament-cms": "^1.0"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",
@@ -29,7 +32,8 @@
         "psr-4": {
             "App\\": "app/",
             "Database\\Factories\\": "database/factories/",
-            "Database\\Seeders\\": "database/seeders/"
+            "Database\\Seeders\\": "database/seeders/",
+            "Modules\\": "Modules/"
         }
     },
     "autoload-dev": {
@@ -70,7 +74,8 @@
         "sort-packages": true,
         "allow-plugins": {
             "pestphp/pest-plugin": true,
-            "php-http/discovery": true
+            "php-http/discovery": true,
+            "wikimedia/composer-merge-plugin": true
         }
     },
     "minimum-stability": "stable",
