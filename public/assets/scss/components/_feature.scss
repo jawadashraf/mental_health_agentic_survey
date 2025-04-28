@@ -1,0 +1,265 @@
+/* ///////////////////////////////////////////////////////////
+08. feature
+/////////////////////////////////////////////////////////// */ 
+@use '../abstracts/variables' as *;
+
+// section css start
+
+.feature {
+    &-top {
+        display: flex;
+        gap: 105px;
+        @media #{$lg}{
+            gap: 30px;
+        }
+        @media #{$md}{
+            flex-wrap: wrap;
+        }
+    }
+    &-item {
+        border-radius: 10px;
+        border: 1px solid rgba(27, 42, 82, 0.07);
+        background-color: #FFF;
+        padding: 30px 30px;
+        position: relative;
+        z-index: 1;
+        @include transition(.3s);
+        @media #{$md}{
+            width: calc(50% - 15px);
+        }
+        @media #{$xs}{
+            width: 100%;
+        }
+        &-title {
+            color: #1B2A52;
+            font-size: 20px;
+            font-style: normal;
+            font-weight: 700;
+            line-height: 1.2;
+            letter-spacing: -0.6px;
+            margin-bottom: 10px;
+            @include transition(.3s);
+        }
+        p {
+            color: #6A738B;
+            font-size: 14px;
+            font-weight: 400;
+            line-height: 22px;
+            margin-bottom: 0;
+            @include transition(.3s);
+        }
+        &-1 {
+            &::after {
+                position: absolute;
+                right: -84px;
+                top: 50%;
+                transform: translateY(-50%);
+                content: url("../../assets/images/feature/shape-4.png");
+                @media #{$lg}{
+                    display: none;
+                }
+            }
+        }
+        &-2 {
+            &::after {
+                position: absolute;
+                right: -84px;
+                top: 50%;
+                transform: translateY(-50%);
+                content: url("../../assets/images/feature/shape-5.png");
+                @media #{$lg}{
+                    display: none;
+                }
+            }
+        }
+        &:hover {
+            background-color: var(--clr-theme-primary);
+            border-color: transparent;
+            .feature-item-title {
+                color: #fff;
+            }
+            p {
+                color: rgba(255, 255, 255, 0.8);
+            }
+        }
+    }
+}
+
+.feature {
+    &-left {
+        &-img {
+            margin-right: 30px;
+            img {
+                width: 100%;
+            }
+            @media #{$sm}{
+                margin-right: 0;
+            }
+        }
+    }
+    &-right {
+        &-img {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            justify-content: end;
+            @media #{$xs}{
+                justify-content: center;
+                order: 0;
+            }
+        }
+    }
+    &-shape {
+        &-1 {
+            position: absolute;
+            right: -45px;
+            top: 75px;
+            @media #{$xl}{
+                right: -20px;
+            }
+            @media #{$sm}{
+                display: none;
+            }
+        }
+        &-2 {
+            position: absolute;
+            left: 105px;
+            top: -15px;
+            @media #{$sm}{
+                display: none;
+            }
+        }
+        &-3 {
+            position: absolute;
+            left: 25px;
+            top: 135px;
+            @media #{$md}{
+                left: 0;
+                top: 30px;
+            }
+            @media #{$sm}{
+                display: none;
+            }
+        }
+    }
+}
+
+// feature 4 css start 
+
+
+.h4_feature {
+    &-item {
+        border-radius: 14px;
+        background: #F0F2F8;
+        padding: 0 50px 55px;
+        text-align: center;
+        @media #{$xxs}{
+            padding: 0 30px 55px;
+        }
+        &-img {
+            height: 205px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        &-content {
+            &-title {
+                color: #1B2A52;
+                font-size: 24px;
+                font-weight: 700;
+                letter-spacing: -0.72px;
+                &:hover a {
+                    color: var(--clr-theme-primary);
+                }
+            }
+            p {
+                color: #7F879E;
+                text-align: center;
+                font-size: 15px;
+                font-weight: 400;
+                line-height: 24px;
+                margin-bottom: 0;
+            }
+        }
+    }
+}
+
+// inner page css start 
+
+.inner_feature {
+    &-content {
+        &-list {
+            list-style: none;
+            margin-bottom: 45px;
+            li {
+                color: #1B2A52;
+                font-size: 15px;
+                font-weight: 500;
+                line-height: 24px;
+                padding-left: 30px;
+                margin-bottom: 12px;
+                position: relative;
+                z-index: 1;
+                &::before {
+                    position: absolute;
+                    left: 0;
+                    top: calc(50% + 2px);
+                    transform: translateY(-50%);
+                    content: url("../../assets/images/work/home2/checkmark.png");
+                }
+                &:last-child {
+                    margin-bottom: 0;
+                }
+            }
+        }
+    }
+    &-img {
+        margin-left: 30px;
+        img {
+            width: 100%;
+        }
+        @media #{$lg}{
+            margin-left: 0;
+        }
+    }
+    &-img-2 {
+        margin-left: 45px;
+        position: relative;
+        z-index: 1;
+        padding-bottom: 110px;
+        padding-right: 70px;
+        @media #{$xl}{
+            margin-left: 15px;
+        }
+        @media #{$lg}{
+            margin-left: 0;
+        }
+        .inner-img-1 {
+            width: 100%;
+            border-radius: 20px 20px 0px 0px;
+            box-shadow: 0px 2px 30px 0px rgba(27, 42, 82, 0.07);
+        }
+        .inner-img-2 {
+            position: absolute;
+            right: 0;
+            bottom: 0;
+            @media #{$lg}{
+                width: 50%;
+            }
+            @media #{$md}{
+                width: 45%;
+            }
+            @media #{$sm}{
+                width: initial;
+            }
+            @media #{$xs}{
+                width: 50%;
+            }
+        }
+        .inner-img-shape {
+            position: absolute;
+            left: 18%;
+            bottom: calc(5% + 3px);
+        }
+    }
+}

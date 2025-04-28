@@ -1,0 +1,41 @@
+/* ///////////////////////////////////////////////////////////
+03. button
+/////////////////////////////////////////////////////////// */ 
+@use '../abstracts/variables' as *;
+
+// section css start
+
+.theme-btn {
+    border-radius: 50px;
+    background: linear-gradient(180deg, #9425EC 0%, #7D25EC 100%);
+    color: #FFF;
+    font-size: 14px;
+    font-weight: 600;
+    display: inline-block;
+    height: 46px;
+    line-height: 45px;
+    padding: 0 25px;
+    @include transition(.3s);
+    &:hover {
+        background: linear-gradient(180deg, #7D25EC 0%, #9425EC 100%);
+        color: #fff;
+    }
+}
+
+// theme btn 2 
+.theme-btn-2 {
+    border-radius: 8px;
+    background: linear-gradient(180deg, #9425EC 0%, #7D25EC 100%);
+    color: #FFF;
+    font-size: 14px;
+    font-weight: 600;
+    display: inline-block;
+    height: 40px;
+    line-height: 40px;
+    padding: 0 30px;
+    @include transition(.3s);
+    &:hover {
+        background: linear-gradient(180deg, #7D25EC 0%, #9425EC 100%);
+        color: #fff;
+    }
+}

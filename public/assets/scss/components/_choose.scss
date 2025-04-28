@@ -1,0 +1,80 @@
+/* ///////////////////////////////////////////////////////////
+07. choose
+/////////////////////////////////////////////////////////// */ 
+@use '../abstracts/variables' as *;
+
+// Choose 01 css start
+
+.choose {
+    &-item {
+        border-radius: 10px;
+        border: 1px solid rgba(27, 42, 82, 0.07);
+        background: #FFF;
+        padding: 40px 35px 35px;
+        position: relative;
+        z-index: 1;
+        @include transition(.3s);
+        @media #{$xl}{
+            padding: 40px 30px 35px;
+        }
+        @media #{$lg}{
+            padding: 40px 35px 35px;
+        }
+        &:hover {
+            border-radius: 10px;
+            background: #FFF;
+            box-shadow: 0px 16px 60px 0px rgba(26, 40, 75, 0.10);
+            border-color: transparent;
+        }
+        &-count {
+            position: absolute;
+            right: 45px;
+            top: 44px;
+            color: rgba(125, 37, 236, 0.06);
+            font-size: 40px;
+            font-weight: 700;
+            line-height: 1;
+            letter-spacing: -1.2px;
+            display: block;
+            transform: rotate(-15deg);
+        }
+        &-img {
+            margin-bottom: 34px;
+        }
+        &-content {
+            &-title {
+                color: #1B2A52;
+                font-size: 20px;
+                font-weight: 700;
+                line-height: 1.2;
+                letter-spacing: -0.6px;
+                margin-bottom: 15px;
+                &:hover a {
+                    color: var(--clr-theme-primary);
+                }
+            }
+            p {
+                color: #6A738B;
+                font-size: 14px;
+                font-weight: 400;
+                line-height: 22px;
+                margin-bottom: 32px;
+            }
+            &-btn {
+                color: #1B2A52;
+                font-size: 14px;
+                line-height: 21px;
+                font-weight: 600;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                i {
+                    margin-top: 2px;
+                }
+                &:hover {
+                    color: var(--clr-theme-primary);
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,211 @@
+/* ///////////////////////////////////////////////////////////
+18. instagram
+/////////////////////////////////////////////////////////// */ 
+@use '../abstracts/variables' as *;
+
+// instagram 2 css start
+
+.h2_instagram {
+    &-wrap {
+        display: flex;
+        flex-wrap: wrap;
+    }
+    &-item {
+        width: 20%;
+        flex-shrink: 0;
+        position: relative;
+        z-index: 1;
+        @media #{$lg}{
+            width: calc(100% / 3);
+        }
+        @media #{$sm}{
+            width: calc(100% / 2);
+        }
+        @media #{$xxs}{
+            width: 100%;
+            img {
+                width: 100%;
+            }
+        }
+        &-content {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--clr-theme-primary);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            opacity: 0;
+            visibility: hidden;
+            @include transition(.3s);
+            h5 {
+                color: #FFF;
+                font-size: 20px;
+                font-weight: 700;
+                line-height: 1.6;
+                letter-spacing: -0.6px;
+                margin-bottom: 15px;
+            }
+            svg {
+                color: #fff;
+                width: 100px;
+                margin-bottom: 35px;
+                @media #{$md}{
+                    width: 80px;
+                }
+            }
+            a {
+                color: #FFF;
+                font-size: 15px;
+                font-weight: 500;
+                line-height: 22px;
+            }
+        }
+        &:hover {
+            .h2_instagram-item-content {
+                opacity: 1;
+                visibility: visible;
+            }
+        }
+    }
+}
+
+
+// instagram 3 css start
+
+.h3_instagram {
+    &-area {
+        background: #F2F8FD;
+    }
+    &-wrap {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+    &-item {
+        width: calc(20% - 8px);
+        flex-shrink: 0;
+        position: relative;
+        z-index: 1;
+        border-radius: 14px;
+        overflow: hidden;
+        @media #{$lg}{
+            width: calc((100% / 3) - 6.7px);
+        }
+        @media #{$sm}{
+            width: calc((100% / 2) - 5px);
+        }
+        @media #{$xxs}{
+            width: 100%;
+            img {
+                width: 100%;
+            }
+        }
+        &-content {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--clr-theme-primary);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            opacity: 0;
+            visibility: hidden;
+            @include transition(.3s);
+            h5 {
+                color: #FFF;
+                font-size: 20px;
+                font-weight: 700;
+                line-height: 1.6;
+                letter-spacing: -0.6px;
+                margin-bottom: 15px;
+            }
+            svg {
+                color: #fff;
+                width: 100px;
+                @media #{$md}{
+                    width: 80px;
+                }
+                margin-bottom: 35px;
+            }
+            a {
+                color: #FFF;
+                font-size: 15px;
+                font-weight: 500;
+                line-height: 22px;
+            }
+        }
+        &:hover {
+            .h3_instagram-item-content {
+                opacity: 1;
+                visibility: visible;
+            }
+        }
+    }
+}
+
+
+
+
+// instagram 3 css start
+
+.h5_instagram {
+    &-wrap {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 30px;
+    }
+    &-item {
+        width: calc(20% - 24px);
+        flex-shrink: 0;
+        position: relative;
+        z-index: 1;
+        border-radius: 14px;
+        overflow: hidden;
+        img {
+            width: 100%;
+        }
+        @media #{$lg}{
+            width: calc((100% / 3) - 20px);
+        }
+        @media #{$sm}{
+            width: calc((100% / 2) - 15px);
+        }
+        @media #{$xxs}{
+            width: 100%;
+        }
+        &-content {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(125, 37, 236, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            visibility: hidden;
+            @include transition(.3s);
+            svg {
+                color: #fff;
+                width: 50px;
+                height: 50px;
+            }
+        }
+        &:hover {
+            .h5_instagram-item-content {
+                opacity: 1;
+                visibility: visible;
+            }
+        }
+    }
+}

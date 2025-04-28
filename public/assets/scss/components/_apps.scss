@@ -1,0 +1,90 @@
+/* ///////////////////////////////////////////////////////////
+10. apps
+/////////////////////////////////////////////////////////// */ 
+@use '../abstracts/variables' as *;
+
+// section css start
+
+.apps {
+    &-area {
+        background: #F2F8FD;
+        position: relative;
+        z-index: 1;
+    }
+    &-icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 25px;
+        column-gap: 45px;
+        flex-wrap: wrap;
+        &-item {
+            &:nth-child(even) {
+                margin-bottom: 50px;
+            }
+        }
+    }
+    &-content {
+        text-align: center;
+        h2 {
+            font-size: 44px;
+            font-weight: 700;
+            line-height: 1.2;
+            letter-spacing: -1.76px;
+            margin-bottom: 15px;
+            @media #{$md}{
+                font-size: 40px;
+            }
+            @media #{$xs}{
+                font-size: 35px;
+            }
+            @media #{$xxs}{
+                font-size: 30px;
+            }
+        }
+        p {
+            font-size: 14px;
+            font-weight: 500;
+            line-height: 22px;
+            margin-bottom: 45px;
+            @media #{$xs}{
+                br {
+                    display: none;
+                }
+            }
+        }
+    }
+    &-shape {
+        &-1 {
+            position: absolute;
+            left: 5%;
+            top: 40%;
+        }
+        &-2 {
+            position: absolute;
+            left: calc(22% + 8px);
+            bottom: 165px;
+        }
+        &-3 {
+            position: absolute;
+            left: 0;
+            bottom: 0;
+        }
+        &-4 {
+            position: absolute;
+            bottom: 185px;
+            right: calc(21% - 12px);
+        }
+        &-5 {
+            position: absolute;
+            right: calc(9% + 7px);
+            top: 50%;
+            transform: translateY(-50%);
+        }
+        &-6 {
+            position: absolute;
+            right: calc(13% + 3px);
+            bottom: 115px;
+        }
+    }
+}

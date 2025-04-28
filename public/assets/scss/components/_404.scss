@@ -1,0 +1,35 @@
+/* ///////////////////////////////////////////////////////////
+32. 404
+/////////////////////////////////////////////////////////// */ 
+@use '../abstracts/variables' as *;
+
+.error {
+    &-content {
+        &-title {
+            color: #1B2A52;
+            font-size: 44px;
+            font-weight: 700;
+            line-height: 1.2;
+            letter-spacing: -1.76px;
+            margin-bottom: 8px;
+            @media #{$sm}{
+                font-size: 40px;
+            }
+            @media #{$xxs}{
+                font-size: 35px;
+            }
+        }
+        p {
+            color: rgba(27, 42, 82, 0.7);
+            font-size: 15px;
+            font-weight: 400;
+            line-height: 24px;
+            margin-bottom: 33px;
+            @media #{$xxs}{
+                br {
+                    display: none;
+                }
+            }
+        }
+    }
+}

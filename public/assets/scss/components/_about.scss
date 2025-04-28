@@ -1,0 +1,49 @@
+/* ///////////////////////////////////////////////////////////
+05. about
+/////////////////////////////////////////////////////////// */ 
+@use '../abstracts/variables' as *;
+
+// testimonial 1 css start
+
+.h2_about {
+    &-img {
+        margin-right: 45px;
+        position: relative;
+        z-index: 1;
+        padding-bottom: 110px;
+        padding-right: 70px;
+        @media #{$xl}{
+            margin-right: 15px;
+        }
+        @media #{$lg}{
+            margin-right: 0;
+        }
+        .inner-img-1 {
+            width: 100%;
+            border-radius: 20px 20px 0px 0px;
+            box-shadow: 0px 2px 30px 0px rgba(27, 42, 82, 0.07);
+        }
+        .inner-img-2 {
+            position: absolute;
+            right: 0;
+            bottom: 0;
+            @media #{$lg}{
+                width: 50%;
+            }
+            @media #{$md}{
+                width: 45%;
+            }
+            @media #{$sm}{
+                width: initial;
+            }
+            @media #{$xs}{
+                width: 50%;
+            }
+        }
+        .inner-img-shape {
+            position: absolute;
+            left: 18%;
+            bottom: calc(5% + 3px);
+        }
+    }
+}

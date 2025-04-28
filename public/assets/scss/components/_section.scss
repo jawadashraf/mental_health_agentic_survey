@@ -1,0 +1,209 @@
+/* ///////////////////////////////////////////////////////////
+06. section
+/////////////////////////////////////////////////////////// */ 
+@use '../abstracts/variables' as *;
+
+// section 1 css start
+
+.section {
+    &-subtitle {
+        border-radius: 50px;
+        background: rgba(125, 37, 236, 0.06);
+        box-shadow: 0px 2px 4px 0px rgba(27, 42, 82, 0.20);
+        display: inline-block;
+        color: var(--clr-theme-primary);
+        font-size: 14px;
+        font-weight: 600;
+        text-transform: uppercase;
+        padding: 0 25px;
+        height: 36px;
+        line-height: 36px;
+        margin-bottom: 11px; 
+    }
+    &-title {
+        color: var(--clr-body-heading);
+        font-size: 44px;
+        font-weight: 700;
+        line-height: 1.13;
+        letter-spacing: -1.76px;
+        @media #{$md}{
+            font-size: 40px;
+        }
+        @media #{$sm}{
+            font-size: 36px;
+        }
+        @media #{$xxs}{
+            font-size: 34px;
+        }
+        &-big {
+            font-size: 55px;
+            @media #{$md}{
+                font-size: 45px;
+            }
+            @media #{$sm}{
+                font-size: 40px;
+            }
+            @media #{$xs}{
+                font-size: 36px;
+            }
+            
+        }
+    }
+}
+
+// section 2 css start
+
+.h2_section {
+    &-subtitle {
+        color: #7D25EC;
+        font-size: 14px;
+        font-weight: 600;
+        text-transform: uppercase;
+        display: block;
+        line-height: 20px;
+        margin-bottom: 7px;
+    }
+    &-title {
+        color: var(--clr-body-heading);
+        font-size: 55px;
+        font-weight: 700;
+        line-height: 1.1;
+        letter-spacing: -1.76px;
+        @media #{$xl}{
+            font-size: 50px;
+        }
+        @media #{$lg}{
+            font-size: 42px;
+        }
+        @media #{$sm}{
+            font-size: 36px;
+        }
+        @media #{$xxs}{
+            font-size: 34px;
+        }
+    }
+    &-text {
+        color: #6A738B;
+        font-size: 15px;
+        font-weight: 400;
+        line-height: 26px;
+        margin-bottom: 0;
+        @media #{$xl}{
+            br {
+                display: none;
+            }
+        }
+    }
+}
+
+
+// section 3 css start
+
+.h3_section {
+    &-title {
+        color: var(--clr-body-heading);
+        line-height: 1.1;
+        font-size: 48px;
+        font-weight: 700;
+        letter-spacing: -1.92px;
+        @media #{$md}{
+            font-size: 42px;
+        }
+        @media #{$xs}{
+            font-size: 38px;
+        }
+        @media #{$xxs}{
+            font-size: 34px;
+        }
+    }
+}
+
+
+// section 4 css start
+
+.h4_section {
+    &-title {
+        color: var(--clr-body-heading);
+        line-height: 1.1;
+        font-size: 55px;
+        font-weight: 700;
+        letter-spacing: -1.92px;
+        letter-spacing: -2.2px;
+        @media #{$xl}{
+            font-size: 50px;
+        }
+        @media #{$lg}{
+            font-size: 45px;
+        }
+        @media #{$sm}{
+            font-size: 38px;
+            br {
+                display: none;
+            }
+        }
+        @media #{$xxs}{
+            font-size: 34px;
+        }
+    }
+}
+
+
+// section 2 css start
+
+.inner_section {
+    &-subtitle {
+        color: #7D25EC;
+        font-size: 14px;
+        font-weight: 600;
+        text-transform: uppercase;
+        display: block;
+        line-height: 20px;
+        margin-bottom: 7px;
+    }
+    &-title {
+        color: var(--clr-body-heading);
+        font-size: 44px;
+        font-weight: 700;
+        line-height: 1.1;
+        letter-spacing: -1.76px;
+        @media #{$lg}{
+            br {
+                display: none;
+            }
+        }
+        @media #{$md}{
+            font-size: 40px;
+        }
+        @media #{$sm}{
+            font-size: 36px;
+        }
+        @media #{$xxs}{
+            font-size: 34px;
+        }
+        &-big {
+            font-size: 55px;
+            @media #{$md}{
+                font-size: 45px;
+            }
+            @media #{$sm}{
+                font-size: 40px;
+            }
+            @media #{$xs}{
+                font-size: 36px;
+            }
+            
+        }
+    }
+    &-text {
+        color: #6A738B;
+        font-size: 15px;
+        font-weight: 400;
+        line-height: 26px;
+        margin-bottom: 0;
+        @media #{$xl}{
+            br {
+                display: none;
+            }
+        }
+    }
+}

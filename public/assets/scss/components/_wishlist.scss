@@ -1,0 +1,163 @@
+/* ///////////////////////////////////////////////////////////
+27. wishlist
+/////////////////////////////////////////////////////////// */ 
+@use '../abstracts/variables' as *;
+
+// work 2 css start
+
+.table-responsive {
+	overflow-x: auto;
+	-webkit-overflow-scrolling: touch;
+}
+.wishlist {
+    &-table {
+        thead {
+            tr {
+                border: none;
+                th {
+                    vertical-align: middle;
+                    padding: 17px 0;
+                    border: none;
+                    background: #F8FAFF;
+                    font-size: 18px;
+                    font-weight: 700;
+                    letter-spacing: -0.54px;
+                    &.first {
+                        padding-left: 30px;
+                        border-radius: 8px 0 0 8px;
+                        padding-left: 65px;
+                        @media #{$md}{
+                            padding-left: 50px;
+                        }
+                    }
+                    &.end {
+                        border-radius: 0 8px 8px 0;
+                    }
+                }
+            }
+        }
+        tbody {
+            tr {
+                border-bottom: 1px solid rgba(27, 42, 82, 0.07);;
+                td {
+                    vertical-align: middle;
+                    padding: 20px 0;
+                    border: none;
+                    min-width: 200px;
+                    h6 {
+                        color: #1B2A52;
+                        font-size: 15px;
+                        font-weight: 500;
+                        line-height: 1.2;
+                        letter-spacing: -0.45px;
+                        margin-bottom: 0;
+                    }
+                    &.product {
+                        display: flex;
+                        align-items: center;
+                        gap: 35px;
+                        padding-left: 20px;
+                        min-width: 380px;
+                        @media #{$md}{
+                            gap: 20px;
+                        }
+                        a {
+                            color: rgba(27, 42, 82, .2);
+                            display: block; 
+                            i {
+                                font-size: 22px;
+                            }
+                            &:hover {
+                                color: var(--clr-theme-primary);
+                            }
+                        }
+                        .product-inner {
+                            display: flex;
+                            align-items: center;
+                            gap: 15px;
+                            img {
+                                border-radius: 8px;
+                                width: 70px;
+                                height: 70px;
+                                object-fit: cover;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+.wishlist {
+    &-coupon {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        @media #{$xxs}{
+            flex-wrap: wrap;
+        }
+        input {
+            border-radius: 6px;
+            border: 1.5px solid rgba(8, 5, 33, 0.10);
+            background: #FFF;
+            width: 420px;
+            height: 46px;
+            display: flex;
+            align-items: center;
+            padding: 20px;
+            color: #7F879E;
+            font-size: 14px;
+            @media #{$lg}{
+                width: 320px;
+            }
+            @media #{$md}{
+                width: 420px;
+            }
+            @media #{$sm}{
+                width: 100%;
+            }
+        }
+        button {
+            border-radius: 10px;
+            background: #7D25EC;
+            height: 46px;
+            color: #fff;
+            font-size: 14px;
+            font-weight: 600;
+            border: none;
+            padding: 0 45px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+    }
+    &-cart {
+        display: flex;
+        justify-content: end;
+        gap: 10px;
+        align-items: center;
+        @media #{$lg}{
+            justify-content: start;
+        }
+        @media #{$xxs}{
+            flex-wrap: wrap;
+        }
+        a {
+            border-radius: 10px;
+            background: #7D25EC;
+            height: 46px;
+            color: #fff;
+            font-size: 14px;
+            font-weight: 600;
+            padding: 0 25px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            &:last-child {
+                padding: 0 32px;
+            }
+        }
+    }
+}
+

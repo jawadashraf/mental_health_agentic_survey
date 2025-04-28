@@ -1,0 +1,106 @@
+/* ///////////////////////////////////////////////////////////
+19. assistant
+/////////////////////////////////////////////////////////// */ 
+@use '../abstracts/variables' as *;
+
+// service 2 css start
+
+
+.h4_assistant {
+    &-wrap {
+        border-radius: 20px 0px 0px 20px;
+        background: #1B2A52;
+        height: 100%;
+        padding: 65px 70px 70px;
+        @media #{$lg}{
+            border-radius: 20px 20px 0 0 ;
+        }
+        @media #{$sm}{
+            padding: 65px 50px 70px;
+        }
+        @media #{$xxs}{
+            padding: 45px 35px 50px;
+        }
+    }
+    &-content {
+        margin-top: 51px;
+        @media #{$xxs}{
+            margin-top: 51px;
+        }
+        &-title {
+            color: #FFF;
+            font-size: 34px;
+            font-weight: 700;
+            line-height: 1.17;
+            letter-spacing: -1.02px;
+            margin-bottom: 20px;
+            @media #{$xxs}{
+                font-size: 22px;
+            }
+        }
+        p {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 15px;
+            font-weight: 400;
+            line-height: 24px;
+            margin-bottom: 30px;
+        }
+        a {
+            display: flex;
+            align-items: center;
+            color: #FFF;
+            font-size: 14px;
+            font-weight: 600;
+            gap: 8px;
+            img {
+                margin-top: 2px;
+            }
+            i {
+                margin-top: 2px;
+                font-weight: 500;
+            }
+            &:hover {
+                color: var(--clr-color-violet);
+            }
+        }
+    }
+    &-top {
+        border: none;
+        display: flex;
+        align-items: center;
+        column-gap: 40px;
+        row-gap: 10px;
+        @media #{$sm}{
+            column-gap: 25px;
+        }
+        .nav-link {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 13px;
+            font-weight: 600;
+            text-transform: uppercase;
+            display: block;
+            padding: 0;
+            border: none;
+            &:hover {
+                color: #fff;
+                text-decoration: underline;
+                border: none;
+            }
+            &.active {
+                color: #fff;
+                text-decoration: underline;
+                background-color: transparent;
+            }
+        }
+    }
+    &-img {
+        border-radius: 0px 20px 20px 0px;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        @media #{$lg}{
+            border-radius: 0 0 20px 20px;
+        }
+    }
+}

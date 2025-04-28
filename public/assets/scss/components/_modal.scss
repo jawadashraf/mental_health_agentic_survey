@@ -1,0 +1,90 @@
+/* ///////////////////////////////////////////////////////////
+24. modal
+/////////////////////////////////////////////////////////// */ 
+@use '../abstracts/variables' as *;
+
+// brand 1 css start
+
+/* 01. ========= search-modal ========== */
+#search-modal {
+	background: rgba(0, 0, 0, 0.65);
+	  
+	a span {
+		color: #fff;
+		top: 50px;
+		right: 50px;
+		position: absolute;
+		font-size: 50px;
+		@include transition(.3s);
+        &:hover{
+            color: var(--clr-theme-primary);
+        }
+	  }
+	  
+	.modal-dialog {
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		-webkit-transform: translate(-50%, -50%);
+		transform: translate(-50%, -50%);
+		border: none;
+		outline: 0;
+	  }
+	  
+	.modal-dialog .modal-content {
+		background: 0 0;
+		-webkit-box-shadow: none;
+		box-shadow: none;
+		border: none;
+	  }
+	  
+	.modal-dialog .modal-content form {
+		max-width: 555px;
+		position: relative;
+	  }
+	  
+	.modal-dialog .modal-content form input {
+		width: 100%;
+		font-size: 36px;
+		border: none;
+		border-bottom: 3px solid rgba(255, 255, 255, 0.938);
+		background: 0 0;
+		color: #fff;
+		padding-bottom: 12px;
+		padding-right: 40px;
+		outline: none;
+	  }
+	  
+	.modal-dialog .modal-content form input::-webkit-input-placeholder {
+		font-size: 35px;
+		color: rgba(255, 255, 255, 0.938);
+	  }
+	  
+	.modal-dialog .modal-content form input:-ms-input-placeholder {
+		font-size: 35px;
+		color: rgba(255, 255, 255, 0.938);
+	  }
+	  
+	.modal-dialog .modal-content form input::-ms-input-placeholder {
+		font-size: 35px;
+		color: rgba(255, 255, 255, 0.938);
+	  }
+	  
+	.modal-dialog .modal-content form input::placeholder {
+		font-size: 35px;
+		color: rgba(255, 255, 255, 0.938);
+	  }
+	  
+	.modal-dialog .modal-content form button {
+		position: absolute;
+		right: 0;
+		margin-bottom: 3px;
+		font-size: 30px;
+		color: rgba(255, 255, 255, 0.938);
+		background: 0 0;
+		border: none;
+		cursor: pointer;
+		top: 11px;
+	  }
+	
+}

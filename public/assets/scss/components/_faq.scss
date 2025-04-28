@@ -1,0 +1,309 @@
+/* ///////////////////////////////////////////////////////////
+16. faq
+/////////////////////////////////////////////////////////// */ 
+@use '../abstracts/variables' as *;
+
+
+// faq 2 css start 
+
+.h2_faq {
+    &-wrap {
+        margin-left: 25px;
+        margin-right: 25px;
+        @media #{$xl}{
+            margin-left: 5px;
+            margin-right: 5px;
+        }
+        @media #{$lg}{
+            margin-left: 0;
+            margin-right: 0;
+        }
+    }
+    &-content {
+        .accordion {
+            &-item {
+                overflow: hidden;
+                background: #fff;
+                border-radius: 10px;
+                border: 1px solid rgba(27, 42, 82, 0.07);
+            }
+            &-button {
+                position: relative;
+                padding-left: 30px;
+                padding-right: 30px;
+                padding-top: 23px;
+                padding-bottom: 23px;
+                cursor: pointer;
+                box-shadow: none;
+                border: none;
+                background: #fff;
+                border-radius: 0 !important;
+                border: 0;
+                color: var(--clr-body-heading);
+                font-family: $SpaceGrotesk;
+                font-size: 20px;
+                font-weight: 700;
+                letter-spacing: -0.6px;
+                @media #{$sm}{
+                    padding-right: 60px;
+                }
+                @media #{$xs}{
+                    font-size: 18px;
+                    padding-left: 25px;
+                    padding-right: 60px;
+                }
+                @media #{$xxs}{
+                    font-size: 16px;
+                }
+                &::after {
+                    display: none;
+                }
+                &::before {
+                    position: absolute;
+                    right: 30px;
+                    top: 50%;
+                    transform: translateY(-50%);
+                    content: "\f107";
+                    font-family: "Font Awesome 6 Pro";
+                    @include transition(.3s);
+                    font-weight: 500;
+                    color: #7F879E;
+                    width: 32px;
+                    height: 32px;
+                    line-height: 32px;
+                    text-align: center;
+                    font-size: 15px;
+                    border: 1px solid rgba(27, 42, 82, 0.07);
+                    border-radius: 50%;
+                    @media #{$xs}{
+                        right: 20px;
+                    }
+                }
+                &:not(.collapsed) {
+                    &::before {
+                        border-color: transparent;
+                        background-color: #F2F8FD;
+                        color: var(--clr-theme-primary);
+                        content: "\f106";
+                        line-height: 29px;
+                    }
+                }
+                img {
+                    width: 40px;
+                    @media #{$xs}{
+                        width: 30px;
+                    }
+                    @media #{$sm}{
+                        width: 40px;
+                    }
+                }
+            }
+            &-body {
+                padding: 0 100px 24px 30px;
+                background: #fff;
+                p {
+                    font-size: 15px;
+                    font-weight: 500;
+                    line-height: 24px;
+                    margin-bottom: 0;
+                }
+                @media #{$sm}{
+                    padding: 0 70px 24px 30px;
+                }
+                @media #{$xs}{
+                    padding: 0 25px 24px 25px;
+                }
+            }
+        }
+    }
+}
+
+// faq 3 css start 
+
+.h3_faq {
+    &-area {
+        background: #F2F8FD;
+    }
+    &-content {
+        .accordion {
+            &-item {
+                overflow: hidden;
+                border: none;
+                border-radius: 10px;
+                background-color: #FFF;
+                box-shadow: 0px 6px 20px 0px rgba(121, 133, 165, 0.16);
+            }
+            &-button {
+                position: relative;
+                cursor: pointer;
+                box-shadow: none;
+                border: none;
+                background: #fff;
+                border-radius: 0 !important;
+                border: 0;
+                color: var(--clr-body-heading);
+                font-family: $SpaceGrotesk;
+                font-size: 22px;
+                font-weight: 700;
+                letter-spacing: -0.6px;
+                padding: 29px 30px;
+                line-height: 1;
+                @media #{$sm}{
+                    padding-right: 60px;
+                }
+                @media #{$xs}{
+                    font-size: 18px;
+                    padding-right: 60px;
+                    padding-left: 25px;
+                    line-height: 24px;
+                }
+                @media #{$xxs}{
+                    font-size: 16px;
+                    line-height: 22px;
+                }
+                &::after {
+                    display: none;
+                }
+                &::before {
+                    position: absolute;
+                    right: 30px;
+                    top: 50%;
+                    transform: translateY(-50%);
+                    content: "\f107";
+                    font-family: "Font Awesome 6 Pro";
+                    @include transition(.3s);
+                    font-weight: 500;
+                    color: #1B2A52;
+                    font-size: 16px;
+                    margin-top: 1px;
+                    @media #{$xs}{
+                        right: 20px;
+                    }
+                    @media #{$sm}{
+                        right: 25px;
+                    }
+                }
+                &:not(.collapsed)::before {
+                    content: "\f106";
+                }
+                img {
+                    width: 40px;
+                    @media #{$xs}{
+                        width: 30px;
+                    }
+                    @media #{$sm}{
+                        width: 40px;
+                    }
+                }
+            }
+            &-body {
+                padding: 0 70px 31px 30px;
+                background: #fff;
+                @media #{$xs}{
+                    padding: 0 25px 24px 25px;
+                }
+                p {
+                    font-size: 15px;
+                    font-weight: 500;
+                    line-height: 24px;
+                    margin-bottom: 0;
+                }
+            }
+        }
+    }
+}
+
+// faq 4 css start 
+
+.h4_faq {
+    &-content {
+        .accordion {
+            &-item {
+                overflow: hidden;
+                border: none;
+                border-radius: 10px;
+                background-color: #FFF;
+                box-shadow: 0px 5px 20px rgba(27, 42, 82, 0.05);
+            }
+            &-button {
+                position: relative;
+                cursor: pointer;
+                box-shadow: none;
+                border: none;
+                background: #F0F2F8;
+                border-radius: 0 !important;
+                border: 0;
+                color: var(--clr-body-heading);
+                font-family: $SpaceGrotesk;
+                font-size: 22px;
+                font-weight: 700;
+                letter-spacing: -0.6px;
+                padding: 29px 30px;
+                line-height: 1;
+                @media #{$sm}{
+                    padding-right: 60px;
+                }
+                @media #{$xs}{
+                    font-size: 18px;
+                    padding-right: 60px;
+                    padding-left: 25px;
+                    line-height: 24px;
+                }
+                @media #{$xxs}{
+                    font-size: 16px;
+                    line-height: 22px;
+                }
+                &::after {
+                    display: none;
+                }
+                &::before {
+                    position: absolute;
+                    right: 30px;
+                    top: 50%;
+                    transform: translateY(-50%);
+                    content: "\f107";
+                    font-family: "Font Awesome 6 Pro";
+                    @include transition(.3s);
+                    font-weight: 500;
+                    color: #1B2A52;
+                    font-size: 16px;
+                    margin-top: 1px;
+                    @media #{$xs}{
+                        right: 20px;
+                    }
+                    @media #{$sm}{
+                        right: 25px;
+                    }
+                }
+                &:not(.collapsed) {
+                    background-color: #fff;
+                    &::before {
+                        content: "\f106";
+                    }
+                }
+                img {
+                    width: 40px;
+                    @media #{$xs}{
+                        width: 30px;
+                    }
+                    @media #{$sm}{
+                        width: 40px;
+                    }
+                }
+            }
+            &-body {
+                padding: 0 70px 29px 30px;
+                background: #fff;
+                @media #{$xs}{
+                    padding: 0 25px 24px 25px;
+                }
+                p {
+                    font-size: 15px;
+                    font-weight: 500;
+                    line-height: 24px;
+                    margin-bottom: 0;
+                }
+            }
+        }
+    }
+}

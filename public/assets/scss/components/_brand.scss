@@ -1,0 +1,129 @@
+/* ///////////////////////////////////////////////////////////
+15. brand
+/////////////////////////////////////////////////////////// */ 
+@use '../abstracts/variables' as *;
+
+// brand 1 css start
+
+.brand {
+    &-wrap {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 35px;
+        justify-content: center;
+        align-items: center;
+    }
+    &-item {
+        border-radius: 60px;
+        background: #FFF;
+        box-shadow: 0px 3px 14px 0px rgba(126, 147, 205, 0.10);
+        height: 100px;
+        width: 230px;
+        display: grid;
+        place-items: center;
+        padding: 0 15px;
+        @include transition(.3s);
+        cursor: pointer;
+        &:hover {
+            box-shadow: 0px 8px 60px 0px rgba(44, 58, 95, 0.16);
+        }
+    }
+}
+
+// brand 2 css start
+.h2_brand {
+    &-wrap {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 35px;
+        justify-content: center;
+        align-items: center;
+    }
+    &-item {
+        border-radius: 60px;
+        background: #FFF;
+        box-shadow: 0px 3px 14px 0px rgba(126, 147, 205, 0.10);
+        height: 100px;
+        width: 230px;
+        display: grid;
+        place-items: center;
+        padding: 0 15px;
+        @include transition(.3s);
+        cursor: pointer;
+        &:hover {
+            box-shadow: 0px 8px 60px 0px rgba(44, 58, 95, 0.16);
+        }
+    }
+}
+
+// brand 3 css start
+.h3_brand {
+    &-area {
+        background: #F2F8FD;
+    }
+    &-wrap {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+        justify-content: space-evenly;
+        align-items: center;
+        position: relative;
+        z-index: 1;
+        padding-top: 60px;
+        padding-bottom: 60px;
+        @media #{$xl}{
+            padding-bottom: 0;
+        }
+        @media #{$md}{
+            padding-top: 0;
+            padding-bottom: 0;
+        }
+        &-bg {
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 0;
+            width: calc(100% - 220px);
+            z-index: -1;
+            margin-left: auto;
+            margin-right: auto;
+            border-radius: 500px;
+            @media #{$md}{
+                display: none;
+            }
+        }
+    }
+    &-img {
+        border-radius: 100px;
+        background: #FFF;
+        box-shadow: 0px 30px 50px 0px rgba(27, 42, 82, 0.07);
+        height: 100px;
+        width: 230px;
+        display: grid;
+        place-items: center;
+        padding: 0 15px;
+        @include transition(.3s);
+        cursor: pointer;
+    }
+}
+
+// brand 4 css start
+.h4_brand {
+    &-area {
+        background: #fff;
+    }
+}
+
+// brand 5 css start
+.h5_brand {
+    &-wrap {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 50px;
+        justify-content: space-evenly;
+        align-items: center;
+        @media #{$md}{
+            gap: 30px;
+        }
+    }
+}
