@@ -17,3 +17,6 @@ Route::get('{any}', [App\Http\Controllers\HomeController::class, 'pageView']);
 //Route::get('/', [HomeController::class , 'index'])->name('home');
 //Route::get('/chat', AiAssistant::class)->name('chat');
 Route::get('/chat', Chat::class);
+Route::get('/clearSession', function () {
+    session()->flush();
+});
