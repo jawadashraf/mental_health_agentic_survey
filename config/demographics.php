@@ -3,110 +3,91 @@
 return [
     [
         "id" => 1,
-        "question" => "What is your date of birth?",
-        "type" => "date",
-        "field" => "date_of_birth"
+        "type" => "radio",
+        "category" => "demographic",
+        "label" => "Age Group",
+        "order" => 1,
+        "question" => "Which of the following age groups do you belong to?",
+        "options" => [
+            "15–24 years",
+            "25–34 years",
+            "35–44 years",
+            "45–54 years",
+            "55–64 years",
+            "65–74 years",
+            "75 years or older",
+            "Prefer not to say"
+        ]
     ],
     [
         "id" => 2,
+        "type" => "radio",
+        "category" => "demographic",
+        "label" => "Gender",
+        "order" => 2,
         "question" => "What is your gender?",
-        "type" => "multiple_choice",
-        "options" => ["Male", "Female", "Other"],
-        "field" => "gender"
+        "options" => [
+            "Male",
+            "Female",
+            "Non-binary",
+            "Prefer to self-describe: [__________]",
+            "Prefer not to say"
+        ]
     ],
     [
         "id" => 3,
-        "question" => "What is your marital status?",
-        "type" => "multiple_choice",
-        "options" => ["Single", "Divorced", "Married", "Widowed"],
-        "field" => "marital_status"
+        "type" => "radio",
+        "category" => "demographic",
+        "label" => "Marital or Civil Partnership Status",
+        "order" => 3,
+        "question" => "What is your current marital or civil partnership status?",
+        "options" => [
+            "Never married and never registered in a civil partnership",
+            "Married",
+            "In a registered civil partnership",
+            "Separated, but still legally married",
+            "Separated, but still legally in a civil partnership",
+            "Divorced",
+            "Formerly in a civil partnership now legally dissolved",
+            "Widowed",
+            "Surviving partner from a registered civil partnership",
+            "Prefer not to say"
+        ]
     ],
     [
         "id" => 4,
+        "type" => "radio",
+        "category" => "demographic",
+        "label" => "Religion",
+        "order" => 4,
         "question" => "What is your religion?",
-        "type" => "text",
-        "field" => "religion"
+        "options" => [
+            "No religion",
+            "Christian",
+            "Buddhist",
+            "Hindu",
+            "Jewish",
+            "Muslim",
+            "Sikh",
+            "Any other religion, please specify: [__________]",
+            "Prefer not to say"
+        ]
     ],
     [
         "id" => 5,
-        "question" => "What is your category?",
-        "type" => "multiple_choice",
-        "options" => ["General", "OBC", "SC", "ST"],
-        "field" => "category"
-    ],
-    [
-        "id" => 6,
-        "question" => "What is your district/village/taluka?",
-        "type" => "text",
-        "field" => "district"
-    ],
-    [
-        "id" => 7,
-        "question" => "What is your municipality of residence?",
-        "type" => "text",
-        "field" => "municipality"
-    ],
-    [
-        "id" => 8,
-        "question" => "What is your academic qualification? (Select one or multiple)",
-        "type" => "multiple_choice",
+        "type" => "radio",
+        "category" => "demographic",
+        "label" => "Academic Qualification",
+        "order" => 5,
+        "question" => "What is your highest level of academic qualification?",
         "options" => [
-            "No Formal Education",
-            "Primary Education",
-            "Secondary Education",
-            "Bachelor's Degree",
-            "Master's Degree",
-            "PhD",
-            "Other"
-        ],
-        "field" => "academic_qualification"
-    ],
-    [
-        "id" => 9,
-        "question" => "What is your economic status?",
-        "type" => "multiple_choice",
-        "options" => [
-            "Low (Less than 15,000 per month)",
-            "Middle (15,000-50,000 per month)",
-            "High (More than 50,000 per month)"
-        ],
-        "field" => "economic_status"
-    ],
-    [
-        "id" => 10,
-        "question" => "What is your profession or occupation?",
-        "type" => "text",
-        "field" => "profession"
-    ],
-    [
-        "id" => 11,
-        "question" => "If you are a student, indicate your degree and year:",
-        "type" => "text",
-        "field" => "student_degree"
-    ],
-    [
-        "id" => 12,
-        "question" => "Do you know anyone who has or had a mental health problem?",
-        "type" => "multiple_choice",
-        "options" => ["Yes", "No", "I am not sure"],
-        "field" => "know_someone_mental_health"
-    ],
-    [
-        "id" => 13,
-        "question" => "If yes, what mental health problem?",
-        "type" => "text",
-        "field" => "mental_health_problem"
-    ],
-    [
-        "id" => 14,
-        "question" => "What is your relationship with that person?",
-        "type" => "multiple_choice",
-        "options" => [
-            "Relative",
-            "Friend",
-            "Myself",
-            "Someone else"
-        ],
-        "field" => "relationship"
+            "No formal qualifications",
+            "GCSEs or equivalent",
+            "A Levels or equivalent",
+            "Undergraduate degree",
+            "Postgraduate degree and above",
+            "Other, please specify: [__________]",
+            "Prefer not to say"
+        ]
     ]
 ];

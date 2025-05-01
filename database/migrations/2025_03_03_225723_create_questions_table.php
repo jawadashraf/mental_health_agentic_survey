@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('type'); // e.g., radio, checkbox, text, etc.
             $table->string('category'); // e.g., demographic, knowledge, attitude
+            $table->string('label')->nullable();
             $table->unsignedInteger('order')->default(0); // for ordering questions
             $table->text('question'); // the question text
             $table->json('options')->nullable(); // for questions with options (like radio/checkbox)

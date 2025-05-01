@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use App\Models\Intent;
 use App\Models\SurveyResponse;
 use Illuminate\Support\Arr;
 use Livewire\Component;
@@ -13,6 +14,7 @@ use function Termwind\ask;
 class ChatResponse extends Component
 {
     public $questions = [];
+    public $responses = [];
 //    public $questions = [
 //        [
 //            "id" => 1,
@@ -87,23 +89,25 @@ class ChatResponse extends Component
                 $this->dispatch('askQuestion');
                 return;
             case 'off-topic':
+                $this->storeIntentForQuestion($intent, $this->prompt["content"]);
                 $promptForAssistant = $this->getOffTopicPrompt(); break;
             case 'refused':
-
+                $this->storeIntentForQuestion($intent, $this->prompt["content"]);
                 $promptForAssistant = $this->generateEncouragingPrompt(); break;
 
             case 'clarify':
+                $this->storeIntentForQuestion($intent, $this->prompt["content"]);
                 $promptForAssistant = $this->getClarifyPrompt($this->questions[$this->currentIndex]['question']);
-                ds($promptForAssistant);
                 break;
 
-                default:  $promptForAssistant = $this->generateEncouragingPrompt();
+            default:
+                $this->storeIntentForQuestion('default', $this->prompt["content"]);
+                $promptForAssistant = $this->generateEncouragingPrompt();
 
         }
 
         $this->messages[] = ['role' => 'user', 'content' => $promptForAssistant];
         $this->messages[] = ['role' => 'assistant', 'content' => ''];
-        ds($this->messages);
 
         $stream = app('openai')->chat()->createStreamed([
             'model' => 'gpt-4',
@@ -155,22 +159,26 @@ class ChatResponse extends Component
         $this->dispatch('askQuestion');
     }
 
-    public function submitResponse()
+    public function saveResponseInSession($currentIndex, $response, $question, $questionId) : void
     {
-        if (empty($this->response)) {
-            return;
-        }
+//        if (empty($response)) {
+//            return;
+//        }
 
+        $this->responses = Session::get('survey_responses', []);
         // Store response in session
-        $this->responses[] = [
-            'question' => $this->questions[$this->currentIndex],
-            'response' => $this->response
+        $this->responses[$questionId] = [
+            'question' => $question,
+            'response' => $response
         ];
         Session::put('survey_responses', $this->responses);
 
 
+//        session()->push('survey_responses', ['question' => $this->questions[session()->get('survey_index', 0)], 'response' => $response]);
+//        session()->push('survey_responses', ['question' => $question, 'response' => $response]);
+
         // Clear input field
-        $this->response = "";
+//        $this->response = "";
     }
 
     function generateEmpatheticSentimentResponse($sentiment) {
@@ -292,7 +300,8 @@ Classify it into one of these categories:
     }
 
 
-    function detectIntentWithAI($userInput) {
+    function detectIntentWithAI($userInput): ?string
+    {
         $aiAgent = Prism::text()->using('openai', 'gpt-4');
 
         $prompt = "You are an advanced conversational AI conducting a survey.
@@ -303,6 +312,8 @@ Classify it into one of these categories:
     - **'clarify'** → if the user asks for more explanation, examples, or further details about the question.
     - **'answer'** → if the user is responding to the question.
     - **'off-topic'** → if the user says something unrelated to the survey, like asking personal questions or giving random statements.
+    - **'low-motivation'** → if the user is hesitant, reluctant, or unenthusiastic but hasn’t outright refused.
+    - **'no-motivation'** → if the user appears disengaged, apathetic, or shows no interest or willingness to proceed.
 
     **Examples:**
     - 'Can you repeat that?' → repeat
@@ -313,9 +324,11 @@ Classify it into one of these categories:
     - 'The website is slow' → answer
     - 'What’s your name?' → off-topic
     - 'Tell me a joke' → off-topic
+    - 'Maybe later, I am a bit tired' → low-motivation
+    - 'I do not care about this survey' → no-motivation
 
     **User Input:** \"$userInput\"
-    **Response:** (only return consent, refused, repeat, clarify, answer, or off-topic)";
+    **Response:** (only return consent, refused, repeat, clarify, answer, off-topic, no-motivation, low-motivation)";
 
         return strtolower(trim($aiAgent->withPrompt($prompt)->generate()->text));
     }
@@ -332,6 +345,7 @@ Classify it into one of these categories:
         }
 
         $this->storeResponse($question['id'], $response, $question['question']);
+        $this->saveResponseInSession($this->currentIndex, $response, $question['question'], $question['id']);
         // Save response logic (e.g., store in DB)
         session()->flash('message', 'Response submitted!');
 
@@ -340,12 +354,31 @@ Classify it into one of these categories:
 //        $response = $request->input('response');
 //        $sentiment = $this->detectSentiment($response);
 
-        session()->push('survey_responses', ['question' => $this->questions[session()->get('survey_index', 0)], 'response' => $response]);
+
 
         $this->selectedOption = null;
         $this->textResponse = '';
 
         $this->dispatch('incrementCurrentIndex');
+
+    }
+
+    public function storeIntentForQuestion($intent, $prompt): void {
+
+        $question = $this->questions[session()->get('survey_index', 0)];
+
+
+        $sessionId = session()->getId();
+
+        Intent::create(
+            [
+                'question_id' => $question['id'],
+                'session_id' => $sessionId,
+                'question' => $question['question'],
+                'intent' => $intent,
+                'prompt' => $prompt,
+            ]
+        );
 
     }
 }

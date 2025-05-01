@@ -3,6 +3,7 @@
 namespace App\Livewire;
 
 use App\Models\SurveyResponse;
+use App\Models\SurveySession;
 use Livewire\Attributes\Validate;
 use Livewire\Component;
 use Request;
@@ -55,8 +56,16 @@ class Chat extends Component
     public array $metadata = [];
 
 
-    public function mount()
+    public function mount(): void
     {
+        $sessionId = session()->getId();
+
+        SurveySession::firstOrCreate(
+            [
+                'session_id' => $sessionId,
+            ]
+        );
+
         $this->questions = config('survey');
         $this->systemPrompt = <<<EOT
     You are a compassionate AI conducting a mental health awareness survey.
@@ -96,17 +105,16 @@ class Chat extends Component
     }
 
 
-    public function incrementCurrentIndex()
+    public function incrementCurrentIndex(): void
     {
         session()->increment('survey_index');
         $this->askQuestion();
 
     }
 
-    public function askQuestion()
+    public function askQuestion(): void
     {
         $this->currentIndex = Session::get('survey_index');
-        ds($this->currentIndex);
 
         if($this->surveyStarted){
             if ($this->currentIndex < count($this->questions) - 1) {
@@ -157,7 +165,7 @@ class Chat extends Component
         }
     }
 
-    public function send()
+    public function send(): void
     {
         $this->validate();
 

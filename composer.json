@@ -15,8 +15,7 @@
         "nwidart/laravel-modules": "^12.0",
         "openai-php/client": "^0.10.3",
         "openai-php/laravel": "^0.11.0",
-        "prism-php/prism": "^0.50.0",
-        "tomatophp/filament-cms": "^1.0"
+        "prism-php/prism": "^0.50.0"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",
