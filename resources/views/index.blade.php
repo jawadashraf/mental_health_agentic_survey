@@ -106,7 +106,7 @@
                         </div>
                     </div>
                     <div class="banner-img tp_fade_left">
-                        <img src="{{ asset('assets/images/banner/home1/scope_chat_screen3.png') }}" alt="Image Not Found">
+                        <img src="{{ asset('assets/images/banner/home1/scope_chat_screen4.png') }}" alt="Image Not Found">
                     </div>
                 </div>
             </div>
