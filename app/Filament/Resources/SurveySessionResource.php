@@ -33,6 +33,10 @@ class SurveySessionResource extends Resource
                     ->content(fn ($record): string => $record->created_at->toFormattedDateString()),
                 Forms\Components\Placeholder::make('updated_at')
                     ->content(fn ($record): string => $record->updated_at->toFormattedDateString()),
+                Forms\Components\Placeholder::make('completed_at')
+                    ->content(fn ($record): string => $record->completed_at->toFormattedDateString()),
+                Forms\Components\Placeholder::make('completed')
+                    ->content(fn ($record): string => $record->completed),
             ]);
     }
 
@@ -42,8 +46,17 @@ class SurveySessionResource extends Resource
             ->columns([
                 TextColumn::make('id'),
                 TextColumn::make('session_id'),
-                TextColumn::make('created_at'),
-                TextColumn::make('updated_at'),
+                TextColumn::make('created_at')->sortable()->dateTime(),
+                TextColumn::make('updated_at')->sortable()->dateTime(),
+                TextColumn::make('completed_at')->sortable()->dateTime(),
+                TextColumn::make('completed')->sortable()
+                    ->formatStateUsing(fn (string $state): string => $state === '1' ? 'Yes' : 'No' )
+                    ->label('Completed')
+                    ->badge()
+                    ->color(fn (string $state): string => match ($state) {
+                        '1' => 'success',
+                        '0' => 'danger',
+                    }),
             ])
             ->filters([
                 //

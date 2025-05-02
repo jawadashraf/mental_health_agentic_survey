@@ -90,12 +90,12 @@ class ChatResponse extends Component
                 $this->dispatch('askQuestion');
                 return;
             case 'off-topic':
-                $this->storeIntentForQuestion($intent, $this->prompt["content"]);
                 $this->js("updateExpression('5')"); //Surprised
+                $this->storeIntentForQuestion($intent, $this->prompt["content"]);
                 $promptForAssistant = $this->getOffTopicPrompt(); break;
             case 'refused':
-                $this->storeIntentForQuestion($intent, $this->prompt["content"]);
                 $this->js("updateExpression('3')"); //Sad
+                $this->storeIntentForQuestion($intent, $this->prompt["content"]);
                 $promptForAssistant = $this->generateEncouragingPrompt(); break;
 
             case 'clarify':
@@ -159,7 +159,7 @@ class ChatResponse extends Component
 
 //        $this->dispatchBrowserEvent('update-expression', ['value' => 3]);
 
-        $this->js("updateExpression('2')"); //Happy
+
     }
 
     function askQuestion(): void
@@ -352,6 +352,7 @@ Classify it into one of these categories:
         if (!$response) {
             return; // Prevent empty submissions
         }
+        $this->js("updateExpression('2')"); //Happy
 
         $this->storeResponse($question['id'], $response, $question['question']);
         $this->saveResponseInSession($this->currentIndex, $response, $question['question'], $question['id']);
