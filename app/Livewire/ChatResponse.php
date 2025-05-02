@@ -106,7 +106,7 @@ class ChatResponse extends Component
                 break;
 
             default:
-                $this->js("updateExpression('2')"); //Happy
+//                $this->js("updateExpression('2')"); //Happy
                 $this->storeIntentForQuestion('default', $this->prompt["content"]);
                 $promptForAssistant = $this->generateEncouragingPrompt();
 
@@ -369,7 +369,7 @@ Classify it into one of these categories:
         if (!$response) {
             return; // Prevent empty submissions
         }
-        $this->js("updateExpression('2')"); //Happy
+
 
         $this->storeResponse($question['id'], $response, $question['question']);
         $this->saveResponseInSession($this->currentIndex, $response, $question['question'], $question['id']);
