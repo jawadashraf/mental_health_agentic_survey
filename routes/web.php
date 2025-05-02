@@ -17,7 +17,7 @@ Route::get('/clear/Session', function (Illuminate\Http\Request $request) {
     }
         return "...";
 });
-Route::get('/chat', Chat::class);
+Route::get('/chat', Chat::class)->name('chat');
 Route::get('/', [App\Http\Controllers\HomeController::class, 'index']);
 
 Route::get('{any}', [App\Http\Controllers\HomeController::class, 'pageView']);
