@@ -34,7 +34,7 @@ class SurveySessionResource extends Resource
                 Forms\Components\Placeholder::make('updated_at')
                     ->content(fn ($record): string => $record->updated_at->toFormattedDateString()),
                 Forms\Components\Placeholder::make('completed_at')
-                    ->content(fn ($record): string => $record->completed_at->toFormattedDateString()),
+                    ->content(fn ($record): string => $record->completed_at),
                 Forms\Components\Placeholder::make('completed')
                     ->content(fn ($record): string => $record->completed),
             ]);
