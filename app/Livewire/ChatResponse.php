@@ -86,21 +86,26 @@ class ChatResponse extends Component
 
             case 'consent':
             case 'repeat':
+                $this->js("updateExpression('2')"); //Happy
                 $this->dispatch('askQuestion');
                 return;
             case 'off-topic':
                 $this->storeIntentForQuestion($intent, $this->prompt["content"]);
+                $this->js("updateExpression('5')"); //Surprised
                 $promptForAssistant = $this->getOffTopicPrompt(); break;
             case 'refused':
                 $this->storeIntentForQuestion($intent, $this->prompt["content"]);
+                $this->js("updateExpression('3')"); //Sad
                 $promptForAssistant = $this->generateEncouragingPrompt(); break;
 
             case 'clarify':
+                $this->js("updateExpression('2')"); //Happy
                 $this->storeIntentForQuestion($intent, $this->prompt["content"]);
                 $promptForAssistant = $this->getClarifyPrompt($this->questions[$this->currentIndex]['question']);
                 break;
 
             default:
+                $this->js("updateExpression('2')"); //Happy
                 $this->storeIntentForQuestion('default', $this->prompt["content"]);
                 $promptForAssistant = $this->generateEncouragingPrompt();
 
@@ -151,6 +156,10 @@ class ChatResponse extends Component
                 'question' => $question,
             ]
         );
+
+//        $this->dispatchBrowserEvent('update-expression', ['value' => 3]);
+
+        $this->js("updateExpression('2')"); //Happy
     }
 
     function askQuestion(): void

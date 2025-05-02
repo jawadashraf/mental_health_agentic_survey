@@ -6,7 +6,8 @@
 
 
     @if($message['content'] === '')
-        <div class="w-3/4 space-y-0.5 has-[.stream:empty]:hidden">
+        <div class="w-3/4 space-y-0.5 has-[.stream:empty]:hidden transition-opacity duration-300 ease-in-out" x-data="{ show: true }" x-init="setTimeout(() => show = true, 100)" x-show="show">
+
             <div class="text-xs">Assist#</div>
             <div class="bg-slate-200 rounded-xl rounded-tl-none px-3 py-1.5 text-sm">
                 <div wire:stream="stream-{{ $this->getId()  }}">{{ $response }}</div>
@@ -18,8 +19,8 @@
             @php
                 $question = $metadata['content'];
             @endphp
-            <div class="w-3/4 space-y-0.5">
-                <div class="text-xs">Assist#</div>
+        <div class="w-3/4 space-y-0.5 transition-opacity duration-300 ease-in-out" x-data="{ show: true }" x-init="setTimeout(() => show = true, 100)" x-show="show">
+            <div class="text-xs">Assist#</div>
                 <div class="bg-slate-200 rounded-xl rounded-tl-none px-3 py-1.5 text-sm">
                     <div class="mb-2 font-medium">Q{{$question['id']}}: {{ $question['question'] }}</div>
 
@@ -63,8 +64,8 @@
 
             </div>
         @else
-            <div class="w-3/4 space-y-0.5">
-                <div class="text-xs">Assist..</div>
+        <div class="w-3/4 space-y-0.5 transition-opacity duration-300 ease-in-out" x-data="{ show: true }" x-init="setTimeout(() => show = true, 100)" x-show="show">
+            <div class="text-xs">Assist..</div>
                 <div class="bg-slate-200 rounded-xl rounded-tl-none px-3 py-1.5 text-sm">
                     <div>{{ $message['content'] }}</div>
                 </div>

@@ -1,4 +1,9 @@
-<div class="max-w-xl mx-auto my-16 border border-slate-200 rounded-xl overflow-hidden">
+<div class="flex h-screen">
+    <div class="w-1/2 flex items-center justify-center p-4">
+        <canvas id="canvas" width="500" height="500"></canvas>
+    </div>
+    <div class="w-1/2 flex flex-col">
+<div class="max-w-xl mx-auto my-16 border border-slate-200 rounded-xl overflow-hidden flex-1 flex flex-col">
     <div class="h-[80vh] bg-gradient-to-t from-slate-100 p-6 flex space-y-1.5 overflow-scroll flex-col-reverse">
         <div class="flex flex-col">
             @foreach($messages as $key => $message)
@@ -28,3 +33,41 @@
         </div>
     </form>
 </div>
+</div>
+</div>
+
+<script src="https://unpkg.com/@rive-app/canvas"></script>
+<script>
+
+    const r = new rive.Rive({
+        src: "/animations/robot.riv",
+        // src: 'https://cdn.rive.app/animations/vehicles.riv',
+        canvas: document.getElementById('canvas'),
+        autoplay: true,
+        stateMachines: 'State Machine 1',
+        fit: rive.Fit.cover,
+        onLoad: (_) => {
+            // // Get the inputs via the name of the state machine
+            // const inputs = r.stateMachineInputs('State Machine 1');
+            // // // Find the input you want to set a value for, or trigger
+            // const expressionInput = inputs.find(i => i.name === 'Expressions');
+            // expressionInput.value = 2;
+            //
+        },
+    });
+
+    function updateExpression(value) {
+
+        const inputs = r.stateMachineInputs('State Machine 1');
+        const expressionInput = inputs.find(i => i.name === 'Expressions');
+
+        if (expressionInput) {
+            expressionInput.value = value;
+        }
+
+        // Reset back to 1 after 3 seconds (3000 milliseconds)
+        setTimeout(() => {
+            expressionInput.value = 1;
+        }, 3000);
+    }
+</script>
