@@ -121,6 +121,14 @@ class Chat extends Component
 
             } else {
                 session()->flash('message', 'Survey completed!');
+                $session = SurveySession::where('session_id', session()->getId());
+                if($session){
+                    $session->update([
+                        'completed' => true,
+                        'completed_at' => now(),
+                    ]);
+                }
+
                 session()->flush();
                 return;
             }
