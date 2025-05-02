@@ -46,29 +46,6 @@
 {{--                                        </ul>--}}
                                     </li>
                                     <li><a href="{{ url('about') }}">About</a></li>
-{{--                                    <li class="menu-has-child">--}}
-{{--                                        <a href="#">Pages</a>--}}
-{{--                                        <ul class="submenu">--}}
-{{--                                            <li><a href="{{ url('service') }}">Services</a></li>--}}
-{{--                                            <li><a href="{{ url('team') }}">Team</a></li>--}}
-{{--                                            <li><a href="{{ url('work') }}">Portfolio</a></li>--}}
-{{--                                            <li><a href="{{ url('price') }}">Pricing</a></li>--}}
-{{--                                            <li><a href="{{ url('faq') }}">FAQ's</a></li>--}}
-{{--                                            <li><a href="{{ url('testimonial') }}">Testimonials</a></li>--}}
-{{--                                            <li><a href="{{ url('wishlist') }}">Wishlist</a></li>--}}
-{{--                                            <li><a href="{{ url('cart') }}">Cart</a></li>--}}
-{{--                                            <li><a href="{{ url('checkout') }}">Checkout</a></li>--}}
-{{--                                            <li><a href="{{ url('login') }}">Login</a></li>--}}
-{{--                                            <li><a href="{{ url('404') }}">404</a></li>--}}
-{{--                                        </ul>--}}
-{{--                                    </li>--}}
-{{--                                    <li class="menu-has-child">--}}
-{{--                                        <a href="{{ url('shop') }}">Shop</a>--}}
-{{--                                        <ul class="submenu">--}}
-{{--                                            <li><a href="{{ url('shop') }}">Shop</a></li>--}}
-{{--                                            <li><a href="{{ url('shop-details') }}">Shop Details</a></li>--}}
-{{--                                        </ul>--}}
-{{--                                    </li>--}}
                                     <li class="menu-has-child">
                                         <a href="{{ url('blog') }}">Blog</a>
                                         <ul class="submenu">
@@ -129,13 +106,13 @@
                         </div>
                     </div>
                     <div class="banner-img tp_fade_left">
-                        <img src="{{ asset('assets/images/banner/home1/bg.png') }}" alt="Image Not Found">
+                        <img src="{{ asset('assets/images/banner/home1/scope_chat_screen3.png') }}" alt="Image Not Found">
                     </div>
                 </div>
             </div>
             <div class="banner-shape d-none d-lg-block">
-                <img src="{{ asset('assets/images/banner/home1/shape-1.png') }}" alt="Image Not Found" class="banner-shape-1" data-speed="0.7">
-                <img src="{{ asset('assets/images/banner/home1/shape-2.png') }}" alt="Image Not Found" class="banner-shape-2" data-speed="0.8">
+{{--                <img src="{{ asset('assets/images/banner/home1/shape-1.png') }}" alt="Image Not Found" class="banner-shape-1" data-speed="0.7">--}}
+{{--                <img src="{{ asset('assets/images/banner/home1/shape-2.png') }}" alt="Image Not Found" class="banner-shape-2" data-speed="0.8">--}}
                 <img src="{{ asset('assets/images/banner/home1/shape-3.png') }}" alt="Image Not Found" class="banner-shape-3" data-speed="0.8">
                 <img src="{{ asset('assets/images/banner/home1/shape-4.png') }}" alt="Image Not Found" class="banner-shape-4" data-speed="0.7">
                 <img src="{{ asset('assets/images/banner/home1/shape-5.png') }}" alt="Image Not Found" class="banner-shape-5">

@@ -40,7 +40,7 @@
 <script>
 
     const r = new rive.Rive({
-        src: "/animations/robot.riv",
+        src: "/animations/robot_transparent_bg.riv",
         // src: 'https://cdn.rive.app/animations/vehicles.riv',
         canvas: document.getElementById('canvas'),
         autoplay: true,
