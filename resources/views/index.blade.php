@@ -35,7 +35,7 @@
                         <div class="header-menu ">
                             <nav class="header-nav-menu" id="mobile-menu">
                                 <ul>
-                                    <li class="menu-has-child">
+                                    <li>
                                         <a href="{{ url('index') }}">Home</a>
 {{--                                        <ul class="submenu">--}}
 {{--                                            <li><a href="{{ url('index') }}">AI Doodle</a></li>--}}
@@ -46,12 +46,12 @@
 {{--                                        </ul>--}}
                                     </li>
                                     <li><a href="{{ url('about') }}">About</a></li>
-                                    <li class="menu-has-child">
+                                    <li>
                                         <a href="{{ url('blog') }}">Blog</a>
-                                        <ul class="submenu">
-                                            <li><a href="{{ url('blog') }}">Blog</a></li>
-                                            <li><a href="{{ url('blog-details') }}">Blog Details</a></li>
-                                        </ul>
+{{--                                        <ul class="submenu">--}}
+{{--                                            <li><a href="{{ url('blog') }}">Blog</a></li>--}}
+{{--                                            <li><a href="{{ url('blog-details') }}">Blog Details</a></li>--}}
+{{--                                        </ul>--}}
                                     </li>
                                     <li><a href="{{ url('contact') }}">Contact</a></li>
                                 </ul>
