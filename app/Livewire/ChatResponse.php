@@ -328,6 +328,34 @@ The user seems disengaged or uninterested. Generate a gentle, empathetic message
         return view('livewire.chat-response');
     }
 
+    protected function extractTerm(string $userInput): string
+    {
+        // Predefined fallback if nothing is found
+        $defaultTerm = 'this term';
+
+        // Common patterns users use to ask about a term
+        $patterns = [
+            '/what does (.+?) mean/i',
+            '/what is (.+?)[\?]?$/i',
+            '/define (.+?)[\?]?$/i',
+            '/what do you mean by (.+?)[\?]?$/i',
+            '/can you explain (.+?)[\?]?$/i',
+            '/meaning of (.+?)[\?]?$/i',
+        ];
+
+        foreach ($patterns as $pattern) {
+            if (preg_match($pattern, $userInput, $matches)) {
+                $term = trim($matches[1]);
+                // Clean up trailing punctuation or filler words
+                $term = preg_replace('/\?|\.$/', '', $term);
+                return ucfirst($term);
+            }
+        }
+
+        return $defaultTerm;
+    }
+
+
     function generateEmpatheticSentimentResponse($sentiment)
     {
         if ($sentiment === 'negative') {
