@@ -92,17 +92,36 @@
             <div class="container custom-container-1">
                 <div class="banner-single">
                     <div class="banner-content">
-                        <span class="banner-content-subtitle tp_fade_left">Something Special</span>
+{{--                        <span class="banner-content-subtitle tp_fade_left">Something Special</span>--}}
                         <h1 class="banner-content-title tp_has_text_reveal_anim">SCOPE</h1>
                         <p class="tp_desc_anim">Responsible AI. Smarter Surveys. Stronger Voices.</p>
-                        <div class="banner-content-btn">
-                            <a href="{{ route('chat') }}" class="theme-btn tp_fade_bottom">Experience it</a>
-{{--                            <span class="tp_fade_bottom">--}}
-{{--                                <svg width="18" height="16" viewBox="0 0 18 16" fill="none" xmlns="http://www.w3.org/2000/svg">--}}
-{{--                                    <path d="M17.4555 0.0244961C16.2201 0.206689 15.2018 0.523653 14.0862 1.07023C12.6337 1.78153 11.3259 2.7424 10.0056 4.06517C8.07885 5.9969 6.49652 8.40034 5.42334 11.0359C5.33349 11.258 5.25612 11.4427 5.25113 11.4477C5.24863 11.4502 5.22118 11.3304 5.19123 11.1781C4.88425 9.64324 3.79359 8.26307 2.56067 7.84877C2.20128 7.72898 1.8369 7.70152 1.50745 7.77141C1.27784 7.81882 0.920944 8.00102 0.736256 8.16574C0.481686 8.38786 0.204654 8.80716 0.0524114 9.1965L0 9.32378L0.292007 9.34125C0.983338 9.37869 1.43258 9.58584 1.8943 10.0725C2.14388 10.3346 2.32357 10.6041 2.53322 11.0259C2.75534 11.4727 2.89511 11.8395 3.26448 12.9327C3.62887 14.0084 3.77362 14.3877 3.9658 14.7721C4.21288 15.2662 4.52485 15.683 4.80438 15.8952L4.94415 16L5.08391 15.9052C5.30853 15.7504 5.78273 15.2612 6.0348 14.9243C6.53645 14.2455 6.90084 13.6065 7.8717 11.6898C8.97733 9.50348 9.39912 8.71731 10.0231 7.68405C12.0621 4.30227 14.4106 1.90632 17.3157 0.24163C17.5279 0.121832 17.7076 0.0170088 17.7126 0.00952148C17.73 -0.00794792 17.6377 -0.000461578 17.4555 0.0244961Z" fill="currentColor"/>--}}
-{{--                                </svg>--}}
-{{--                                No credit card Required--}}
-{{--                            </span>--}}
+
+{{--                         <p>--}}
+
+{{--                            SCOPE is a research-driven initiative that tests how AI-powered conversational agents can be used to –--}}
+{{--                            <ul>--}}
+{{--                            <li>Create dynamic, human-centred surveys</li>--}}
+{{--                                <li>Increase engagement among participants</li>--}}
+{{--                                <li>Raise awareness on diverse issues</li>--}}
+{{--                                <li>Track inclusivity and underrepresented voices in data collection</li>--}}
+{{--                                <li>Inform future ethical AI practices</li>--}}
+{{--                            </ul>--}}
+{{--                         </p>--}}
+
+                        <div class="inner_feature-content mb-50 mb-md-0">
+                            <div class="inner_section-area mb-20">
+                                <p class="inner_section-text tp_fade_bottom">
+                                    SCOPE is a research-driven initiative that tests how AI-powered conversational agents can be used to
+                                </p>
+                            </div>
+
+                            <ul class="inner_feature-content-list tp_fade_bottom">
+                                <li>Create dynamic, human-centred surveys</li>
+                                <li>Increase engagement among participants</li>
+                                <li>Raise awareness on diverse issues</li>
+                                <li>Track inclusivity and underrepresented voices in data collection</li>
+                                <li>Inform future ethical AI practices</li>
+                            </ul>
                         </div>
                     </div>
                     <div class="banner-img tp_fade_left">
@@ -110,13 +129,13 @@
                     </div>
                 </div>
             </div>
-            <div class="banner-shape d-none d-lg-block">
+{{--            <div class="banner-shape d-none d-lg-block">--}}
 {{--                <img src="{{ asset('assets/images/banner/home1/shape-1.png') }}" alt="Image Not Found" class="banner-shape-1" data-speed="0.7">--}}
 {{--                <img src="{{ asset('assets/images/banner/home1/shape-2.png') }}" alt="Image Not Found" class="banner-shape-2" data-speed="0.8">--}}
-                <img src="{{ asset('assets/images/banner/home1/shape-3.png') }}" alt="Image Not Found" class="banner-shape-3" data-speed="0.8">
-                <img src="{{ asset('assets/images/banner/home1/shape-4.png') }}" alt="Image Not Found" class="banner-shape-4" data-speed="0.7">
-                <img src="{{ asset('assets/images/banner/home1/shape-5.png') }}" alt="Image Not Found" class="banner-shape-5">
-            </div>
+{{--                <img src="{{ asset('assets/images/banner/home1/shape-3.png') }}" alt="Image Not Found" class="banner-shape-3" data-speed="0.8">--}}
+{{--                <img src="{{ asset('assets/images/banner/home1/shape-4.png') }}" alt="Image Not Found" class="banner-shape-4" data-speed="0.7">--}}
+{{--                <img src="{{ asset('assets/images/banner/home1/shape-5.png') }}" alt="Image Not Found" class="banner-shape-5">--}}
+{{--            </div>--}}
         </section>
         <!-- banner area end -->
 
@@ -124,6 +143,142 @@
         <section class="choose-area pt-140">
             <div class="container">
                 <div class="row justify-content-center">
+                    <div class="col-6">
+                        <div class="h2_about-content mb-40">
+                            <div class="inner_section-area mb-40">
+                                <span class="inner_section-subtitle tp_subtitle_anim">Why</span>
+                                <h2 class="inner_section-title tp_title_slideup inner_section-title
+                                tp_title_slideup-big mb-25">Scope</h2>
+
+                                <div class="inner_section-text tp_fade_bottom text-dark">
+                                    Surveys are one of the most widely used
+                                    tools for understanding communities, but they often fall short. Response rates are
+                                    low, participation skews toward certain groups, and static forms rarely reflect the
+                                    nuance or complexity of human experiences. These challenges are especially visible
+                                    in areas such as mental health, where stigma, confusion, or disengagement can easily
+                                    disrupt the data collection process.
+                                    <br>
+                                    SCOPE explores a new way forward – using AI to make surveys more adaptive and more
+                                    inclusive.
+                                    <br>
+                                    At the heart of the project is a pilot test of an AI-powered conversational agent – a
+                                digital tool that leads users through a mental health literacy survey not as a form, but
+                                as a conversation. The AI responds to queries, handles confusion, gently redirects
+                                digressions, and ensures respectful, accessible dialogue. It adapts to the user, instead
+                                    of expecting the user to adapt to it.
+
+                                    <br>
+
+                                But SCOPE is not just about improving one survey <br>
+
+                                This pilot is a proof of concept for a larger idea that AI can be used to create
+                                smarter, more meaningful ways of gathering public insight—especially in contexts where
+                                traditional surveys fall flat. We are testing whether a conversational agent can –
+
+
+                                        <ul class="inner_feature-content-list tp_fade_bottom my-4">
+                                          <li>
+                                            Improve completion rates and engagement
+                                          </li>
+                                            <li>
+                                                Handle real-world ambiguity in user responses
+                                            </li>
+                                        <li>
+                                            Respect boundaries while still collecting useful data
+                                        </li>
+                                        <li>
+                                            Monitor for inclusion and underrepresented voices in real-time
+                                        </li>
+                                        <li>
+                                            Log drop-offs, digressions, and friction points for future refinement
+                                        </li>
+
+
+                                    </ul>
+
+                                Importantly, the agent is not designed to diagnose or advise – it is not a therapeutic
+                                tool. Its role is to listen, guide the user through the experience, and help researchers
+                                gather cleaner, more reflective data. <br>
+
+                                We are starting with young adults and mental health. But the potential use cases go far
+                                beyond—to city councils, schools, community organisations, and anyone who needs to
+                                engage people in meaningful, inclusive ways. <br>
+
+                                SCOPE asks the question – What if surveys were not something you filled out… but
+                                something you had a conversation with? <br>
+
+                                This pilot is our first step toward answering that!
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="row">
+                            <div class="col-12 tp_fade_left" data-fade-from="left">
+                                <div class="choose-item mb-10 p-4">
+                                    <span class="choose-item-count">01</span>
+                                    <div class="choose-item-img">
+                                        <img src="{{ asset('assets/images/choose/adaptive_survey.png') }}" alt="Image Not Found">
+                                    </div>
+                                    <div class="choose-item-content">
+                                        <h5 class="choose-item-content-title"><a href="#">Adaptive Surveys</a></h5>
+                                        <p>SCOPE uses an AI-powered conversational agent that adapts in real-time to
+                                            each participant’s responses. It can clarify questions, handle digressions
+                                            gently, and guide the user without breaking the flow – making the experience
+                                            feel more like a dialogue than a form.</p>
+                                        {{--                                <a href="#" class="choose-item-content-btn">Learn More<i class="fa-light fa-angle-right"></i></a>--}}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 tp_fade_left" data-fade-from="left" data-delay=".8">
+                                <div class="choose-item mb-10 p-4">
+                                    <span class="choose-item-count">02</span>
+                                    <div class="choose-item-img">
+                                        <img src="{{ asset('assets/images/choose/increased_engagement.png') }}" alt="Image Not Found">
+                                    </div>
+                                    <div class="choose-item-content">
+                                        <h5 class="choose-item-content-title"><a href="#">Increased Engagement</a></h5>
+                                        <p>
+                                            By replacing survey forms into a dynamic conversation, SCOPE helps reduce
+                                            survey fatigue and increase completion rates. Participants stay more focused
+                                            and involved, even when discussing complex or sensitive topics.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 tp_fade_left" data-fade-from="left" data-delay="1.1">
+                                <div class="choose-item mb-10 p-4">
+                                    <span class="choose-item-count">03</span>
+                                    <div class="choose-item-img">
+                                        <img src="{{ asset('assets/images/choose/inclusive_data_collection.png') }}" alt="Image Not Found">
+                                    </div>
+                                    <div class="choose-item-content">
+                                        <h5 class="choose-item-content-title"><a href="#">Inclusive Data Collection</a></h5>
+                                        <p>SCOPE monitors for underrepresented voices, tracks skipped questions and
+                                            digression points, and allows users to opt out – supporting respectful,
+                                            inclusive participation across diverse groups.</p>
+                                        {{--                                <a href="#" class="choose-item-content-btn">Learn More<i class="fa-light fa-angle-right"></i></a>--}}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 tp_fade_left" data-fade-from="left" data-delay="1.3">
+                                <div class="choose-item mb-10 p-4">
+                                    <span class="choose-item-count">04</span>
+                                    <div class="choose-item-img">
+                                        <img src="{{ asset('assets/images/choose/ethics.png') }}" alt="Image Not Found">
+                                    </div>
+                                    <div class="choose-item-content">
+                                        <h5 class="choose-item-content-title"><a href="#">Ethical AI Practices</a></h5>
+                                        <p>SCOPE is designed with strict guardrails – no diagnosis, no advice, and no
+                                            storage of identifiable personal data. It prioritises care, clarity, and
+                                            autonomy – showing how AI can support human-centred research without
+                                            overstepping.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     <div class="col-12">
                         <div class="section-area text-center mb-50">
                             <span class="section-subtitle tp_fade_left text-3xl">Why</span>
