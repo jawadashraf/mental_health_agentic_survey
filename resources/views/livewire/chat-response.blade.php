@@ -6,7 +6,8 @@
 
 
     @if($message['content'] === '')
-        <div class="w-3/4 space-y-0.5 has-[.stream:empty]:hidden transition-opacity duration-300 ease-in-out" x-data="{ show: true }" x-init="setTimeout(() => show = true, 100)" x-show="show">
+        <div class="w-3/4 space-y-0.5 has-[.stream:empty]:hidden"
+             id="next-bot-response-{{ $this->getId() }}">
 
             <div class="text-xs">Assist#</div>
             <div class="bg-slate-200 rounded-xl rounded-tl-none px-3 py-1.5 text-sm">

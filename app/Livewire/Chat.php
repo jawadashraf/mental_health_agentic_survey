@@ -8,28 +8,10 @@ use Livewire\Attributes\Validate;
 use Livewire\Component;
 use Request;
 use Session;
+use Livewire\Attributes\On;
 
 class Chat extends Component
 {
-//    public $questions = [
-//        [
-//            "id" => 1,
-//            "type" => "radio",
-//            "question" => "How satisfied are you with our service?",
-//            "options" => ["Very Satisfied", "Satisfied", "Neutral", "Dissatisfied", "Very Dissatisfied"]
-//        ],
-//        [
-//            "id" => 2,
-//            "type" => "text",
-//            "question" => "What improvements would you like to see?"
-//        ],
-//        [
-//            "id" => 3,
-//            "type" => "radio",
-//            "question" => "Would you recommend us to others?",
-//            "options" => ["Yes", "No"]
-//        ]
-//    ];
 
         public $questions = [];
 
@@ -112,7 +94,7 @@ class Chat extends Component
 
     }
 
-    public function askQuestion(): void
+    public function askQuestion($currentLivewireComponentId = null): void
     {
         $this->currentIndex = Session::get('survey_index');
 
@@ -135,6 +117,10 @@ class Chat extends Component
 
         } else {
             $this->surveyStarted = true;
+        }
+
+        if($currentLivewireComponentId){
+            $this->js("hideBotDiv('". "next-bot-response-". $currentLivewireComponentId . "')");
         }
 
         $question = $this->questions[$this->currentIndex];

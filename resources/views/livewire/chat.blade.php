@@ -70,4 +70,11 @@
             expressionInput.value = 1;
         }, 3000);
     }
+
+    function hideBotDiv(divId){
+        console.log(divId, 'divId');
+        console.log(document.getElementById(divId), 'divId Element');
+        document.getElementById(divId)?.classList.add('hidden');
+        console.log('div disappeared');
+    }
 </script>

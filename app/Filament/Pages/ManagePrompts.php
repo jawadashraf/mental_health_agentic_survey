@@ -4,6 +4,7 @@ namespace App\Filament\Pages;
 
 use App\Settings\PromptSettings;
 use Filament\Forms;
+use Filament\Forms\Components\MarkdownEditor;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Form;
 use Filament\Pages\SettingsPage;
@@ -18,7 +19,7 @@ class ManagePrompts extends SettingsPage
     {
         return $form
             ->schema([
-                Richeditor::make('intent_classification_prompt')
+                MarkdownEditor::make('intent_classification_prompt')
                     ->required()
                 ->columnSpanFull(),
             ]);
