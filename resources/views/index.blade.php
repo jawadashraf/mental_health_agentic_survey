@@ -124,8 +124,8 @@
                             </ul>
                         </div>
                     </div>
-                    <div class="banner-img tp_fade_left">
-                        <img src="{{ asset('assets/images/banner/home1/scope_chat_screen4.png') }}" alt="Image Not Found">
+                    <div class="banner-img tp_fade_left img-thumbnail">
+                        <img src="{{ asset('assets/images/banner/home1/Clip3Clarifies.gif') }}" alt="Image Not Found">
                     </div>
                 </div>
             </div>
@@ -279,70 +279,130 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-12">
-                        <div class="section-area text-center mb-50">
-                            <span class="section-subtitle tp_fade_left text-3xl">Why</span>
-                            <h2 class="section-title tp_title_slideup mb-0">SCOPE</h2>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-xl-3 col-lg-4 col-md-6 tp_fade_left" data-fade-from="left">
-                        <div class="choose-item mb-30">
-                            <span class="choose-item-count">01</span>
-                            <div class="choose-item-img">
-                                <img src="{{ asset('assets/images/choose/1.png') }}" alt="Image Not Found">
-                            </div>
-                            <div class="choose-item-content">
-                                <h5 class="choose-item-content-title"><a href="#">Adaptive Surveys</a></h5>
-                                <p>SCOPE uses AI to create dynamic, human-centred surveys that adapt to user responses.</p>
-{{--                                <a href="#" class="choose-item-content-btn">Learn More<i class="fa-light fa-angle-right"></i></a>--}}
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-xl-3 col-lg-4 col-md-6 tp_fade_left" data-fade-from="left" data-delay=".8">
-                        <div class="choose-item mb-30">
-                            <span class="choose-item-count">02</span>
-                            <div class="choose-item-img">
-                                <img src="{{ asset('assets/images/choose/2.png') }}" alt="Image Not Found">
-                            </div>
-                            <div class="choose-item-content">
-                                <h5 class="choose-item-content-title"><a href="#">Increased Engagement</a></h5>
-                                <p>Our AI-powered conversational agent boosts participation among young adults.</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-xl-3 col-lg-4 col-md-6 tp_fade_left" data-fade-from="left" data-delay="1.1">
-                        <div class="choose-item mb-30">
-                            <span class="choose-item-count">03</span>
-                            <div class="choose-item-img">
-                                <img src="{{ asset('assets/images/choose/3.png') }}" alt="Image Not Found">
-                            </div>
-                            <div class="choose-item-content">
-                                <h5 class="choose-item-content-title"><a href="#">Inclusive Data Collection</a></h5>
-                                <p>SCOPE ensures inclusivity by tracking underrepresented voices in real-time.</p>
-{{--                                <a href="#" class="choose-item-content-btn">Learn More<i class="fa-light fa-angle-right"></i></a>--}}
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-xl-3 col-lg-4 col-md-6 tp_fade_left" data-fade-from="left" data-delay="1.3">
-                        <div class="choose-item mb-30">
-                            <span class="choose-item-count">04</span>
-                            <div class="choose-item-img">
-                                <img src="{{ asset('assets/images/choose/4.png') }}" alt="Image Not Found">
-                            </div>
-                            <div class="choose-item-content">
-                                <h5 class="choose-item-content-title"><a href="#">Ethical AI Practices</a></h5>
-                                <p>The project informs future ethical AI practices in digital health.</p>
-                            </div>
-                        </div>
-                    </div>
                 </div>
             </div>
         </section>
         <!-- choose area end -->
 
+        <!-- Gifs area start -->
+        <section class="h2_about-area pt-140 pb-100">
+            <div class="container">
+                <div class="row align-items-center">
+                    <div class="col-xl-6 col-lg-6">
+                        <div class="h2_about-img mb-40">
+                            <img src="{{ asset('assets/images/banner/home1/ScopeClip1_Integrated.gif') }}"
+                                 alt="Image Not Found" class="tp_fade_right img-thumbnail">
+                        </div>
+                    </div>
+                    <div class="col-xl-6 col-lg-6">
+                        <div class="h2_about-content mb-40">
+                            <div class="inner_section-area mb-40">
+                                <span class="inner_section-subtitle tp_subtitle_anim">In-Chat Survey</span>
+                                <h2 class="inner_section-title tp_title_slideup inner_section-title tp_title_slideup-big mb-25">Integrated Questions</h2>
+                                <p class="inner_section-text tp_fade_bottom">Sed Mattis eros lectors, eu fermentum Felis laborites convallis. Nam Felis arco, sed <br> mi Faubus quips. Fusco id dui nil. Sed ac lorem a dolor incident suscept <br> Poetesqueo.</p>
+                                <p class="inner_section-text mt-10 tp_fade_bottom">Sed Mattis eros lectors, eu fermentum Felis laborites convallis. Nam Felis arco, sed <br>  mi Faubus quips. Fusco id dui nil.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="container">
+                <div class="row align-items-center">
+                    <div class="col-xl-6 col-lg-6">
+                        <div class="h2_about-content mb-40">
+                            <div class="inner_section-area mb-40">
+                                <span class="inner_section-subtitle tp_subtitle_anim">Helps</span>
+                                <h2 class="inner_section-title tp_title_slideup inner_section-title tp_title_slideup-big mb-25">Helps answering the questions</h2>
+                                <p class="inner_section-text tp_fade_bottom">Sed Mattis eros lectors, eu fermentum Felis laborites convallis. Nam Felis arco, sed <br> mi Faubus quips. Fusco id dui nil. Sed ac lorem a dolor incident suscept <br> Poetesqueo.</p>
+                                <p class="inner_section-text mt-10 tp_fade_bottom">Sed Mattis eros lectors, eu fermentum Felis laborites convallis. Nam Felis arco, sed <br>  mi Faubus quips. Fusco id dui nil.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-6 col-lg-6">
+                        <div class="h2_about-img mb-40">
+                            <img src="{{ asset('assets/images/banner/home1/SCOPEClip2HelpsAnswer.gif') }}" alt="Image Not Found" class="inner-img-1 tp_fade_right">
+                            {{--                            <img src="{{ asset('assets/images/about/home2/bg-2.png') }}" alt="Image Not Found" class="inner-img-2 tp_fade_bottom">--}}
+                            {{--                            <img src="{{ asset('assets/images/about/home2/shape.png') }}" alt="Image Not Found" class="inner-img-shape">--}}
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="container">
+                <div class="row align-items-center">
+                    <div class="col-xl-6 col-lg-6">
+                        <div class="h2_about-img mb-40">
+                            <img src="{{ asset('assets/images/banner/home1/Clip3Clarifies.gif') }}"
+                                 alt="Image Not Found" class="tp_fade_right img-thumbnail">
+                        </div>
+                    </div>
+                    <div class="col-xl-6 col-lg-6">
+                        <div class="h2_about-content mb-40">
+                            <div class="inner_section-area mb-40">
+                                <span class="inner_section-subtitle tp_subtitle_anim">Clarifies</span>
+                                <h2 class="inner_section-title tp_title_slideup inner_section-title tp_title_slideup-big mb-25">Helps understand questions</h2>
+                                <p class="inner_section-text tp_fade_bottom">Sed Mattis eros lectors, eu fermentum Felis laborites convallis. Nam Felis arco, sed <br> mi Faubus quips. Fusco id dui nil. Sed ac lorem a dolor incident suscept <br> Poetesqueo.</p>
+                                <p class="inner_section-text mt-10 tp_fade_bottom">Sed Mattis eros lectors, eu fermentum Felis laborites convallis. Nam Felis arco, sed <br>  mi Faubus quips. Fusco id dui nil.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="container">
+                <div class="row align-items-center">
+                    <div class="col-xl-6 col-lg-6">
+                        <div class="h2_about-content mb-40">
+                            <div class="inner_section-area mb-40">
+                                <span class="inner_section-subtitle tp_subtitle_anim">Encourages</span>
+                                <h2 class="inner_section-title tp_title_slideup inner_section-title tp_title_slideup-big mb-25">Encourages when participant loses motivation</h2>
+                                <p class="inner_section-text tp_fade_bottom">Sed Mattis eros lectors, eu fermentum Felis laborites convallis. Nam Felis arco, sed <br> mi Faubus quips. Fusco id dui nil. Sed ac lorem a dolor incident suscept <br> Poetesqueo.</p>
+                                <p class="inner_section-text mt-10 tp_fade_bottom">Sed Mattis eros lectors, eu fermentum Felis laborites convallis. Nam Felis arco, sed <br>  mi Faubus quips. Fusco id dui nil.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-6 col-lg-6">
+                        <div class="h2_about-img mb-40">
+                            <img src="{{ asset('assets/images/banner/home1/Clip4_Empathises.gif') }}" alt="Image Not Found" class="inner-img-1 tp_fade_right">
+                            {{--                            <img src="{{ asset('assets/images/about/home2/bg-2.png') }}" alt="Image Not Found" class="inner-img-2 tp_fade_bottom">--}}
+                            {{--                            <img src="{{ asset('assets/images/about/home2/shape.png') }}" alt="Image Not Found" class="inner-img-shape">--}}
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="container">
+                <div class="row align-items-center">
+                    <div class="col-xl-6 col-lg-6">
+                        <div class="h2_about-img mb-40">
+                            <img src="{{ asset('assets/images/banner/home1/Clip5_ContextAware.gif') }}"
+                                 alt="Image Not Found" class="tp_fade_right img-thumbnail">
+                        </div>
+                    </div>
+                    <div class="col-xl-6 col-lg-6">
+                        <div class="h2_about-content mb-40">
+                            <div class="inner_section-area mb-40">
+                                <span class="inner_section-subtitle tp_subtitle_anim">Informs</span>
+                                <h2 class="inner_section-title tp_title_slideup inner_section-title tp_title_slideup-big mb-25">Informs about the status</h2>
+                                <p class="inner_section-text tp_fade_bottom">Sed Mattis eros lectors, eu fermentum Felis laborites convallis. Nam Felis arco, sed <br> mi Faubus quips. Fusco id dui nil. Sed ac lorem a dolor incident suscept <br> Poetesqueo.</p>
+                                <p class="inner_section-text mt-10 tp_fade_bottom">Sed Mattis eros lectors, eu fermentum Felis laborites convallis. Nam Felis arco, sed <br>  mi Faubus quips. Fusco id dui nil.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </section>
+
+
+
+        <!-- Gifs area end -->
+
         <!-- feature area start -->
+
         <section class="feature-area pt-110 pb-110">
             <div class="container">
                 <div class="row justify-content-center">
