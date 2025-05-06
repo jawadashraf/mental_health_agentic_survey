@@ -284,122 +284,7 @@
         </section>
         <!-- choose area end -->
 
-        <!-- Gifs area start -->
-        <section class="h2_about-area pt-140 pb-100">
-            <div class="container">
-                <div class="row align-items-center">
-                    <div class="col-xl-6 col-lg-6">
-                        <div class="h2_about-img mb-40">
-                            <img src="{{ asset('assets/images/banner/home1/ScopeClip1_Integrated.gif') }}"
-                                 alt="Image Not Found" class="tp_fade_right img-thumbnail">
-                        </div>
-                    </div>
-                    <div class="col-xl-6 col-lg-6">
-                        <div class="h2_about-content mb-40">
-                            <div class="inner_section-area mb-40">
-                                <span class="inner_section-subtitle tp_subtitle_anim">In-Chat Survey</span>
-                                <h2 class="inner_section-title tp_title_slideup inner_section-title tp_title_slideup-big mb-25">Integrated Questions</h2>
-                                <p class="inner_section-text tp_fade_bottom">Sed Mattis eros lectors, eu fermentum Felis laborites convallis. Nam Felis arco, sed <br> mi Faubus quips. Fusco id dui nil. Sed ac lorem a dolor incident suscept <br> Poetesqueo.</p>
-                                <p class="inner_section-text mt-10 tp_fade_bottom">Sed Mattis eros lectors, eu fermentum Felis laborites convallis. Nam Felis arco, sed <br>  mi Faubus quips. Fusco id dui nil.</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
 
-            <div class="container">
-                <div class="row align-items-center">
-                    <div class="col-xl-6 col-lg-6">
-                        <div class="h2_about-content mb-40">
-                            <div class="inner_section-area mb-40">
-                                <span class="inner_section-subtitle tp_subtitle_anim">Helps</span>
-                                <h2 class="inner_section-title tp_title_slideup inner_section-title tp_title_slideup-big mb-25">Helps answering the questions</h2>
-                                <p class="inner_section-text tp_fade_bottom">Sed Mattis eros lectors, eu fermentum Felis laborites convallis. Nam Felis arco, sed <br> mi Faubus quips. Fusco id dui nil. Sed ac lorem a dolor incident suscept <br> Poetesqueo.</p>
-                                <p class="inner_section-text mt-10 tp_fade_bottom">Sed Mattis eros lectors, eu fermentum Felis laborites convallis. Nam Felis arco, sed <br>  mi Faubus quips. Fusco id dui nil.</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-xl-6 col-lg-6">
-                        <div class="h2_about-img mb-40">
-                            <img src="{{ asset('assets/images/banner/home1/SCOPEClip2HelpsAnswer.gif') }}" alt="Image Not Found" class="inner-img-1 tp_fade_right">
-                            {{--                            <img src="{{ asset('assets/images/about/home2/bg-2.png') }}" alt="Image Not Found" class="inner-img-2 tp_fade_bottom">--}}
-                            {{--                            <img src="{{ asset('assets/images/about/home2/shape.png') }}" alt="Image Not Found" class="inner-img-shape">--}}
-                        </div>
-                    </div>
-
-                </div>
-            </div>
-
-            <div class="container">
-                <div class="row align-items-center">
-                    <div class="col-xl-6 col-lg-6">
-                        <div class="h2_about-img mb-40">
-                            <img src="{{ asset('assets/images/banner/home1/Clip3Clarifies.gif') }}"
-                                 alt="Image Not Found" class="tp_fade_right img-thumbnail">
-                        </div>
-                    </div>
-                    <div class="col-xl-6 col-lg-6">
-                        <div class="h2_about-content mb-40">
-                            <div class="inner_section-area mb-40">
-                                <span class="inner_section-subtitle tp_subtitle_anim">Clarifies</span>
-                                <h2 class="inner_section-title tp_title_slideup inner_section-title tp_title_slideup-big mb-25">Helps understand questions</h2>
-                                <p class="inner_section-text tp_fade_bottom">Sed Mattis eros lectors, eu fermentum Felis laborites convallis. Nam Felis arco, sed <br> mi Faubus quips. Fusco id dui nil. Sed ac lorem a dolor incident suscept <br> Poetesqueo.</p>
-                                <p class="inner_section-text mt-10 tp_fade_bottom">Sed Mattis eros lectors, eu fermentum Felis laborites convallis. Nam Felis arco, sed <br>  mi Faubus quips. Fusco id dui nil.</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="container">
-                <div class="row align-items-center">
-                    <div class="col-xl-6 col-lg-6">
-                        <div class="h2_about-content mb-40">
-                            <div class="inner_section-area mb-40">
-                                <span class="inner_section-subtitle tp_subtitle_anim">Encourages</span>
-                                <h2 class="inner_section-title tp_title_slideup inner_section-title tp_title_slideup-big mb-25">Encourages when participant loses motivation</h2>
-                                <p class="inner_section-text tp_fade_bottom">Sed Mattis eros lectors, eu fermentum Felis laborites convallis. Nam Felis arco, sed <br> mi Faubus quips. Fusco id dui nil. Sed ac lorem a dolor incident suscept <br> Poetesqueo.</p>
-                                <p class="inner_section-text mt-10 tp_fade_bottom">Sed Mattis eros lectors, eu fermentum Felis laborites convallis. Nam Felis arco, sed <br>  mi Faubus quips. Fusco id dui nil.</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-xl-6 col-lg-6">
-                        <div class="h2_about-img mb-40">
-                            <img src="{{ asset('assets/images/banner/home1/Clip4_Empathises.gif') }}" alt="Image Not Found" class="inner-img-1 tp_fade_right">
-                            {{--                            <img src="{{ asset('assets/images/about/home2/bg-2.png') }}" alt="Image Not Found" class="inner-img-2 tp_fade_bottom">--}}
-                            {{--                            <img src="{{ asset('assets/images/about/home2/shape.png') }}" alt="Image Not Found" class="inner-img-shape">--}}
-                        </div>
-                    </div>
-
-                </div>
-            </div>
-
-            <div class="container">
-                <div class="row align-items-center">
-                    <div class="col-xl-6 col-lg-6">
-                        <div class="h2_about-img mb-40">
-                            <img src="{{ asset('assets/images/banner/home1/Clip5_ContextAware.gif') }}"
-                                 alt="Image Not Found" class="tp_fade_right img-thumbnail">
-                        </div>
-                    </div>
-                    <div class="col-xl-6 col-lg-6">
-                        <div class="h2_about-content mb-40">
-                            <div class="inner_section-area mb-40">
-                                <span class="inner_section-subtitle tp_subtitle_anim">Informs</span>
-                                <h2 class="inner_section-title tp_title_slideup inner_section-title tp_title_slideup-big mb-25">Informs about the status</h2>
-                                <p class="inner_section-text tp_fade_bottom">Sed Mattis eros lectors, eu fermentum Felis laborites convallis. Nam Felis arco, sed <br> mi Faubus quips. Fusco id dui nil. Sed ac lorem a dolor incident suscept <br> Poetesqueo.</p>
-                                <p class="inner_section-text mt-10 tp_fade_bottom">Sed Mattis eros lectors, eu fermentum Felis laborites convallis. Nam Felis arco, sed <br>  mi Faubus quips. Fusco id dui nil.</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-        </section>
-
-
-
-        <!-- Gifs area end -->
 
         <!-- feature area start -->
 
@@ -445,6 +330,120 @@
             </div>
         </section>
         <!-- feature area end -->
+
+        <!-- Gifs area start -->
+        <section class="h2_about-area pt-140 pb-100">
+            <div class="container">
+                <div class="row align-items-center">
+                    <div class="col-xl-8 col-lg-8">
+                        <div class="h2_about-img mb-40 pe-1">
+                            <img src="{{ asset('assets/images/banner/home1/ScopeClip1_Integrated.gif') }}"
+                                 alt="Image Not Found" class="tp_fade_right img-thumbnail">
+                        </div>
+                    </div>
+                    <div class="col-xl-4 col-lg-4">
+                        <div class="h2_about-content mb-40">
+                            <div class="inner_section-area mb-40">
+                                <span class="inner_section-subtitle tp_subtitle_anim">In-Chat Survey</span>
+                                <h2 class="inner_section-title tp_title_slideup inner_section-title tp_title_slideup-big mb-25">Integrated Questions</h2>
+                                <p class="inner_section-text tp_fade_bottom">Sed Mattis eros lectors, eu fermentum Felis laborites convallis. Nam Felis arco, sed <br> mi Faubus quips. Fusco id dui nil. Sed ac lorem a dolor incident suscept <br> Poetesqueo.</p>
+                                <p class="inner_section-text mt-10 tp_fade_bottom">Sed Mattis eros lectors, eu fermentum Felis laborites convallis. Nam Felis arco, sed <br>  mi Faubus quips. Fusco id dui nil.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="container">
+                <div class="row align-items-center">
+                    <div class="col-xl-4 col-lg-4">
+                        <div class="h2_about-content mb-40">
+                            <div class="inner_section-area mb-40">
+                                <span class="inner_section-subtitle tp_subtitle_anim">Helps</span>
+                                <h2 class="inner_section-title tp_title_slideup inner_section-title tp_title_slideup-big mb-25">Helps answering the questions</h2>
+                                <p class="inner_section-text tp_fade_bottom">Sed Mattis eros lectors, eu fermentum Felis laborites convallis. Nam Felis arco, sed <br> mi Faubus quips. Fusco id dui nil. Sed ac lorem a dolor incident suscept <br> Poetesqueo.</p>
+                                <p class="inner_section-text mt-10 tp_fade_bottom">Sed Mattis eros lectors, eu fermentum Felis laborites convallis. Nam Felis arco, sed <br>  mi Faubus quips. Fusco id dui nil.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-8 col-lg-8">
+                        <div class="h2_about-img mb-40 pe-1">
+                            <img src="{{ asset('assets/images/banner/home1/SCOPEClip2HelpsAnswer.gif') }}" alt="Image Not Found" class="inner-img-1 tp_fade_right">
+                            {{--                            <img src="{{ asset('assets/images/about/home2/bg-2.png') }}" alt="Image Not Found" class="inner-img-2 tp_fade_bottom">--}}
+                            {{--                            <img src="{{ asset('assets/images/about/home2/shape.png') }}" alt="Image Not Found" class="inner-img-shape">--}}
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="container">
+                <div class="row align-items-center">
+                    <div class="col-xl-8 col-lg-8">
+                        <div class="h2_about-img mb-40 pe-1">
+                            <img src="{{ asset('assets/images/banner/home1/Clip3Clarifies.gif') }}"
+                                 alt="Image Not Found" class="tp_fade_right img-thumbnail">
+                        </div>
+                    </div>
+                    <div class="col-xl-4 col-lg-4">
+                        <div class="h2_about-content mb-40">
+                            <div class="inner_section-area mb-40">
+                                <span class="inner_section-subtitle tp_subtitle_anim">Clarifies</span>
+                                <h2 class="inner_section-title tp_title_slideup inner_section-title tp_title_slideup-big mb-25">Helps understand questions</h2>
+                                <p class="inner_section-text tp_fade_bottom">Sed Mattis eros lectors, eu fermentum Felis laborites convallis. Nam Felis arco, sed <br> mi Faubus quips. Fusco id dui nil. Sed ac lorem a dolor incident suscept <br> Poetesqueo.</p>
+                                <p class="inner_section-text mt-10 tp_fade_bottom">Sed Mattis eros lectors, eu fermentum Felis laborites convallis. Nam Felis arco, sed <br>  mi Faubus quips. Fusco id dui nil.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="container">
+                <div class="row align-items-center">
+                    <div class="col-xl-4 col-lg-4">
+                        <div class="h2_about-content mb-40">
+                            <div class="inner_section-area mb-40">
+                                <span class="inner_section-subtitle tp_subtitle_anim">Encourages</span>
+                                <h2 class="inner_section-title tp_title_slideup inner_section-title tp_title_slideup-big mb-25">Encourages when participant loses motivation</h2>
+                                <p class="inner_section-text tp_fade_bottom">Sed Mattis eros lectors, eu fermentum Felis laborites convallis. Nam Felis arco, sed <br> mi Faubus quips. Fusco id dui nil. Sed ac lorem a dolor incident suscept <br> Poetesqueo.</p>
+                                <p class="inner_section-text mt-10 tp_fade_bottom">Sed Mattis eros lectors, eu fermentum Felis laborites convallis. Nam Felis arco, sed <br>  mi Faubus quips. Fusco id dui nil.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-8 col-lg-8">
+                        <div class="h2_about-img mb-40 pe-1">
+                            <img src="{{ asset('assets/images/banner/home1/Clip4_Empathises.gif') }}" alt="Image Not Found" class="inner-img-1 tp_fade_right">
+                            {{--                            <img src="{{ asset('assets/images/about/home2/bg-2.png') }}" alt="Image Not Found" class="inner-img-2 tp_fade_bottom">--}}
+                            {{--                            <img src="{{ asset('assets/images/about/home2/shape.png') }}" alt="Image Not Found" class="inner-img-shape">--}}
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="container">
+                <div class="row align-items-center">
+                    <div class="col-xl-8 col-lg-8">
+                        <div class="h2_about-img mb-40 pe-1">
+                            <img src="{{ asset('assets/images/banner/home1/Clip5_ContextAware.gif') }}"
+                                 alt="Image Not Found" class="tp_fade_right img-thumbnail">
+                        </div>
+                    </div>
+                    <div class="col-xl-4 col-lg-4">
+                        <div class="h2_about-content mb-40">
+                            <div class="inner_section-area mb-40">
+                                <span class="inner_section-subtitle tp_subtitle_anim">Informs</span>
+                                <h2 class="inner_section-title tp_title_slideup inner_section-title tp_title_slideup-big mb-25">Informs about the status</h2>
+                                <p class="inner_section-text tp_fade_bottom">Sed Mattis eros lectors, eu fermentum Felis laborites convallis. Nam Felis arco, sed <br> mi Faubus quips. Fusco id dui nil. Sed ac lorem a dolor incident suscept <br> Poetesqueo.</p>
+                                <p class="inner_section-text mt-10 tp_fade_bottom">Sed Mattis eros lectors, eu fermentum Felis laborites convallis. Nam Felis arco, sed <br>  mi Faubus quips. Fusco id dui nil.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </section>
+        <!-- Gifs area end -->
 
         <!-- apps area start -->
         <section class="apps-area pt-140 pb-140">
