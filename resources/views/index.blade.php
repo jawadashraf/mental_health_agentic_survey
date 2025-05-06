@@ -1,4 +1,10 @@
 @extends('layouts.layout1')
+<style>
+    .border-pink {
+        border-width: 8px !important;
+        border-color: #FFC1DD !important; /* optional: custom color */
+    }
+</style>
 
 @section('header')
     <header class="header-area">
@@ -315,15 +321,16 @@
                 <div class="row align-items-end">
                     <div class="col-xl-8 col-lg-8 col-md-8 col-sm-8">
                         <div class="feature-left-img mb-30 tp_fade_right">
-                            <img src="{{ asset('assets/images/feature/bg.png') }}" alt="Image Not Found">
+                            <img src="{{ asset('assets/images/banner/home1/ScopeClip1_Integrated.gif') }}" alt="Image Not Found"
+                                 class="img-thumbnail border-pink">
                         </div>
                     </div>
                     <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4">
                         <div class="feature-right-img mb-30">
                             <img src="{{ asset('assets/images/feature/bg-1.png') }}" alt="Image Not Found" class="f-main-img tp_fade_left">
-                            <img src="{{ asset('assets/images/feature/shape-1.png') }}" alt="Image Not Found" class="feature-shape-1" data-speed="0.7">
-                            <img src="{{ asset('assets/images/feature/shape-2.png') }}" alt="Image Not Found" class="feature-shape-2" data-speed="0.8">
-                            <img src="{{ asset('assets/images/feature/shape-3.png') }}" alt="Image Not Found" class="feature-shape-3" data-speed="0.7">
+{{--                            <img src="{{ asset('assets/images/feature/shape-1.png') }}" alt="Image Not Found" class="feature-shape-1" data-speed="0.7">--}}
+{{--                            <img src="{{ asset('assets/images/feature/shape-2.png') }}" alt="Image Not Found" class="feature-shape-2" data-speed="0.8">--}}
+{{--                            <img src="{{ asset('assets/images/feature/shape-3.png') }}" alt="Image Not Found" class="feature-shape-3" data-speed="0.7">--}}
                         </div>
                     </div>
                 </div>
