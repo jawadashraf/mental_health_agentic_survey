@@ -340,6 +340,14 @@
 
         <!-- Gifs area start -->
         <section class="h2_about-area pt-140 pb-100">
+            <div class="row justify-content-center">
+                <div class="col-12">
+                    <div class="section-area text-center mb-50">
+                        <span class="section-subtitle tp_fade_left">How It Works</span>
+                    </div>
+                </div>
+            </div>
+
             <div class="container">
                 <div class="row align-items-center">
                     <div class="col-xl-8 col-lg-8">
@@ -452,58 +460,6 @@
         </section>
         <!-- Gifs area end -->
 
-        <!-- apps area start -->
-        <section class="apps-area pt-140 pb-140">
-            <div class="container">
-                <div class="apps-icon tp_fade_bottom">
-                    <div class="apps-icon-item">
-                        <img src="{{ asset('assets/images/apps/1.png') }}" alt="Image Not Found">
-                    </div>
-                    <div class="apps-icon-item">
-                        <img src="{{ asset('assets/images/apps/2.png') }}" alt="Image Not Found">
-                    </div>
-                    <div class="apps-icon-item">
-                        <img src="{{ asset('assets/images/apps/3.png') }}" alt="Image Not Found">
-                    </div>
-                    <div class="apps-icon-item">
-                        <img src="{{ asset('assets/images/apps/4.png') }}" alt="Image Not Found">
-                    </div>
-                    <div class="apps-icon-item">
-                        <img src="{{ asset('assets/images/apps/5.png') }}" alt="Image Not Found">
-                    </div>
-                    <div class="apps-icon-item">
-                        <img src="{{ asset('assets/images/apps/6.png') }}" alt="Image Not Found">
-                    </div>
-                    <div class="apps-icon-item">
-                        <img src="{{ asset('assets/images/apps/7.png') }}" alt="Image Not Found">
-                    </div>
-                    <div class="apps-icon-item">
-                        <img src="{{ asset('assets/images/apps/8.png') }}" alt="Image Not Found">
-                    </div>
-                </div>
-                <div class="row justify-content-center">
-                    <div class="col-xxl-6 col-xl-7 col-lg-8 col-md-9">
-                        <div class="apps-content">
-                            <h2 class="tp_title_slideup">Easily Bring AI in Your
-                                Workflow to Create Content</h2>
-                            <p class="tp_fade_bottom">There are many variations of passages of Lorem Ipsum available <br> but the majority have suffered alteration in some form, by more and <br> more injected humour.</p>
-                            <a href="#" class="theme-btn tp_fade_bottom">Integrate With Your App</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="apps-shape d-none d-md-block">
-                <img src="{{ asset('assets/images/apps/shape-1.png') }}" alt="Image Not Found" class="apps-shape-1" data-speed="0.6">
-                <img src="{{ asset('assets/images/apps/shape-2.png') }}" alt="Image Not Found" class="apps-shape-2" data-speed="0.8">
-                <img src="{{ asset('assets/images/apps/shape-3.png') }}" alt="Image Not Found" class="apps-shape-3">
-                <img src="{{ asset('assets/images/apps/shape-4.png') }}" alt="Image Not Found" class="apps-shape-4" data-speed="0.7">
-                <img src="{{ asset('assets/images/apps/shape-5.png') }}" alt="Image Not Found" class="apps-shape-5" data-speed="0.7">
-                <img src="{{ asset('assets/images/apps/shape-6.png') }}" alt="Image Not Found" class="apps-shape-6" data-speed="0.8">
-            </div>
-        </section>
-        <!-- apps area end -->
-
-
         <!-- blog area start -->
         <section class="blog-area pt-140 pb-110">
             <div class="container">
@@ -571,6 +527,130 @@
             </div>
         </section>
         <!-- blog area end -->
+
+        <!-- About Us start -->
+{{--        <section class="blog-area pt-140 pb-110">--}}
+{{--            <div class="container">--}}
+{{--                <div class="row justify-content-center">--}}
+{{--                    <div class="col-12">--}}
+{{--                        <div class="section-area text-center mb-50">--}}
+{{--                            <span class="section-subtitle tp_fade_left">ABOUT</span>--}}
+{{--                            <h2 class="section-title tp_title_slideup mb-0">Our Team</h2>--}}
+{{--                        </div>--}}
+{{--                    </div>--}}
+{{--                </div>--}}
+{{--            </div>--}}
+{{--        </section>--}}
+        <!-- About Us end -->
+
+        <!-- team area start -->
+        <section class="inner_team-area pb-110">
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-12">
+                        <div class="section-area text-center mb-50">
+                            <span class="section-subtitle tp_fade_left">ABOUT</span>
+                            <h2 class="section-title tp_title_slideup mb-0">Our Team</h2>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="container mt-5">
+                <div class="row">
+                    <div class="col-xl-5 col-lg-5">
+                        <div class="inner_team-img mb-30 mb-lg-0">
+                            <img src="{{ asset('assets/images/team/1.png') }}" alt="" class="tp_fade_right">
+                            <img src="{{ asset('assets/images/team/shape.png') }}" alt="" class="inner_team-img-shape tp_fade_bottom">
+                        </div>
+                    </div>
+                    <div class="col-xl-7 col-lg-7">
+                        <div class="inner_team-content mb-lg-0 mb-140">
+                            <h2 class="inner_team-content-title tp_has_text_reveal_anim">Project Lead. <br> Dr Swati Virmani</h2>
+                            {{--                        <h6 class="inner_team-content-subtitle tp_has_text_reveal_anim">I’m David Ferry – AI of SalePush, A leading professional Designer company in NewYork</h6>--}}
+                            <p class="tp_fade_bottom">
+                                is the Deputy Head – Academic at De Montfort University’s London Campus. She is a passionate
+                                educator and researcher in Human-Centred AI, Governance, and Digital Transformation,
+                                committed to pedagogical innovation and industry-aligned teaching. An Associate of the UK’s
+                                Economics Network, she was conferred the title of University Teacher Fellow in 2023. Swati
+                                specialises in the strategy and operations of Responsible AI, with a focus on ensuring
+                                equitable distribution of benefits of technology. She has advised policy-makers and industry
+                                bodies on the ethical use of AI in public and professional settings. As a member of the UK’s
+                                Chartered Institute of Public Relations’ AI in PR panel, she has contributed to three major
+                                reports assessing the industry’s readiness for an AI-driven future. She speaks nationally
+                                and internationally, including at the UK AI Summit, Global Alliance Public Relations (Africa
+                                & Europe), and the Institute for Public Relations (New York), on the future of AI in
+                                education, communication, and training and upskilling.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="container mt-5">
+                <div class="row">
+                    <div class="col-xl-5 col-lg-5">
+                        <div class="inner_team-img mb-30 mb-lg-0">
+                            <img src="{{ asset('assets/images/team/1.png') }}" alt="" class="tp_fade_right">
+                            <img src="{{ asset('assets/images/team/shape.png') }}" alt="" class="inner_team-img-shape tp_fade_bottom">
+                        </div>
+                    </div>
+                    <div class="col-xl-7 col-lg-7">
+                        <div class="inner_team-content mb-lg-0 mb-140">
+                            <h2 class="inner_team-content-title tp_has_text_reveal_anim">Project Lead. <br> Dr Swati Virmani</h2>
+                            {{--                        <h6 class="inner_team-content-subtitle tp_has_text_reveal_anim">I’m David Ferry – AI of SalePush, A leading professional Designer company in NewYork</h6>--}}
+                            <p class="tp_fade_bottom">
+                                is the Deputy Head – Academic at De Montfort University’s London Campus. She is a passionate
+                                educator and researcher in Human-Centred AI, Governance, and Digital Transformation,
+                                committed to pedagogical innovation and industry-aligned teaching. An Associate of the UK’s
+                                Economics Network, she was conferred the title of University Teacher Fellow in 2023. Swati
+                                specialises in the strategy and operations of Responsible AI, with a focus on ensuring
+                                equitable distribution of benefits of technology. She has advised policy-makers and industry
+                                bodies on the ethical use of AI in public and professional settings. As a member of the UK’s
+                                Chartered Institute of Public Relations’ AI in PR panel, she has contributed to three major
+                                reports assessing the industry’s readiness for an AI-driven future. She speaks nationally
+                                and internationally, including at the UK AI Summit, Global Alliance Public Relations (Africa
+                                & Europe), and the Institute for Public Relations (New York), on the future of AI in
+                                education, communication, and training and upskilling.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="container mt-5">
+                <div class="row">
+                    <div class="col-xl-5 col-lg-5">
+                        <div class="inner_team-img mb-30 mb-lg-0">
+                            <img src="{{ asset('assets/images/team/1.png') }}" alt="" class="tp_fade_right">
+                            <img src="{{ asset('assets/images/team/shape.png') }}" alt="" class="inner_team-img-shape tp_fade_bottom">
+                        </div>
+                    </div>
+                    <div class="col-xl-7 col-lg-7">
+                        <div class="inner_team-content mb-lg-0 mb-140">
+                            <h2 class="inner_team-content-title tp_has_text_reveal_anim">Project Lead. <br> Dr Swati Virmani</h2>
+                            {{--                        <h6 class="inner_team-content-subtitle tp_has_text_reveal_anim">I’m David Ferry – AI of SalePush, A leading professional Designer company in NewYork</h6>--}}
+                            <p class="tp_fade_bottom">
+                                is the Deputy Head – Academic at De Montfort University’s London Campus. She is a passionate
+                                educator and researcher in Human-Centred AI, Governance, and Digital Transformation,
+                                committed to pedagogical innovation and industry-aligned teaching. An Associate of the UK’s
+                                Economics Network, she was conferred the title of University Teacher Fellow in 2023. Swati
+                                specialises in the strategy and operations of Responsible AI, with a focus on ensuring
+                                equitable distribution of benefits of technology. She has advised policy-makers and industry
+                                bodies on the ethical use of AI in public and professional settings. As a member of the UK’s
+                                Chartered Institute of Public Relations’ AI in PR panel, she has contributed to three major
+                                reports assessing the industry’s readiness for an AI-driven future. She speaks nationally
+                                and internationally, including at the UK AI Summit, Global Alliance Public Relations (Africa
+                                & Europe), and the Institute for Public Relations (New York), on the future of AI in
+                                education, communication, and training and upskilling.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </section>
+        <!-- team area end -->
     </main>
 @endsection
 
