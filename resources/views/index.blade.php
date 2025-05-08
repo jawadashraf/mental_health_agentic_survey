@@ -34,7 +34,7 @@
                 <div class="row align-items-center">
                     <div class="col-xl-2 col-lg-2 col-6">
                         <div class="header-logo">
-                            <a href="{{ url('index') }}"><img src="{{ asset('assets/images/logo/logo.png') }}" alt="Image Not Found"></a>
+                            <a href="{{ url('index') }}"><img src="{{ asset('assets/images/logo/scope-purple-black-horizontal.svg') }}" alt="Image Not Found"></a>
                         </div>
                     </div>
                     <div class="col-xl-7 col-lg-7 text-center d-none d-lg-block">
@@ -566,21 +566,26 @@
                     </div>
                     <div class="col-xl-7 col-lg-7">
                         <div class="inner_team-content mb-lg-0 mb-140">
-                            <h2 class="inner_team-content-title tp_has_text_reveal_anim">Project Lead. <br> Dr Swati Virmani</h2>
+                            <h2 class="inner_team-content-title tp_has_text_reveal_anim">Project Lead <br> Dr Swati Virmani</h2>
                             {{--                        <h6 class="inner_team-content-subtitle tp_has_text_reveal_anim">I’m David Ferry – AI of SalePush, A leading professional Designer company in NewYork</h6>--}}
                             <p class="tp_fade_bottom">
-                                is the Deputy Head – Academic at De Montfort University’s London Campus. She is a passionate
-                                educator and researcher in Human-Centred AI, Governance, and Digital Transformation,
-                                committed to pedagogical innovation and industry-aligned teaching. An Associate of the UK’s
-                                Economics Network, she was conferred the title of University Teacher Fellow in 2023. Swati
-                                specialises in the strategy and operations of Responsible AI, with a focus on ensuring
-                                equitable distribution of benefits of technology. She has advised policy-makers and industry
-                                bodies on the ethical use of AI in public and professional settings. As a member of the UK’s
-                                Chartered Institute of Public Relations’ AI in PR panel, she has contributed to three major
-                                reports assessing the industry’s readiness for an AI-driven future. She speaks nationally
-                                and internationally, including at the UK AI Summit, Global Alliance Public Relations (Africa
-                                & Europe), and the Institute for Public Relations (New York), on the future of AI in
-                                education, communication, and training and upskilling.
+                                is the Deputy Head – Academic at De Montfort University (DMU) London Campus. She is a
+                                passionate educator and researcher in Human-Centred AI, Governance, and Digital
+                                Transformation, committed to pedagogical innovation and industry-aligned teaching. She
+                                is particularly interested in how Generative AI is reshaping assessment, learning
+                                design, and institutional responsibility within the UK Higher Education. An Associate of
+                                the UK’s Economics Network, she was conferred the title of DMU University Teacher Fellow
+                                in 2023.
+                                <br><br>
+                                Swati has led projects on AI-integrated curriculum development, culturally sensitive AI
+                                systems, Responsible AI strategy, with a focus on promoting equity, unbiased design,
+                                transparency and community engagement. She has advised policy-makers and industry bodies
+                                on the ethical use of AI in public and professional settings. As a member of the UK’s
+                                Chartered Institute of Public Relations’ AI in PR panel, she has contributed to three
+                                major reports assessing the industry’s readiness for an AI-driven future. She speaks
+                                nationally and internationally, including at the UK AI Summit, Global Alliance Public
+                                Relations (Africa & Europe), and the Institute for Public Relations (New York), on the
+                                future of AI in education, communication and engagement, and social good.
                             </p>
                         </div>
                     </div>
