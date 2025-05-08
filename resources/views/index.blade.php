@@ -307,15 +307,15 @@
                 <div class="feature-top mb-50 tp_fade_bottom">
                     <div class="feature-item feature-item-1">
                         <h5 class="feature-item-title">Welcome screen</h5>
-                        <p>Lorem Ipsum is simply dummy text’s of the one most printing and typesetting is an one of the best.</p>
+                        <p>A warm, clear introduction that sets the tone and purpose of the conversation from the first click.</p>
                     </div>
                     <div class="feature-item feature-item-2">
                         <h5 class="feature-item-title">One-click management</h5>
-                        <p>Lorem Ipsum is simply dummy text’s of the one most printing and typesetting is an one of the best.</p>
+                        <p>Easily control the survey experience with simple actions such as skip, repeat, or ask again – no need to type.</p>
                     </div>
                     <div class="feature-item feature-item-3">
                         <h5 class="feature-item-title">Custom greetings</h5>
-                        <p>Lorem Ipsum is simply dummy text’s of the one most printing and typesetting is an one of the best.</p>
+                        <p>A personalised, friendly message that adapts to context and makes every participant feel welcome.</p>
                     </div>
                 </div>
                 <div class="row align-items-end">
@@ -361,8 +361,10 @@
                             <div class="inner_section-area mb-40">
                                 <span class="inner_section-subtitle tp_subtitle_anim">In-Chat Survey</span>
                                 <h2 class="inner_section-title tp_title_slideup inner_section-title tp_title_slideup-big mb-25">Integrated Questions</h2>
-                                <p class="inner_section-text tp_fade_bottom">Sed Mattis eros lectors, eu fermentum Felis laborites convallis. Nam Felis arco, sed <br> mi Faubus quips. Fusco id dui nil. Sed ac lorem a dolor incident suscept <br> Poetesqueo.</p>
-                                <p class="inner_section-text mt-10 tp_fade_bottom">Sed Mattis eros lectors, eu fermentum Felis laborites convallis. Nam Felis arco, sed <br>  mi Faubus quips. Fusco id dui nil.</p>
+                                <p class="inner_section-text tp_fade_bottom">
+                                    The AI agent seamlessly embeds each survey question into a natural conversational
+                                    flow, so it never feels like a form being filled out, but rather a guided dialogue.
+                                    There are no page breaks or rigid transitions, just smooth, adaptive pacing.</p>
                             </div>
                         </div>
                     </div>
@@ -376,8 +378,11 @@
                             <div class="inner_section-area mb-40">
                                 <span class="inner_section-subtitle tp_subtitle_anim">Helps</span>
                                 <h2 class="inner_section-title tp_title_slideup inner_section-title tp_title_slideup-big mb-25">Helps answering the questions</h2>
-                                <p class="inner_section-text tp_fade_bottom">Sed Mattis eros lectors, eu fermentum Felis laborites convallis. Nam Felis arco, sed <br> mi Faubus quips. Fusco id dui nil. Sed ac lorem a dolor incident suscept <br> Poetesqueo.</p>
-                                <p class="inner_section-text mt-10 tp_fade_bottom">Sed Mattis eros lectors, eu fermentum Felis laborites convallis. Nam Felis arco, sed <br>  mi Faubus quips. Fusco id dui nil.</p>
+                                <p class="inner_section-text tp_fade_bottom">
+                                    When a participant hesitates and asks for helps answering, the agent can offer
+                                    gentle hints or simple examples, just enough support to help them reflect and
+                                    respond. It does not lead or judge, it simply clarifies.
+                                </p>
                             </div>
                         </div>
                     </div>
@@ -404,9 +409,13 @@
                         <div class="h2_about-content mb-40">
                             <div class="inner_section-area mb-40">
                                 <span class="inner_section-subtitle tp_subtitle_anim">Clarifies</span>
-                                <h2 class="inner_section-title tp_title_slideup inner_section-title tp_title_slideup-big mb-25">Helps understand questions</h2>
-                                <p class="inner_section-text tp_fade_bottom">Sed Mattis eros lectors, eu fermentum Felis laborites convallis. Nam Felis arco, sed <br> mi Faubus quips. Fusco id dui nil. Sed ac lorem a dolor incident suscept <br> Poetesqueo.</p>
-                                <p class="inner_section-text mt-10 tp_fade_bottom">Sed Mattis eros lectors, eu fermentum Felis laborites convallis. Nam Felis arco, sed <br>  mi Faubus quips. Fusco id dui nil.</p>
+                                <h2 class="inner_section-title tp_title_slideup inner_section-title tp_title_slideup-big mb-25">
+                                    Helps understand questions</h2>
+                                <p class="inner_section-text tp_fade_bottom">
+                                    If a user seems confused or asks for clarification, the agent offers plain-language
+                                    explanations or rephrasing. This helps reduce cognitive load and ensures questions
+                                    are accessible to participants with different levels of mental health literacy.
+                                </p>
                             </div>
                         </div>
                     </div>
@@ -420,8 +429,11 @@
                             <div class="inner_section-area mb-40">
                                 <span class="inner_section-subtitle tp_subtitle_anim">Encourages</span>
                                 <h2 class="inner_section-title tp_title_slideup inner_section-title tp_title_slideup-big mb-25">Encourages when participant loses motivation</h2>
-                                <p class="inner_section-text tp_fade_bottom">Sed Mattis eros lectors, eu fermentum Felis laborites convallis. Nam Felis arco, sed <br> mi Faubus quips. Fusco id dui nil. Sed ac lorem a dolor incident suscept <br> Poetesqueo.</p>
-                                <p class="inner_section-text mt-10 tp_fade_bottom">Sed Mattis eros lectors, eu fermentum Felis laborites convallis. Nam Felis arco, sed <br>  mi Faubus quips. Fusco id dui nil.</p>
+                                <p class="inner_section-text tp_fade_bottom">
+                                    If the participant slows down or appears
+                                    disengaged, the agent offers gentle encouragement. This might include short
+                                    affirmations, reminders of the value of their input or suggests to take a break and
+                                    return to the survey when the participant feels ready.</p>
                             </div>
                         </div>
                     </div>
@@ -448,9 +460,13 @@
                         <div class="h2_about-content mb-40">
                             <div class="inner_section-area mb-40">
                                 <span class="inner_section-subtitle tp_subtitle_anim">Informs</span>
-                                <h2 class="inner_section-title tp_title_slideup inner_section-title tp_title_slideup-big mb-25">Informs about the status</h2>
-                                <p class="inner_section-text tp_fade_bottom">Sed Mattis eros lectors, eu fermentum Felis laborites convallis. Nam Felis arco, sed <br> mi Faubus quips. Fusco id dui nil. Sed ac lorem a dolor incident suscept <br> Poetesqueo.</p>
-                                <p class="inner_section-text mt-10 tp_fade_bottom">Sed Mattis eros lectors, eu fermentum Felis laborites convallis. Nam Felis arco, sed <br>  mi Faubus quips. Fusco id dui nil.</p>
+                                <h2 class="inner_section-title tp_title_slideup inner_section-title tp_title_slideup-big mb-25">Informs
+                                    <br> about the status</h2>
+                                <p class="inner_section-text tp_fade_bottom">
+                                    When asked, the agent lets users know how far they have come and how much is
+                                    left without rushing them. It helps manage expectations and reduce fatigue by
+                                    keeping users aware of their progress in a supportive tone.
+                                </p>
                             </div>
                         </div>
                     </div>
