@@ -591,27 +591,23 @@
                 <div class="row">
                     <div class="col-xl-5 col-lg-5">
                         <div class="inner_team-img mb-30 mb-lg-0">
-                            <img src="{{ asset('assets/images/team/1.png') }}" alt="" class="tp_fade_right">
+                            <img src="{{ asset('assets/images/team/JawadPic396x524.jpeg') }}" alt="" class="tp_fade_right">
                             <img src="{{ asset('assets/images/team/shape.png') }}" alt="" class="inner_team-img-shape tp_fade_bottom">
                         </div>
                     </div>
                     <div class="col-xl-7 col-lg-7">
                         <div class="inner_team-content mb-lg-0 mb-140">
-                            <h2 class="inner_team-content-title tp_has_text_reveal_anim">Project Lead. <br> Dr Swati Virmani</h2>
+                            <h2 class="inner_team-content-title tp_has_text_reveal_anim">Dr Jawad Ashraf</h2>
                             {{--                        <h6 class="inner_team-content-subtitle tp_has_text_reveal_anim">I’m David Ferry – AI of SalePush, A leading professional Designer company in NewYork</h6>--}}
                             <p class="tp_fade_bottom">
-                                is the Deputy Head – Academic at De Montfort University’s London Campus. She is a passionate
-                                educator and researcher in Human-Centred AI, Governance, and Digital Transformation,
-                                committed to pedagogical innovation and industry-aligned teaching. An Associate of the UK’s
-                                Economics Network, she was conferred the title of University Teacher Fellow in 2023. Swati
-                                specialises in the strategy and operations of Responsible AI, with a focus on ensuring
-                                equitable distribution of benefits of technology. She has advised policy-makers and industry
-                                bodies on the ethical use of AI in public and professional settings. As a member of the UK’s
-                                Chartered Institute of Public Relations’ AI in PR panel, she has contributed to three major
-                                reports assessing the industry’s readiness for an AI-driven future. She speaks nationally
-                                and internationally, including at the UK AI Summit, Global Alliance Public Relations (Africa
-                                & Europe), and the Institute for Public Relations (New York), on the future of AI in
-                                education, communication, and training and upskilling.
+                                is a Senior Lecturer in Computing at De Montfort University, with a PhD in Computer
+                                Science from the University of Leicester. His research intersects machine learning,
+                                natural language processing, and intelligent systems, with a growing focus on generative
+                                AI for addressing multidisciplinary community challenges. Previously, he served as
+                                Assistant Professor at Kohat University of Science and Technology, where he led
+                                academic-industry linkages, startup incubation, and the commercialization of applied
+                                research. Dr Ashraf has supervised numerous PhD and MS projects, and continues to work
+                                at the intersection of education, technology, and social impact.
                             </p>
                         </div>
                     </div>
@@ -628,21 +624,10 @@
                     </div>
                     <div class="col-xl-7 col-lg-7">
                         <div class="inner_team-content mb-lg-0 mb-140">
-                            <h2 class="inner_team-content-title tp_has_text_reveal_anim">Project Lead. <br> Dr Swati Virmani</h2>
+                            <h2 class="inner_team-content-title tp_has_text_reveal_anim">Dr Agnes</h2>
                             {{--                        <h6 class="inner_team-content-subtitle tp_has_text_reveal_anim">I’m David Ferry – AI of SalePush, A leading professional Designer company in NewYork</h6>--}}
                             <p class="tp_fade_bottom">
-                                is the Deputy Head – Academic at De Montfort University’s London Campus. She is a passionate
-                                educator and researcher in Human-Centred AI, Governance, and Digital Transformation,
-                                committed to pedagogical innovation and industry-aligned teaching. An Associate of the UK’s
-                                Economics Network, she was conferred the title of University Teacher Fellow in 2023. Swati
-                                specialises in the strategy and operations of Responsible AI, with a focus on ensuring
-                                equitable distribution of benefits of technology. She has advised policy-makers and industry
-                                bodies on the ethical use of AI in public and professional settings. As a member of the UK’s
-                                Chartered Institute of Public Relations’ AI in PR panel, she has contributed to three major
-                                reports assessing the industry’s readiness for an AI-driven future. She speaks nationally
-                                and internationally, including at the UK AI Summit, Global Alliance Public Relations (Africa
-                                & Europe), and the Institute for Public Relations (New York), on the future of AI in
-                                education, communication, and training and upskilling.
+                                Content Goes Here
                             </p>
                         </div>
                     </div>
