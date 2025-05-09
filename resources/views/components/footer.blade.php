@@ -5,7 +5,7 @@
                                 <div class="col-xl-3 col-lg-3 col-md-5 col-sm-7 tp_has_fade_anim" data-fade-from="left">
                                     <div class="h5_footer-widget mb-40">
                                         <div class="h5_footer-logo">
-                                            <a href="{{ url('index') }}"><img src="{{ asset('assets/images/logo/logo.png') }}" alt=""></a>
+                                            <a href="{{ url('index') }}"><img src="{{ asset('assets/images/logo/scope-purple-black-horizontal.svg') }}" alt=""></a>
                                         </div>
                                         <p class="h5_footer-widget-text">Responsible AI. Smarter Surveys. Stronger Voices..</p>
                                         <div class="h5_footer-widget-social">
