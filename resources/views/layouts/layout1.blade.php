@@ -43,7 +43,7 @@
             s1.async=true;
             s1.src='https://embed.tawk.to/681e09eac66711190f8d750a/1iqqlderj';
             s1.charset='UTF-8';
-            s1.setAttribute('crossorigin','*');
+            s1.setAttribute('crossorigin','anonymous');
             s0.parentNode.insertBefore(s1,s0);
         })();
     </script>
