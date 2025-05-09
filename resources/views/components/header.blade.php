@@ -44,7 +44,7 @@
 {{--                            <div class="row align-items-center justify-content-between">--}}
 {{--                                <div class="col-xl-2 col-lg-2 col-4">--}}
 {{--                                    <div class="h5_header-logo">--}}
-{{--                                        <a href="{{ url('index') }}"><img src="{{ asset('assets/images/logo/logo.png') }}" alt="Image Not Found"></a>--}}
+{{--                                        <a href="{{ url('index') }}"><img src="{{ asset('assets/images/logo/scope-purple-black-horizontal.svg') }}" alt="Image Not Found"></a>--}}
 {{--                                    </div>--}}
 {{--                                </div>--}}
 {{--                                <div class="col-xl-7 col-lg-6 d-none d-lg-block text-center">--}}

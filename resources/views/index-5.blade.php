@@ -65,7 +65,7 @@
                     <div class="row align-items-center justify-content-between">
                         <div class="col-xl-2 col-lg-2 col-4">
                             <div class="h5_header-logo">
-                                <a href="{{ url('index') }}"><img src="{{ asset('assets/images/logo/logo.png') }}" alt="Image Not Found"></a>
+                                <a href="{{ url('index') }}"><img src="{{ asset('assets/images/logo/scope-purple-black-horizontal.svg') }}" alt="Image Not Found"></a>
                             </div>
                         </div>
                         <div class="col-xl-7 col-lg-6 d-none d-lg-block text-center">
@@ -1062,7 +1062,7 @@
                     <div class="col-xl-3 col-lg-3 col-md-5 col-sm-7 tp_has_fade_anim" data-fade-from="left">
                         <div class="h5_footer-widget mb-40">
                             <div class="h5_footer-logo">
-                                <a href="{{ url('index') }}"><img src="{{ asset('assets/images/logo/logo.png') }}" alt=""></a>
+                                <a href="{{ url('index') }}"><img src="{{ asset('assets/images/logo/scope-purple-black-horizontal.svg') }}" alt=""></a>
                             </div>
                             <p class="h5_footer-widget-text">Lorem Ipsum has been the industry's standard dummy text ever since.</p>
                             <div class="h5_footer-widget-social">

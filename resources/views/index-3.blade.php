@@ -7,7 +7,7 @@
 
                 <div class="col-xl-2 col-lg-2 col-6">
                     <div class="h3_header-logo">
-                        <a href="{{ url('index') }}"><img src="{{ asset('assets/images/logo/logo.png') }}" alt="Image Not Found"></a>
+                        <a href="{{ url('index') }}"><img src="{{ asset('assets/images/logo/scope-purple-black-horizontal.svg') }}" alt="Image Not Found"></a>
                     </div>
                 </div>
                 <div class="col-xl-6 col-lg-8 d-none d-lg-block text-center">
@@ -1035,7 +1035,7 @@
                 <div class="row justify-content-sm-between align-items-center justify-content-center">
                     <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-auto tp_has_fade_anim" data-fade-from="left">
                         <div class="h3_footer-logo mb-20 mb-sm-0">
-                            <a href="{{ url('index') }}"><img src="{{ asset('assets/images/logo/logo.png') }}" alt="Image Not Found"></a>
+                            <a href="{{ url('index') }}"><img src="{{ asset('assets/images/logo/scope-purple-black-horizontal.svg') }}" alt="Image Not Found"></a>
                         </div>
                     </div>
                     <div class="col-xl-6 col-lg-6 col-md-8 d-none d-md-block tp_has_fade_anim" data-fade-from="bottom" data-delay=".5">

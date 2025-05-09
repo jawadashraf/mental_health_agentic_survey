@@ -56,7 +56,7 @@
                             <div class="row align-items-center">
                                 <div class="col-xl-6 col-md-6">
                                     <div class="h5_footer-bottom-copyright d-flex justify-content-center justify-content-md-start">
-                                        <p>&copy; {{ now()->year }} SCOPE All Rights Reserved by site</p>
+                                        <p>&copy; {{ now()->year }} SCOPE All Rights Reserved by SCOPE-AI</p>
                                     </div>
                                 </div>
                                 <div class="col-xl-6 col-md-6">
