@@ -576,13 +576,13 @@
                 <div class="row">
                     <div class="col-xl-5 col-lg-5">
                         <div class="inner_team-img mb-30 mb-lg-0">
-                            <img src="{{ asset('assets/images/team/1.png') }}" alt="" class="tp_fade_right">
-                            <img src="{{ asset('assets/images/team/shape.png') }}" alt="" class="inner_team-img-shape tp_fade_bottom">
+                            <img src="{{ asset('assets/images/team/1.png') }}" alt="" class="tp_fade_right w-50">
+                            <img src="{{ asset('assets/images/team/shape.png') }}" alt="" class="inner_team-img-shape tp_fade_bottom" style="width: 60%;">
                         </div>
                     </div>
                     <div class="col-xl-7 col-lg-7">
                         <div class="inner_team-content mb-lg-0 mb-140">
-                            <h2 class="inner_team-content-title tp_has_text_reveal_anim">Project Lead <br> Dr Swati Virmani</h2>
+                            <h2 class="inner_team-content-title tp_has_text_reveal_anim">Dr Swati Virmani</h2>
                             {{--                        <h6 class="inner_team-content-subtitle tp_has_text_reveal_anim">I’m David Ferry – AI of SalePush, A leading professional Designer company in NewYork</h6>--}}
                             <p class="tp_fade_bottom">
                                 is the Deputy Head – Academic at De Montfort University (DMU) London Campus. She is a
@@ -612,8 +612,8 @@
                 <div class="row">
                     <div class="col-xl-5 col-lg-5">
                         <div class="inner_team-img mb-30 mb-lg-0">
-                            <img src="{{ asset('assets/images/team/JawadPic396x524.jpeg') }}" alt="" class="tp_fade_right">
-                            <img src="{{ asset('assets/images/team/shape.png') }}" alt="" class="inner_team-img-shape tp_fade_bottom">
+                            <img src="{{ asset('assets/images/team/JawadPic396x524.jpeg') }}" alt="" class="tp_fade_right w-50">
+                            <img src="{{ asset('assets/images/team/shape.png') }}" alt="" class="inner_team-img-shape tp_fade_bottom" style="width: 60%;">
                         </div>
                     </div>
                     <div class="col-xl-7 col-lg-7">
@@ -639,8 +639,8 @@
                 <div class="row">
                     <div class="col-xl-5 col-lg-5">
                         <div class="inner_team-img mb-30 mb-lg-0">
-                            <img src="{{ asset('assets/images/team/1.png') }}" alt="" class="tp_fade_right">
-                            <img src="{{ asset('assets/images/team/shape.png') }}" alt="" class="inner_team-img-shape tp_fade_bottom">
+                            <img src="{{ asset('assets/images/team/1.png') }}" alt="" class="tp_fade_right w-50">
+                            <img src="{{ asset('assets/images/team/shape.png') }}" alt="" class="inner_team-img-shape tp_fade_bottom" style="width: 60%;">
                         </div>
                     </div>
                     <div class="col-xl-7 col-lg-7">
