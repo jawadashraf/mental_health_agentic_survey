@@ -4,6 +4,7 @@
     <meta name="keywords" content="GenAI, Survey, Mental Health">
     <meta name="author" content="SCOPE">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
 
     <title>SCOPE – Advancing Mental Health Literacy</title>
 
