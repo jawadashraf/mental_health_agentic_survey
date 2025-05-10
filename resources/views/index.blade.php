@@ -321,7 +321,7 @@
                 <div class="row align-items-end">
                     <div class="col-xl-8 col-lg-8 col-md-8 col-sm-8">
                         <div class="feature-left-img mb-30 tp_fade_right">
-                            <img src="{{ asset('assets/images/banner/home1/ScopeClip1_Integrated.gif') }}" alt="Image Not Found"
+                            <img src="{{ asset('assets/images/banner/home1/Clip1_Integrated_long.gif') }}" alt="Image Not Found"
                                  class="img-thumbnail border-pink">
                         </div>
                     </div>
@@ -352,7 +352,7 @@
                 <div class="row align-items-center">
                     <div class="col-xl-8 col-lg-8">
                         <div class="h2_about-img mb-40 pe-1">
-                            <img src="{{ asset('assets/images/banner/home1/ScopeClip1_Integrated.gif') }}"
+                            <img src="{{ asset('assets/images/banner/home1/Clip1_Integrated_long.gif') }}"
                                  alt="Image Not Found" class="tp_fade_right img-thumbnail">
                         </div>
                     </div>
@@ -388,7 +388,7 @@
                     </div>
                     <div class="col-xl-8 col-lg-8">
                         <div class="h2_about-img mb-40 pe-1">
-                            <img src="{{ asset('assets/images/banner/home1/SCOPEClip2HelpsAnswer.gif') }}" alt="Image Not Found" class="inner-img-1 tp_fade_right">
+                            <img src="{{ asset('assets/images/banner/home1/Clip2_HelpsAnswer_long.gif') }}" alt="Image Not Found" class="inner-img-1 tp_fade_right">
                             {{--                            <img src="{{ asset('assets/images/about/home2/bg-2.png') }}" alt="Image Not Found" class="inner-img-2 tp_fade_bottom">--}}
                             {{--                            <img src="{{ asset('assets/images/about/home2/shape.png') }}" alt="Image Not Found" class="inner-img-shape">--}}
                         </div>
@@ -401,7 +401,7 @@
                 <div class="row align-items-center">
                     <div class="col-xl-8 col-lg-8">
                         <div class="h2_about-img mb-40 pe-1">
-                            <img src="{{ asset('assets/images/banner/home1/Clip3Clarifies.gif') }}"
+                            <img src="{{ asset('assets/images/banner/home1/Clip3_clarifies_long.gif') }}"
                                  alt="Image Not Found" class="tp_fade_right img-thumbnail">
                         </div>
                     </div>
@@ -439,7 +439,7 @@
                     </div>
                     <div class="col-xl-8 col-lg-8">
                         <div class="h2_about-img mb-40 pe-1">
-                            <img src="{{ asset('assets/images/banner/home1/Clip4_Empathises.gif') }}" alt="Image Not Found" class="inner-img-1 tp_fade_right">
+                            <img src="{{ asset('assets/images/banner/home1/Clip4_Empathizes_long.gif') }}" alt="Image Not Found" class="inner-img-1 tp_fade_right">
                             {{--                            <img src="{{ asset('assets/images/about/home2/bg-2.png') }}" alt="Image Not Found" class="inner-img-2 tp_fade_bottom">--}}
                             {{--                            <img src="{{ asset('assets/images/about/home2/shape.png') }}" alt="Image Not Found" class="inner-img-shape">--}}
                         </div>
@@ -452,7 +452,7 @@
                 <div class="row align-items-center">
                     <div class="col-xl-8 col-lg-8">
                         <div class="h2_about-img mb-40 pe-1">
-                            <img src="{{ asset('assets/images/banner/home1/Clip5_ContextAware.gif') }}"
+                            <img src="{{ asset('assets/images/banner/home1/Clip5_ContextAware_long.gif') }}"
                                  alt="Image Not Found" class="tp_fade_right img-thumbnail">
                         </div>
                     </div>
