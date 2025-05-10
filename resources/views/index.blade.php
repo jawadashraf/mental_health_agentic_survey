@@ -51,7 +51,7 @@
 {{--                                            <li><a href="{{ url('index-5') }}">AI Photostock</a></li>--}}
 {{--                                        </ul>--}}
                                     </li>
-                                    <li><a href="{{ url('about') }}">About</a></li>
+                                    <li><a href="#about">About</a></li>
                                     <li>
                                         <a href="{{ url('blog') }}">Blog</a>
 {{--                                        <ul class="submenu">--}}
@@ -560,13 +560,13 @@
         <!-- About Us end -->
 
         <!-- team area start -->
-        <section class="inner_team-area pb-110">
+        <section class="inner_team-area pb-110" id="about">
             <div class="container">
                 <div class="row justify-content-center">
                     <div class="col-12">
                         <div class="section-area text-center mb-50">
-                            <span class="section-subtitle tp_fade_left">ABOUT</span>
-                            <h2 class="section-title tp_title_slideup mb-0">Our Team</h2>
+                            <span class="section-subtitle tp_fade_left">Meet</span>
+                            <h2 class="section-title tp_title_slideup mb-0">The Team</h2>
                         </div>
                     </div>
                 </div>
@@ -576,7 +576,7 @@
                 <div class="row">
                     <div class="col-xl-5 col-lg-5">
                         <div class="inner_team-img mb-30 mb-lg-0">
-                            <img src="{{ asset('assets/images/team/1.png') }}" alt="" class="tp_fade_right w-50">
+                            <img src="{{ asset('assets/images/team/dr_swati_virmani.jpeg') }}" alt="" class="tp_fade_right w-50">
                             <img src="{{ asset('assets/images/team/shape.png') }}" alt="" class="inner_team-img-shape tp_fade_bottom" style="width: 60%;">
                         </div>
                     </div>
