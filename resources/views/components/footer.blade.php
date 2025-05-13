@@ -20,8 +20,8 @@
                                         <h5 class="h5_footer-widget-title">SCOPE</h5>
                                         <ul>
                                             <li><a href="{{ url('index') }}">Home</a></li>
-                                            <li><a href="{{ url('about') }}">About Us</a></li>
-                                            <li><a href="{{ url('about') }}">Resources</a></li>
+                                            <li><a href="#about">About Us</a></li>
+                                            <li><a href="#blog">Resources</a></li>
                                         </ul>
                                     </div>
                                 </div>

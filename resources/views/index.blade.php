@@ -53,13 +53,13 @@
                                     </li>
                                     <li><a href="#about">About</a></li>
                                     <li>
-                                        <a href="{{ url('blog') }}">Blog</a>
+                                        <a href="#blog">Blog</a>
 {{--                                        <ul class="submenu">--}}
 {{--                                            <li><a href="{{ url('blog') }}">Blog</a></li>--}}
 {{--                                            <li><a href="{{ url('blog-details') }}">Blog Details</a></li>--}}
 {{--                                        </ul>--}}
                                     </li>
-                                    <li><a href="{{ url('contact') }}">Contact</a></li>
+{{--                                    <li><a href="{{ url('contact') }}">Contact</a></li>--}}
                                 </ul>
                             </nav>
                         </div>
@@ -480,7 +480,7 @@
         <!-- Gifs area end -->
 
         <!-- blog area start -->
-        <section class="blog-area pt-140 pb-110">
+        <section class="blog-area pt-140 pb-110" id="blog">
             <div class="container">
                 <div class="row justify-content-center">
                     <div class="col-12">
@@ -494,54 +494,56 @@
                     <div class="col-xl-4 col-lg-4 col-md-6 tp_fade_left" data-fade-from="left">
                         <div class="blog-item mb-30">
                             <div class="blog-img">
-                                <a href="{{ url('blog-details') }}"><img src="{{ asset('assets/images/blog/home1/1.png') }}" alt="Image Not Found"></a>
+                                <a href="{{ url('blog-details') }}">
+                                    <img src="{{ asset('assets/images/blog/guardrail/ai_guardrail.jpg') }}"
+                                         alt="Image Not Found"></a>
                             </div>
                             <div class="blog-content">
                                 <div class="blog-content-meta">
-                                    <a href="#">Creative</a>
-                                    <span><i class="fa-light fa-calendar-days"></i>April 18, 2024</span>
+                                    <a href="#">ETHICS</a>
+                                    <span><i class="fa-light fa-calendar-days"></i>Dec, 2024</span>
                                 </div>
                                 <h4 class="blog-content-title">
-                                    <a href="{{ url('blog-details') }}">Exploring The Power Of AI Text Generator</a>
+                                    <a href="{{ url('ai-guardrail') }}">Behind the Guardrails – Can Users Bypass AI Safeguards?</a>
                                 </h4>
-                                <a href="{{ url('blog-details') }}" class="blog-content-btn">Learn More<i class="fa-light fa-angle-right"></i></a>
+                                <a href="{{ url('ai-guardrail') }}" class="blog-content-btn">Learn More<i class="fa-light fa-angle-right"></i></a>
                             </div>
                         </div>
                     </div>
-                    <div class="col-xl-4 col-lg-4 col-md-6 tp_fade_left" data-fade-from="left" data-delay=".8">
-                        <div class="blog-item mb-30">
-                            <div class="blog-img">
-                                <a href="{{ url('blog-details') }}"><img src="{{ asset('assets/images/blog/home1/2.png') }}" alt="Image Not Found"></a>
-                            </div>
-                            <div class="blog-content">
-                                <div class="blog-content-meta">
-                                    <a href="#">Animation</a>
-                                    <span><i class="fa-light fa-calendar-days"></i>June 18, 2024</span>
-                                </div>
-                                <h4 class="blog-content-title">
-                                    <a href="{{ url('blog-details') }}">The 6 Types Of Menus For Your Business</a>
-                                </h4>
-                                <a href="{{ url('blog-details') }}" class="blog-content-btn">Learn More<i class="fa-light fa-angle-right"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-xl-4 col-lg-4 col-md-6 tp_fade_left" data-fade-from="left" data-delay="1.1">
-                        <div class="blog-item mb-30">
-                            <div class="blog-img">
-                                <a href="{{ url('blog-details') }}"><img src="{{ asset('assets/images/blog/home1/3.png') }}" alt="Image Not Found"></a>
-                            </div>
-                            <div class="blog-content">
-                                <div class="blog-content-meta">
-                                    <a href="#">Creative</a>
-                                    <span><i class="fa-light fa-calendar-days"></i>April 18, 2024</span>
-                                </div>
-                                <h4 class="blog-content-title">
-                                    <a href="{{ url('blog-details') }}">Exploring The Power Of AI Text Generator</a>
-                                </h4>
-                                <a href="{{ url('blog-details') }}" class="blog-content-btn">Learn More<i class="fa-light fa-angle-right"></i></a>
-                            </div>
-                        </div>
-                    </div>
+{{--                    <div class="col-xl-4 col-lg-4 col-md-6 tp_fade_left" data-fade-from="left" data-delay=".8">--}}
+{{--                        <div class="blog-item mb-30">--}}
+{{--                            <div class="blog-img">--}}
+{{--                                <a href="{{ url('blog-details') }}"><img src="{{ asset('assets/images/blog/home1/2.png') }}" alt="Image Not Found"></a>--}}
+{{--                            </div>--}}
+{{--                            <div class="blog-content">--}}
+{{--                                <div class="blog-content-meta">--}}
+{{--                                    <a href="#">Animation</a>--}}
+{{--                                    <span><i class="fa-light fa-calendar-days"></i>June 18, 2024</span>--}}
+{{--                                </div>--}}
+{{--                                <h4 class="blog-content-title">--}}
+{{--                                    <a href="{{ url('blog-details') }}">The 6 Types Of Menus For Your Business</a>--}}
+{{--                                </h4>--}}
+{{--                                <a href="{{ url('blog-details') }}" class="blog-content-btn">Learn More<i class="fa-light fa-angle-right"></i></a>--}}
+{{--                            </div>--}}
+{{--                        </div>--}}
+{{--                    </div>--}}
+{{--                    <div class="col-xl-4 col-lg-4 col-md-6 tp_fade_left" data-fade-from="left" data-delay="1.1">--}}
+{{--                        <div class="blog-item mb-30">--}}
+{{--                            <div class="blog-img">--}}
+{{--                                <a href="{{ url('blog-details') }}"><img src="{{ asset('assets/images/blog/home1/3.png') }}" alt="Image Not Found"></a>--}}
+{{--                            </div>--}}
+{{--                            <div class="blog-content">--}}
+{{--                                <div class="blog-content-meta">--}}
+{{--                                    <a href="#">Creative</a>--}}
+{{--                                    <span><i class="fa-light fa-calendar-days"></i>April 18, 2024</span>--}}
+{{--                                </div>--}}
+{{--                                <h4 class="blog-content-title">--}}
+{{--                                    <a href="{{ url('blog-details') }}">Exploring The Power Of AI Text Generator</a>--}}
+{{--                                </h4>--}}
+{{--                                <a href="{{ url('blog-details') }}" class="blog-content-btn">Learn More<i class="fa-light fa-angle-right"></i></a>--}}
+{{--                            </div>--}}
+{{--                        </div>--}}
+{{--                    </div>--}}
                 </div>
             </div>
         </section>
@@ -638,25 +640,25 @@
                 </div>
             </div>
 
-            <div class="container mt-5">
-                <div class="row">
-                    <div class="col-xl-5 col-lg-5">
-                        <div class="inner_team-img mb-30 mb-lg-0">
-                            <img src="{{ asset('assets/images/team/1.png') }}" alt="" class="tp_fade_right w-50">
-                            <img src="{{ asset('assets/images/team/shape.png') }}" alt="" class="inner_team-img-shape tp_fade_bottom" style="width: 60%;">
-                        </div>
-                    </div>
-                    <div class="col-xl-7 col-lg-7">
-                        <div class="inner_team-content mb-lg-0 mb-140">
-                            <h2 class="inner_team-content-title tp_has_text_reveal_anim">Dr Agnes</h2>
-                            {{--                        <h6 class="inner_team-content-subtitle tp_has_text_reveal_anim">I’m David Ferry – AI of SalePush, A leading professional Designer company in NewYork</h6>--}}
-                            <p class="tp_fade_bottom">
-                                Content Goes Here
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            </div>
+{{--            <div class="container mt-5">--}}
+{{--                <div class="row">--}}
+{{--                    <div class="col-xl-5 col-lg-5">--}}
+{{--                        <div class="inner_team-img mb-30 mb-lg-0">--}}
+{{--                            <img src="{{ asset('assets/images/team/1.png') }}" alt="" class="tp_fade_right w-50">--}}
+{{--                            <img src="{{ asset('assets/images/team/shape.png') }}" alt="" class="inner_team-img-shape tp_fade_bottom" style="width: 60%;">--}}
+{{--                        </div>--}}
+{{--                    </div>--}}
+{{--                    <div class="col-xl-7 col-lg-7">--}}
+{{--                        <div class="inner_team-content mb-lg-0 mb-140">--}}
+{{--                            <h2 class="inner_team-content-title tp_has_text_reveal_anim">Dr Agnes</h2>--}}
+{{--                            --}}{{--                        <h6 class="inner_team-content-subtitle tp_has_text_reveal_anim">I’m David Ferry – AI of SalePush, A leading professional Designer company in NewYork</h6>--}}
+{{--                            <p class="tp_fade_bottom">--}}
+{{--                                Content Goes Here--}}
+{{--                            </p>--}}
+{{--                        </div>--}}
+{{--                    </div>--}}
+{{--                </div>--}}
+{{--            </div>--}}
 
         </section>
         <!-- team area end -->
