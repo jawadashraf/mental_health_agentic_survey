@@ -131,7 +131,10 @@
                         </div>
                     </div>
                     <div class="banner-img tp_fade_left img-thumbnail">
-                        <img src="{{ asset('assets/images/banner/home1/Clip3Clarifies.gif') }}" alt="Image Not Found">
+                        <video width="640" controls autoplay muted class="img-fluid rounded">
+                            <source src="{{ asset('assets/images/videos/scope_ai_without_captions.mp4') }}" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
                     </div>
                 </div>
             </div>
