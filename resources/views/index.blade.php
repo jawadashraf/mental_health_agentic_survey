@@ -132,7 +132,7 @@
                     </div>
                     <div class="banner-img tp_fade_left img-thumbnail">
                         <video width="640" controls autoplay muted class="img-fluid rounded">
-                            <source src="{{ asset('assets/images/videos/scope_ai_without_captions.mp4') }}" type="video/mp4">
+                            <source src="{{ asset('assets/images/videos/scope_ai_video_5.mp4') }}" type="video/mp4">
                             Your browser does not support the video tag.
                         </video>
                     </div>
