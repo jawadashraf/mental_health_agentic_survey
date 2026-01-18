@@ -2,23 +2,16 @@
 
 namespace App\Filament\Resources\SurveySessions;
 
-use App\Filament\Resources\SurveySessions\Pages;
-use App\Filament\Resources\SurveySessions\RelationManagers;
 use App\Models\SurveySession;
 use App\Settings\PromptSettings;
 use BackedEnum;
 use Filament\Actions\EditAction;
 use Filament\Forms;
-use Filament\Forms\Components\TextInput;
-use Filament\Schemas\Components\Form ;
 use Filament\Resources\Resource;
-use Filament\Tables;
+use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Support\HtmlString;
-use Filament\Schemas\Schema;
 
 class SurveySessionResource extends Resource
 {
@@ -39,26 +32,27 @@ class SurveySessionResource extends Resource
                 Forms\Components\Placeholder::make('updated_at')
                     ->content(fn ($record): string => $record->updated_at->toFormattedDateString()),
                 Forms\Components\Placeholder::make('completed_at')
-                    ->content(fn ($record): string => $record->completed_at ?? '' ),
+                    ->content(fn ($record): string => $record->completed_at ?? ''),
                 Forms\Components\Placeholder::make('completed')
                     ->content(fn ($record): string => $record->completed),
 
                 Forms\Components\Placeholder::make('intent_id')
-                ->content( function ($record) {
+                    ->content(function ($record) {
 
-                    $questions = config('survey');
-                    $question = $questions[0]['question'];
-                    $options = $questions[0]['options'];
+                        $questions = config('survey');
+                        $question = $questions[0]['question'];
+                        $options = $questions[0]['options'];
 
-                    $userInput = "Some User Input";
-                    $stored_intent_classification_prompt = app(PromptSettings::class)
-                        ->intent_classification_prompt;
-                    return new HtmlString(str_replace(
-                        ['{{userInput}}', '{{question}}', '{{options}}'],
-                        [$userInput, $question, implode(', ', $options)],
-                        $stored_intent_classification_prompt
-                    ));
-                } )
+                        $userInput = 'Some User Input';
+                        $stored_intent_classification_prompt = app(PromptSettings::class)
+                            ->intent_classification_prompt;
+
+                        return new HtmlString(str_replace(
+                            ['{{userInput}}', '{{question}}', '{{options}}'],
+                            [$userInput, $question, implode(', ', $options)],
+                            $stored_intent_classification_prompt
+                        ));
+                    }),
             ]);
     }
 
@@ -72,7 +66,7 @@ class SurveySessionResource extends Resource
                 TextColumn::make('updated_at')->sortable()->dateTime(),
                 TextColumn::make('completed_at')->sortable()->dateTime(),
                 TextColumn::make('completed')->sortable()
-                    ->formatStateUsing(fn (string $state): string => $state === '1' ? 'Yes' : 'No' )
+                    ->formatStateUsing(fn (string $state): string => $state === '1' ? 'Yes' : 'No')
                     ->label('Completed')
                     ->badge()
                     ->color(fn (string $state): string => match ($state) {
@@ -87,7 +81,7 @@ class SurveySessionResource extends Resource
                 EditAction::make()->label('Responses'),
             ])
             ->toolbarActions([
-                
+
             ]);
     }
 

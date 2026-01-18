@@ -3,13 +3,10 @@
 namespace App\Filament\Resources\SurveySessions\RelationManagers;
 
 use Filament\Forms;
-use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Schemas\Schema;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class IntentsRelationManager extends RelationManager
 {
@@ -19,9 +16,9 @@ class IntentsRelationManager extends RelationManager
     {
         return $schema
             ->schema([
-//                Forms\Components\TextInput::make('title')
-//                    ->required()
-//                    ->maxLength(255),
+                //                Forms\Components\TextInput::make('title')
+                //                    ->required()
+                //                    ->maxLength(255),
             ]);
     }
 
@@ -41,14 +38,14 @@ class IntentsRelationManager extends RelationManager
                 //
             ])
             ->headerActions([
-//                Tables\Actions\CreateAction::make(),
+                //                Tables\Actions\CreateAction::make(),
             ])
             ->recordActions([
-//                Tables\Actions\EditAction::make(),
-//                Tables\Actions\DeleteAction::make(),
+                //                Tables\Actions\EditAction::make(),
+                //                Tables\Actions\DeleteAction::make(),
             ])
             ->toolbarActions([
-                
+
             ]);
     }
 }

@@ -20,7 +20,7 @@ class ManagePrompts extends SettingsPage
             ->schema([
                 MarkdownEditor::make('intent_classification_prompt')
                     ->required()
-                ->columnSpanFull(),
+                    ->columnSpanFull(),
             ]);
     }
 }

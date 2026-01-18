@@ -25,16 +25,16 @@ class ResponsesRelationManager extends RelationManager
                 //
             ])
             ->headerActions([
-//                Tables\Actions\CreateAction::make(),
+                //                Tables\Actions\CreateAction::make(),
             ])
             ->actions([
-//                Tables\Actions\EditAction::make(),
-//                Tables\Actions\DeleteAction::make(),
+                //                Tables\Actions\EditAction::make(),
+                //                Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
-//                Tables\Actions\BulkActionGroup::make([
-//                    Tables\Actions\DeleteBulkAction::make(),
-//                ]),
+                //                Tables\Actions\BulkActionGroup::make([
+                //                    Tables\Actions\DeleteBulkAction::make(),
+                //                ]),
             ]);
     }
 }

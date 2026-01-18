@@ -2,8 +2,6 @@
 
 namespace App\Filament\Resources\Questions;
 
-use App\Filament\Resources\Questions\Pages;
-use App\Filament\Resources\Questions\RelationManagers;
 use App\Models\Question;
 use BackedEnum;
 use Filament\Actions\BulkActionGroup;
@@ -11,14 +9,11 @@ use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Forms;
-use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Schema;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class QuestionResource extends Resource
 {
@@ -65,7 +60,7 @@ class QuestionResource extends Resource
                     ->deletable(true)
                     ->reorderable(true)
                     ->columnSpanFull()
-                    ->visible(fn (Get $get) => in_array($get('type'), ['radio', 'checkbox']))
+                    ->visible(fn (Get $get) => in_array($get('type'), ['radio', 'checkbox'])),
             ]);
     }
 

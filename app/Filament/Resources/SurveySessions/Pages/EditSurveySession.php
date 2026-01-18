@@ -9,12 +9,13 @@ use Filament\Resources\Pages\EditRecord;
 class EditSurveySession extends EditRecord
 {
     protected static string $resource = SurveySessionResource::class;
+
     protected ?string $heading = 'Survey Session';
 
     protected function getHeaderActions(): array
     {
         return [
-//            Actions\DeleteAction::make(),
+            //            Actions\DeleteAction::make(),
         ];
     }
 }

@@ -10,7 +10,7 @@ use Filament\Widgets\TableWidget as BaseWidget;
 
 class LatestSessions extends BaseWidget
 {
-    protected int | string | array $columnSpan = 'full';
+    protected int|string|array $columnSpan = 'full';
 
     protected static ?int $sort = 1;
 
@@ -30,7 +30,7 @@ class LatestSessions extends BaseWidget
                     ->date()
                     ->sortable(),
                 TextColumn::make('completed')->sortable()
-                    ->formatStateUsing(fn (string $state): string => $state === '1' ? 'Yes' : 'No' )
+                    ->formatStateUsing(fn (string $state): string => $state === '1' ? 'Yes' : 'No')
                     ->label('Completed')
                     ->badge()
                     ->color(fn (string $state): string => match ($state) {
@@ -42,7 +42,7 @@ class LatestSessions extends BaseWidget
                     ->label('Responses'),
                 TextColumn::make('intents_count')
                     ->counts('intents')
-                ->label('Digressions'),
+                    ->label('Digressions'),
             ])
             ->actions([
 

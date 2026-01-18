@@ -4,16 +4,17 @@ namespace App\Livewire;
 
 use Livewire\Attributes\Layout;
 use Livewire\Component;
-
 use OpenAI\Laravel\Facades\OpenAI;
 use Prism\Prism\Prism;
 
 class AiAssistant extends Component
 {
     public $threadId;
+
     public $inputMessage;
 
-    public function mount() {
+    public function mount()
+    {
         $this->threadId = $this->setThread();
     }
 
@@ -23,6 +24,7 @@ class AiAssistant extends Component
     public function setThread(array $parameters = [])
     {
         $thread = OpenAI::threads()->create($parameters);
+
         return $thread->id;
     }
 
@@ -41,28 +43,28 @@ class AiAssistant extends Component
         return $this;
     }
 
-//    public function sendMessage()
-//    {
-//        $response = Prism::stream()
-//            ->using('openai', 'gpt-4')
-//            ->withPrompt($this->inputMessage)
-//            ->generate();
-//
-//// Process each chunk as it arrives
-//        foreach ($response as $chunk) {
-//            echo $chunk->text;
-//            // Flush the output buffer to send text to the browser immediately
-////            ob_flush();
-////            flush();
-//
-//            $this->stream(to: 'answer', content: $chunk->text);
-//
-//            // Check if this is the final chunk
-//            if ($chunk->finishReason) {
-//                ds("Generation complete: " . $chunk->finishReason->name);
-//            }
-//        }
-//    }
+    //    public function sendMessage()
+    //    {
+    //        $response = Prism::stream()
+    //            ->using('openai', 'gpt-4')
+    //            ->withPrompt($this->inputMessage)
+    //            ->generate();
+    //
+    // // Process each chunk as it arrives
+    //        foreach ($response as $chunk) {
+    //            echo $chunk->text;
+    //            // Flush the output buffer to send text to the browser immediately
+    // //            ob_flush();
+    // //            flush();
+    //
+    //            $this->stream(to: 'answer', content: $chunk->text);
+    //
+    //            // Check if this is the final chunk
+    //            if ($chunk->finishReason) {
+    //                ds("Generation complete: " . $chunk->finishReason->name);
+    //            }
+    //        }
+    //    }
 
     /**
      * Stream the AI assistant's response to the user's message.
@@ -77,13 +79,13 @@ class AiAssistant extends Component
 
         $streamResponse = '';
 
-        foreach($stream as $response){
-            if($response->event == 'thread.message.delta') {
+        foreach ($stream as $response) {
+            if ($response->event == 'thread.message.delta') {
                 $this->stream(to: 'answer', content: $response->response->delta->content[0]->text->value);
                 $streamResponse .= $response->response->delta->content[0]->text->value;
             }
 
-            if($response->event == 'thread.run.completed') {
+            if ($response->event == 'thread.run.completed') {
                 $this->messages[] = [
                     'role' => 'assistant',
                     'content' => $streamResponse,
@@ -93,7 +95,7 @@ class AiAssistant extends Component
         }
     }
 
-//    #[Layout('layouts.minimal')]
+    //    #[Layout('layouts.minimal')]
     public function render()
     {
         return view('livewire.ai-assistant');

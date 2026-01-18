@@ -3,43 +3,48 @@
 namespace App\Livewire;
 
 use App\Models\SurveyResponse;
-use Illuminate\Support\Arr;
+use Illuminate\Support\Str;
 use Livewire\Component;
 use Prism\Prism\Prism;
-use Request;
-use Session;
-use Illuminate\Support\Str;
 
 class ChatResponseClaude extends Component
 {
     public $questions = [
         [
-            "id" => 1,
-            "type" => "radio",
-            "question" => "How would you rate your overall mental health awareness?",
-            "options" => ["Very High", "High", "Moderate", "Low", "Very Low"]
+            'id' => 1,
+            'type' => 'radio',
+            'question' => 'How would you rate your overall mental health awareness?',
+            'options' => ['Very High', 'High', 'Moderate', 'Low', 'Very Low'],
         ],
         [
-            "id" => 2,
-            "type" => "text",
-            "question" => "What strategies do you use to manage stress in your daily life?"
+            'id' => 2,
+            'type' => 'text',
+            'question' => 'What strategies do you use to manage stress in your daily life?',
         ],
         [
-            "id" => 3,
-            "type" => "radio",
-            "question" => "How comfortable are you discussing mental health with others?",
-            "options" => ["Very Comfortable", "Comfortable", "Neutral", "Uncomfortable", "Very Uncomfortable"]
-        ]
+            'id' => 3,
+            'type' => 'radio',
+            'question' => 'How comfortable are you discussing mental health with others?',
+            'options' => ['Very Comfortable', 'Comfortable', 'Neutral', 'Uncomfortable', 'Very Uncomfortable'],
+        ],
     ];
 
     public array $prompt;
+
     public array $messages = [];
+
     public ?string $response = null;
+
     public ?array $currentQuestion = null;
+
     public int $currentIndex = 0;
+
     public array $responses = [];
+
     public string $greetings = "Hi there! I'm here to chat about mental health awareness. Would you be interested in taking a short survey to help us understand your perspective better?";
+
     public bool $surveyStarted = false;
+
     public string $responseType = 'normal'; // 'normal' or 'stream'
 
     public function mount()
@@ -47,13 +52,12 @@ class ChatResponseClaude extends Component
         $this->js('$wire.displayGreeting()');
     }
 
-
     public function displayGreeting()
     {
         $this->messages[] = [
             'sender' => 'bot',
             'content' => $this->greetings,
-            'type' => 'normal'
+            'type' => 'normal',
         ];
     }
 
@@ -63,10 +67,10 @@ class ChatResponseClaude extends Component
         $this->messages[] = [
             'sender' => 'user',
             'content' => $input,
-            'type' => 'normal'
+            'type' => 'normal',
         ];
 
-        if (!$this->surveyStarted) {
+        if (! $this->surveyStarted) {
             $intent = $this->detectIntentWithAI($input);
             if ($intent === 'consent') {
                 $this->startSurvey();
@@ -89,8 +93,9 @@ class ChatResponseClaude extends Component
     public function askCurrentQuestion()
     {
         if ($this->currentIndex >= count($this->questions)) {
-            $this->sendNonStreamedResponse("Thank you for completing the survey! Your responses will help us understand mental health awareness better.");
+            $this->sendNonStreamedResponse('Thank you for completing the survey! Your responses will help us understand mental health awareness better.');
             $this->surveyStarted = false;
+
             return;
         }
 
@@ -101,7 +106,7 @@ class ChatResponseClaude extends Component
         $this->messages[] = [
             'sender' => 'bot',
             'content' => $question,
-            'type' => 'question'
+            'type' => 'question',
         ];
     }
 
@@ -118,7 +123,7 @@ class ChatResponseClaude extends Component
 
         $this->responses[] = [
             'question' => $this->currentQuestion,
-            'response' => $response
+            'response' => $response,
         ];
 
         // Move to next question
@@ -142,18 +147,18 @@ class ChatResponseClaude extends Component
         $this->messages[] = [
             'sender' => 'bot',
             'content' => '',
-            'type' => 'stream'
+            'type' => 'stream',
         ];
 
         // Simulate streaming for demo, or use actual streaming with OpenAI
         $words = explode(' ', $message);
 
         foreach ($words as $word) {
-            $this->response .= $word . ' ';
+            $this->response .= $word.' ';
 
             $this->stream(
-                to: 'stream-' . $this->getId(),
-                content: $word . ' ',
+                to: 'stream-'.$this->getId(),
+                content: $word.' ',
                 replace: false
             );
 
@@ -169,7 +174,7 @@ class ChatResponseClaude extends Component
         $this->messages[] = [
             'sender' => 'bot',
             'content' => $message,
-            'type' => 'normal'
+            'type' => 'normal',
         ];
     }
 
@@ -178,28 +183,30 @@ class ChatResponseClaude extends Component
         return view('livewire.chat-response');
     }
 
-    function storeResponse($questionId, $response, $threadId, $sessionId, $question) : void
+    public function storeResponse($questionId, $response, $threadId, $sessionId, $question): void
     {
         SurveyResponse::create([
             'question_id' => $questionId,
             'response' => $response,
             'thread_id' => $threadId,
             'session_id' => $sessionId,
-            'question' => $question
+            'question' => $question,
         ]);
     }
 
-    function generateEmpatheticSentimentResponse($sentiment) {
+    public function generateEmpatheticSentimentResponse($sentiment)
+    {
         if ($sentiment === 'negative') {
             return "I'm really sorry you're feeling this way. Please know that your feelings are valid, and you're not alone. Would you like to talk more about what's been on your mind?";
         } elseif ($sentiment === 'positive') {
             return "That's wonderful to hear! Taking care of your mental health is important, and I'm glad you're finding things that bring you joy.";
         } else {
-            return "I appreciate you sharing. Mental health is a journey, and every step matters.";
+            return 'I appreciate you sharing. Mental health is a journey, and every step matters.';
         }
     }
 
-    function detectSentiment($userInput) {
+    public function detectSentiment($userInput)
+    {
         $prompt = "Analyze the sentiment of the following user response in a mental health awareness survey.
 Response: \"$userInput\"
 
@@ -219,20 +226,22 @@ Classify it into one of these categories:
         return strtolower(trim($response['choices'][0]['message']['content'] ?? 'neutral'));
     }
 
-    function generateEncouragingResponse() {
+    public function generateEncouragingResponse()
+    {
         $aiAgent = Prism::text()->using('openai', 'gpt-4');
 
-        $prompt = "You are a compassionate AI conducting a mental health awareness survey.
+        $prompt = 'You are a compassionate AI conducting a mental health awareness survey.
     Your responses should be **two lines, warm, encouraging, and non-judgmental**.
 
     The user seems hesitant about taking the survey.
 
-    **Generate a comforting and encouraging statement to take the survey:**";
+    **Generate a comforting and encouraging statement to take the survey:**';
 
         return trim($aiAgent->withPrompt($prompt)->generate()->text);
     }
 
-    function detectIntentWithAI($userInput) {
+    public function detectIntentWithAI($userInput)
+    {
         $aiAgent = Prism::text()->using('openai', 'gpt-4');
 
         $prompt = "You are an advanced conversational AI conducting a survey.

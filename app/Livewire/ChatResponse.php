@@ -6,47 +6,52 @@ use App\Models\Intent;
 use App\Models\SurveyResponse;
 use App\Settings\PromptSettings;
 use Illuminate\Support\Arr;
-use Livewire\Component;
-use Prism\Prism\Prism;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Session;
+use Livewire\Component;
+use Prism\Prism\Prism;
+
 use function Termwind\ask;
 
 class ChatResponse extends Component
 {
     public $questions = [];
+
     public $responses = [];
-//    public $questions = [
-//        [
-//            "id" => 1,
-//            "type" => "radio",
-//            "question" => "How satisfied are you with our service?",
-//            "options" => ["Very Satisfied", "Satisfied", "Neutral", "Dissatisfied", "Very Dissatisfied"]
-//        ],
-//        [
-//            "id" => 2,
-//            "type" => "text",
-//            "question" => "What improvements would you like to see?"
-//        ],
-//        [
-//            "id" => 3,
-//            "type" => "radio",
-//            "question" => "Would you recommend us to others?",
-//            "options" => ["Yes", "No"]
-//        ]
-//    ];
+    //    public $questions = [
+    //        [
+    //            "id" => 1,
+    //            "type" => "radio",
+    //            "question" => "How satisfied are you with our service?",
+    //            "options" => ["Very Satisfied", "Satisfied", "Neutral", "Dissatisfied", "Very Dissatisfied"]
+    //        ],
+    //        [
+    //            "id" => 2,
+    //            "type" => "text",
+    //            "question" => "What improvements would you like to see?"
+    //        ],
+    //        [
+    //            "id" => 3,
+    //            "type" => "radio",
+    //            "question" => "Would you recommend us to others?",
+    //            "options" => ["Yes", "No"]
+    //        ]
+    //    ];
 
     public $currentIndex = 0;
+
     public $surveyStarted = false;
 
     public array $prompt;
 
     public array $messages;
+
     public $metadata = []; // Metadata for the current message
 
     public ?string $response = null;
 
     public $selectedOption; // For radio button responses
+
     public $textResponse = ''; // For text responses
 
     public function mount()
@@ -58,19 +63,18 @@ class ChatResponse extends Component
         $message = end($this->messages);
         $metadata = end($this->metadata);
 
-
         // If the content is already provided, display it
-        if (!empty($message['content']) && $metadata['type'] != 'question') {
+        if (! empty($message['content']) && $metadata['type'] != 'question') {
             $this->response = $message['content'];
-//            dd($message['content']);
+
+            //            dd($message['content']);
             return;
         }
 
-        if (!empty($message['content']) && $metadata['type'] == 'question') {
-//            dd($message['content']);
+        if (! empty($message['content']) && $metadata['type'] == 'question') {
+            //            dd($message['content']);
             return;
         }
-
 
         $this->js('$wire.getResponse()');
     }
@@ -78,13 +82,12 @@ class ChatResponse extends Component
     public function getResponse(): void
     {
 
-
-        $intent = $this->detectIntentWithAI($this->prompt["content"]);
+        $intent = $this->detectIntentWithAI($this->prompt['content']);
 
         ds($intent);
 
-        $intent = str_replace("'", "", $intent);
-        $promptForAssistant = "";
+        $intent = str_replace("'", '', $intent);
+        $promptForAssistant = '';
         switch ($intent) {
 
             case 'progress-question':
@@ -92,28 +95,29 @@ class ChatResponse extends Component
                 break;
             case 'consent':
             case 'repeat':
-                $this->js("updateExpression('2')"); //Happy
+                $this->js("updateExpression('2')"); // Happy
                 $this->askQuestion();
+
                 return;
             case 'off-topic':
-                $this->js("updateExpression('5')"); //Surprised
-                $this->storeIntentForQuestion($intent, $this->prompt["content"]);
+                $this->js("updateExpression('5')"); // Surprised
+                $this->storeIntentForQuestion($intent, $this->prompt['content']);
                 $promptForAssistant = $this->getOffTopicPrompt();
                 break;
             case 'refused':
-                $this->js("updateExpression('3')"); //Sad
-                $this->storeIntentForQuestion($intent, $this->prompt["content"]);
+                $this->js("updateExpression('3')"); // Sad
+                $this->storeIntentForQuestion($intent, $this->prompt['content']);
                 $promptForAssistant = $this->generateEncouragingPrompt();
                 break;
 
             case 'clarify':
-                $this->js("updateExpression('2')"); //Happy
-                $this->storeIntentForQuestion($intent, $this->prompt["content"]);
+                $this->js("updateExpression('2')"); // Happy
+                $this->storeIntentForQuestion($intent, $this->prompt['content']);
                 $promptForAssistant = $this->getClarifyPrompt($this->questions[$this->currentIndex]['question']);
                 break;
 
             case 'term-explanation':
-                $term = $this->extractTerm($this->prompt["content"]); // you'd write a helper for this
+                $term = $this->extractTerm($this->prompt['content']); // you'd write a helper for this
                 $promptForAssistant = $this->getTermExplanationPrompt($term);
                 break;
 
@@ -134,8 +138,8 @@ class ChatResponse extends Component
                 break;
 
             default:
-//                $this->js("updateExpression('2')"); //Happy
-                $this->storeIntentForQuestion('default', $this->prompt["content"]);
+                //                $this->js("updateExpression('2')"); //Happy
+                $this->storeIntentForQuestion('default', $this->prompt['content']);
                 $promptForAssistant = $this->generateEncouragingPrompt();
 
         }
@@ -146,9 +150,8 @@ class ChatResponse extends Component
         $stream = app('openai')->chat()->createStreamed([
             'model' => 'gpt-4',
             'messages' => $this->messages,
-            'temperature' => 1.0
+            'temperature' => 1.0,
         ]);
-
 
         foreach ($stream as $response) {
             $content = Arr::get($response->choices[0]->toArray(), 'delta.content');
@@ -156,52 +159,52 @@ class ChatResponse extends Component
             $this->response .= $content;
 
             $this->stream(
-                to: 'stream-' . $this->getId(),
+                to: 'stream-'.$this->getId(),
                 content: $content,
                 replace: false
             );
         }
     }
 
-    function detectIntentWithAI($userInput): ?string
+    public function detectIntentWithAI($userInput): ?string
     {
         $aiAgent = Prism::text()->using('openai', 'gpt-4');
         $question = $this->questions[$this->currentIndex]['question'];
         $options = $this->questions[$this->currentIndex]['options'];
 
-//        $prompt = "You are an advanced conversational AI conducting a survey.
-//    Your task is to **classify user responses** into one of the following categories:
-//    - **'consent'** → if the user is ready to proceed for the survey.
-//    - **'refused'** → if the user is not ready to proceed for the survey.
-//    - **'repeat'** → if the user asks you to repeat, reword, or rephrase the last question.
-//    - **'clarify'** → if the user asks for more explanation, examples, or further details about the question.
-//    - **'answer'** → if the user is responding to the question.
-//    - **'off-topic'** → if the user says something unrelated to the survey, like asking personal questions or giving random statements.
-//    - **'low-motivation'** → if the user is hesitant, reluctant, or unenthusiastic but hasn’t outright refused.
-//    - **'no-motivation'** → if the user appears disengaged, apathetic, or shows no interest or willingness to proceed.
-//
-//    **Examples:**
-//    - 'Can you repeat that?' → repeat
-//    - 'Say that again' → repeat
-//    - 'I don’t get it, explain' → clarify
-//    - 'What do you mean by that?' → clarify
-//    - 'My answer is Yes' → answer
-//    - 'The website is slow' → answer
-//    - 'What’s your name?' → off-topic
-//    - 'Tell me a joke' → off-topic
-//    - 'Maybe later, I am a bit tired' → low-motivation
-//    - 'I do not care about this survey' → no-motivation
-//
-//    **User Input:** \"$userInput\"
-//    **Response:** (only return consent, refused, repeat, clarify, answer, off-topic, no-motivation, low-motivation)";
+        //        $prompt = "You are an advanced conversational AI conducting a survey.
+        //    Your task is to **classify user responses** into one of the following categories:
+        //    - **'consent'** → if the user is ready to proceed for the survey.
+        //    - **'refused'** → if the user is not ready to proceed for the survey.
+        //    - **'repeat'** → if the user asks you to repeat, reword, or rephrase the last question.
+        //    - **'clarify'** → if the user asks for more explanation, examples, or further details about the question.
+        //    - **'answer'** → if the user is responding to the question.
+        //    - **'off-topic'** → if the user says something unrelated to the survey, like asking personal questions or giving random statements.
+        //    - **'low-motivation'** → if the user is hesitant, reluctant, or unenthusiastic but hasn’t outright refused.
+        //    - **'no-motivation'** → if the user appears disengaged, apathetic, or shows no interest or willingness to proceed.
+        //
+        //    **Examples:**
+        //    - 'Can you repeat that?' → repeat
+        //    - 'Say that again' → repeat
+        //    - 'I don’t get it, explain' → clarify
+        //    - 'What do you mean by that?' → clarify
+        //    - 'My answer is Yes' → answer
+        //    - 'The website is slow' → answer
+        //    - 'What’s your name?' → off-topic
+        //    - 'Tell me a joke' → off-topic
+        //    - 'Maybe later, I am a bit tired' → low-motivation
+        //    - 'I do not care about this survey' → no-motivation
+        //
+        //    **User Input:** \"$userInput\"
+        //    **Response:** (only return consent, refused, repeat, clarify, answer, off-topic, no-motivation, low-motivation)";
 
         $stored_intent_classification_prompt = app(PromptSettings::class)->intent_classification_prompt;
 
-//        $prompt = str_replace(
-//            ['{{userInput}}', '{{question}}', '{{options}}'],
-//            [$userInput, $question, implode(', ', $options)],
-//            $storedPrompt
-//        );
+        //        $prompt = str_replace(
+        //            ['{{userInput}}', '{{question}}', '{{options}}'],
+        //            [$userInput, $question, implode(', ', $options)],
+        //            $storedPrompt
+        //        );
 
         $prompt = str_replace(
             ['{{userInput}}', '{{question}}', '{{options}}'],
@@ -212,25 +215,25 @@ class ChatResponse extends Component
         return strtolower(trim($aiAgent->withPrompt($prompt)->generate()->text));
     }
 
-    function getProgressPrompt($currentIndex, $total): string
+    public function getProgressPrompt($currentIndex, $total): string
     {
         $remaining = $total - $currentIndex;
         if ($remaining == $total) {
 
-            $msg = "**Generate a statement to inform user about the total number of questions, that is:" . $total . " questions.**";
+            $msg = '**Generate a statement to inform user about the total number of questions, that is:'.$total.' questions.**';
         } elseif ($remaining <= 3) {
             $msg = "Generate an encouraging statement, since the user is at the start of the survey. Like: You're doing great! Just $remaining more questions to go.";
         } else {
             $msg = "Generate an encouraging statement, since the user is going further into the survey. Like: You're on a roll! Just {$remaining} more questions to go.";
         }
 
-//        $prompt = $remaining . " questions remaining. **Generate a encouraging statement , like: I’m here to assist with the survey. Let’s continue with the questions!**";
+        //        $prompt = $remaining . " questions remaining. **Generate a encouraging statement , like: I’m here to assist with the survey. Let’s continue with the questions!**";
 
-//        return $msg . " Let me know if you'd like a quick pause.";
+        //        return $msg . " Let me know if you'd like a quick pause.";
         return $msg;
     }
 
-    function askQuestion(): void
+    public function askQuestion(): void
     {
 
         $this->dispatch('askQuestion', currentLivewireComponentId: $this->getId());
@@ -254,25 +257,24 @@ class ChatResponse extends Component
 
     }
 
-    function getOffTopicPrompt(): string
+    public function getOffTopicPrompt(): string
     {
-        return "**Generate a comforting and encouraging statement to take survey, like: I’m here to assist with the survey. Let’s continue with the questions!**";
+        return '**Generate a comforting and encouraging statement to take survey, like: I’m here to assist with the survey. Let’s continue with the questions!**';
     }
 
-    function generateEncouragingPrompt(): string
+    public function generateEncouragingPrompt(): string
     {
 
-
-        return "You are a compassionate AI conducting a mental health awareness survey.
+        return 'You are a compassionate AI conducting a mental health awareness survey.
     Your responses should be **two lines, warm, encouraging, and non-judgmental**.
 
     The user refused to conduct survey
 
-    **Generate a comforting and encouraging statement to take survey.**";
+    **Generate a comforting and encouraging statement to take survey.**';
 
     }
 
-    function getClarifyPrompt($question): string
+    public function getClarifyPrompt($question): string
     {
 
         return "You are a compassionate AI conducting a mental health awareness survey.
@@ -285,7 +287,7 @@ class ChatResponse extends Component
 
     }
 
-    function getTermExplanationPrompt($term): string
+    public function getTermExplanationPrompt($term): string
     {
         return "You are a compassionate AI conducting a mental health awareness survey.
 The user asked about the meaning of the term: \"$term\" in the question.
@@ -293,34 +295,34 @@ The user asked about the meaning of the term: \"$term\" in the question.
 Generate a simple, empathetic, two-line explanation of this term in the context of mental health. End by inviting the user to continue.";
     }
 
-    function getMetaQuestionPrompt(): string
+    public function getMetaQuestionPrompt(): string
     {
-        return "You are a trustworthy AI conducting a mental health awareness survey.
+        return 'You are a trustworthy AI conducting a mental health awareness survey.
 
 The user asked about the survey’s purpose, data usage, or background.
 
-Generate a two-line, friendly and reassuring explanation of the survey’s purpose and invite the user to continue.";
+Generate a two-line, friendly and reassuring explanation of the survey’s purpose and invite the user to continue.';
     }
 
-    function getTechnicalIssuePrompt(): string
+    public function getTechnicalIssuePrompt(): string
     {
-        return "You are a helpful AI assistant.
+        return 'You are a helpful AI assistant.
 
-The user reported a technical issue. Generate a short, polite response acknowledging the issue and suggest they refresh or contact support if the issue persists.";
+The user reported a technical issue. Generate a short, polite response acknowledging the issue and suggest they refresh or contact support if the issue persists.';
     }
 
-    function getLowMotivationPrompt(): string
+    public function getLowMotivationPrompt(): string
     {
-        return "You are a compassionate AI conducting a mental health awareness survey.
+        return 'You are a compassionate AI conducting a mental health awareness survey.
 
-The user appears unsure or hesitant. Generate a warm, two-line message encouraging them gently to give it a try and continue.";
+The user appears unsure or hesitant. Generate a warm, two-line message encouraging them gently to give it a try and continue.';
     }
 
-    function getNoMotivationPrompt(): string
+    public function getNoMotivationPrompt(): string
     {
-        return "You are a compassionate AI conducting a mental health awareness survey.
+        return 'You are a compassionate AI conducting a mental health awareness survey.
 
-The user seems disengaged or uninterested. Generate a gentle, empathetic message that acknowledges their feeling and offers to pause or opt out, while leaving the door open for return.";
+The user seems disengaged or uninterested. Generate a gentle, empathetic message that acknowledges their feeling and offers to pause or opt out, while leaving the door open for return.';
     }
 
     public function render()
@@ -348,6 +350,7 @@ The user seems disengaged or uninterested. Generate a gentle, empathetic message
                 $term = trim($matches[1]);
                 // Clean up trailing punctuation or filler words
                 $term = preg_replace('/\?|\.$/', '', $term);
+
                 return ucfirst($term);
             }
         }
@@ -355,19 +358,18 @@ The user seems disengaged or uninterested. Generate a gentle, empathetic message
         return $defaultTerm;
     }
 
-
-    function generateEmpatheticSentimentResponse($sentiment)
+    public function generateEmpatheticSentimentResponse($sentiment)
     {
         if ($sentiment === 'negative') {
             return "I'm really sorry you're feeling this way. Please know that your feelings are valid, and you're not alone. Would you like to talk more about what’s been on your mind?";
         } elseif ($sentiment === 'positive') {
-            return "That’s wonderful to hear! Taking care of your mental health is important, and I’m glad you’re finding things that bring you joy.";
+            return 'That’s wonderful to hear! Taking care of your mental health is important, and I’m glad you’re finding things that bring you joy.';
         } else {
-            return "I appreciate you sharing. Mental health is a journey, and every step matters.";
+            return 'I appreciate you sharing. Mental health is a journey, and every step matters.';
         }
     }
 
-    function detectSentiment($userInput)
+    public function detectSentiment($userInput)
     {
 
         $prompt = "Analyze the sentiment of the following user response in a mental health awareness survey.
@@ -389,7 +391,7 @@ Classify it into one of these categories:
         return strtolower(trim($response['choices'][0]['message']['content'] ?? 'neutral'));
     }
 
-    function generateFollowUpQuestion($response, $originalQuestion)
+    public function generateFollowUpQuestion($response, $originalQuestion)
     {
         $aiAgent = Prism::text()->using('openai', 'gpt-4');
 
@@ -414,7 +416,7 @@ Classify it into one of these categories:
         return trim($aiAgent->withPrompt($prompt)->generate()->text);
     }
 
-    function generateEmpatheticResponse($question)
+    public function generateEmpatheticResponse($question)
     {
         $aiAgent = Prism::text()->using('openai', 'gpt-4');
 
@@ -434,16 +436,16 @@ Classify it into one of these categories:
         return trim($aiAgent->withPrompt($prompt)->generate()->text);
     }
 
-    function generateEncouragingResponse()
+    public function generateEncouragingResponse()
     {
         $aiAgent = Prism::text()->using('openai', 'gpt-4');
 
-        $prompt = "You are a compassionate AI conducting a mental health awareness survey.
+        $prompt = 'You are a compassionate AI conducting a mental health awareness survey.
     Your responses should be **two lines, warm, encouraging, and non-judgmental**.
 
     The user refused to conduct survey
 
-    **Generate a comforting and encouraging statement to take survey.**";
+    **Generate a comforting and encouraging statement to take survey.**';
 
         return trim($aiAgent->withPrompt($prompt)->generate()->text);
     }
@@ -454,10 +456,9 @@ Classify it into one of these categories:
         $question = $this->questions[session()->get('survey_index', 0)];
         $response = $this->questions[$this->currentIndex]['type'] === 'radio' ? $this->selectedOption : $this->textResponse;
 
-        if (!$response) {
+        if (! $response) {
             return; // Prevent empty submissions
         }
-
 
         $this->storeResponse($question['id'], $response, $question['question']);
         $this->saveResponseInSession($this->currentIndex, $response, $question['question'], $question['id']);
@@ -466,8 +467,8 @@ Classify it into one of these categories:
 
         // Clear input after submission
 
-//        $response = $request->input('response');
-//        $sentiment = $this->detectSentiment($response);
+        //        $response = $request->input('response');
+        //        $sentiment = $this->detectSentiment($response);
 
         $this->selectedOption = null;
         $this->textResponse = '';
@@ -475,7 +476,7 @@ Classify it into one of these categories:
         $this->dispatch('incrementCurrentIndex');
     }
 
-    function storeResponse($questionId, $response, $question): void
+    public function storeResponse($questionId, $response, $question): void
     {
 
         $sessionId = session()->getId();
@@ -491,30 +492,28 @@ Classify it into one of these categories:
             ]
         );
 
-//        $this->dispatchBrowserEvent('update-expression', ['value' => 3]);
-
+        //        $this->dispatchBrowserEvent('update-expression', ['value' => 3]);
 
     }
 
     public function saveResponseInSession($currentIndex, $response, $question, $questionId): void
     {
-//        if (empty($response)) {
-//            return;
-//        }
+        //        if (empty($response)) {
+        //            return;
+        //        }
 
         $this->responses = Session::get('survey_responses', []);
         // Store response in session
         $this->responses[$questionId] = [
             'question' => $question,
-            'response' => $response
+            'response' => $response,
         ];
         Session::put('survey_responses', $this->responses);
 
-
-//        session()->push('survey_responses', ['question' => $this->questions[session()->get('survey_index', 0)], 'response' => $response]);
-//        session()->push('survey_responses', ['question' => $question, 'response' => $response]);
+        //        session()->push('survey_responses', ['question' => $this->questions[session()->get('survey_index', 0)], 'response' => $response]);
+        //        session()->push('survey_responses', ['question' => $question, 'response' => $response]);
 
         // Clear input field
-//        $this->response = "";
+        //        $this->response = "";
     }
 }

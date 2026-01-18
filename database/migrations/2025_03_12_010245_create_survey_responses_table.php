@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('survey_sessions', function (Blueprint $table) {
             $table->id();
             $table->string('session_id')->unique();
-            $table->string('thread_id')->nullable(); //GPT ThreadId
+            $table->string('thread_id')->nullable(); // GPT ThreadId
             $table->timestamps();
         });
 

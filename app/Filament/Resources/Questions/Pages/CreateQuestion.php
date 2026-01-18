@@ -3,7 +3,6 @@
 namespace App\Filament\Resources\Questions\Pages;
 
 use App\Filament\Resources\Questions\QuestionResource;
-use Filament\Actions;
 use Filament\Resources\Pages\CreateRecord;
 
 class CreateQuestion extends CreateRecord
