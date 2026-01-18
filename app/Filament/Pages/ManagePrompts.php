@@ -3,21 +3,20 @@
 namespace App\Filament\Pages;
 
 use App\Settings\PromptSettings;
-use Filament\Forms;
+use BackedEnum;
 use Filament\Forms\Components\MarkdownEditor;
-use Filament\Forms\Components\RichEditor;
-use Filament\Forms\Form;
 use Filament\Pages\SettingsPage;
+use Filament\Schemas\Schema;
 
 class ManagePrompts extends SettingsPage
 {
-    protected static ?string $navigationIcon = 'heroicon-o-cog-6-tooth';
+    protected static BackedEnum|string|null $navigationIcon = 'heroicon-o-cog-6-tooth';
 
     protected static string $settings = PromptSettings::class;
 
-    public function form(Form $form): Form
+    public function form(Schema $schema): Schema
     {
-        return $form
+        return $schema
             ->schema([
                 MarkdownEditor::make('intent_classification_prompt')
                     ->required()

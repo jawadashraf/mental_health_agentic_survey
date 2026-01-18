@@ -6,10 +6,14 @@ use Filament\Widgets\ChartWidget;
 
 class IntentsChart extends ChartWidget
 {
-    protected static ?string $heading = 'Sessions per month';
     protected int | string | array $columnSpan = 'full';
 
     protected static ?int $sort = 2;
+
+    public static function setHeading(): ?string
+    {
+        return 'Sessions per month';
+    }
 
     protected function getType(): string
     {

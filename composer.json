@@ -8,8 +8,8 @@
     "require": {
         "php": "^8.3",
         "calebporzio/sushi": "^2.5",
-        "filament/filament": "^3.3",
-        "filament/spatie-laravel-settings-plugin": "^3.2",
+        "filament/filament": "^4.0",
+        "filament/spatie-laravel-settings-plugin": "^4.0",
         "laravel/framework": "^12.0",
         "laravel/tinker": "^2.10.1",
         "livewire/livewire": "^3.6",
@@ -21,6 +21,7 @@
     "require-dev": {
         "fakerphp/faker": "^1.23",
         "laradumps/laradumps": "^4.0",
+        "laravel/boost": "*",
         "laravel/pail": "^1.2.2",
         "laravel/pint": "^1.13",
         "laravel/sail": "^1.41",

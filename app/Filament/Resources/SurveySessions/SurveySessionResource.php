@@ -1,14 +1,16 @@
 <?php
 
-namespace App\Filament\Resources;
+namespace App\Filament\Resources\SurveySessions;
 
-use App\Filament\Resources\SurveySessionResource\Pages;
-use App\Filament\Resources\SurveySessionResource\RelationManagers;
+use App\Filament\Resources\SurveySessions\Pages;
+use App\Filament\Resources\SurveySessions\RelationManagers;
 use App\Models\SurveySession;
 use App\Settings\PromptSettings;
+use BackedEnum;
+use Filament\Actions\EditAction;
 use Filament\Forms;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Form;
+use Filament\Schemas\Components\Form ;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
@@ -16,16 +18,17 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Support\HtmlString;
+use Filament\Schemas\Schema;
 
 class SurveySessionResource extends Resource
 {
     protected static ?string $model = SurveySession::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static BackedEnum|string|null $navigationIcon = 'heroicon-o-rectangle-stack';
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
+        return $schema
             ->schema([
                 Forms\Components\Placeholder::make('id')
                     ->content(fn ($record): string => $record->id),
@@ -80,13 +83,11 @@ class SurveySessionResource extends Resource
             ->filters([
                 //
             ])
-            ->actions([
-                Tables\Actions\EditAction::make()->label('Responses'),
+            ->recordActions([
+                EditAction::make()->label('Responses'),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-//                    Tables\Actions\DeleteBulkAction::make(),
-                ]),
+            ->toolbarActions([
+                
             ]);
     }
 

@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Filament\Resources\QuestionResource\Pages;
+namespace App\Filament\Resources\Questions\Pages;
 
-use App\Filament\Resources\QuestionResource;
+use App\Filament\Resources\Questions\QuestionResource;
 use Filament\Actions;
 use Filament\Resources\Pages\ListRecords;
 

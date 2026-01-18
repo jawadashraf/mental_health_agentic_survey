@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Filament\Resources\SurveySessionResource\Pages;
+namespace App\Filament\Resources\SurveySessions\Pages;
 
-use App\Filament\Resources\SurveySessionResource;
+use App\Filament\Resources\SurveySessions\SurveySessionResource;
 use Filament\Actions;
 use Filament\Resources\Pages\ListRecords;
 

@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Filament\Resources\SurveySessionResource\RelationManagers;
+namespace App\Filament\Resources\SurveySessions\RelationManagers;
 
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
+use Filament\Schemas\Schema;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
@@ -14,9 +15,9 @@ class IntentsRelationManager extends RelationManager
 {
     protected static string $relationship = 'intents';
 
-    public function form(Form $form): Form
+    public function form(Schema $schema): Schema
     {
-        return $form
+        return $schema
             ->schema([
 //                Forms\Components\TextInput::make('title')
 //                    ->required()
@@ -42,14 +43,12 @@ class IntentsRelationManager extends RelationManager
             ->headerActions([
 //                Tables\Actions\CreateAction::make(),
             ])
-            ->actions([
+            ->recordActions([
 //                Tables\Actions\EditAction::make(),
 //                Tables\Actions\DeleteAction::make(),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-//                    Tables\Actions\DeleteBulkAction::make(),
-                ]),
+            ->toolbarActions([
+                
             ]);
     }
 }

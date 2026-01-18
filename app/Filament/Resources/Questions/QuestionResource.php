@@ -1,13 +1,20 @@
 <?php
 
-namespace App\Filament\Resources;
+namespace App\Filament\Resources\Questions;
 
-use App\Filament\Resources\QuestionResource\Pages;
-use App\Filament\Resources\QuestionResource\RelationManagers;
+use App\Filament\Resources\Questions\Pages;
+use App\Filament\Resources\Questions\RelationManagers;
 use App\Models\Question;
+use BackedEnum;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\EditAction;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
+use Filament\Schemas\Components\Utilities\Get;
+use Filament\Schemas\Schema;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
@@ -17,11 +24,11 @@ class QuestionResource extends Resource
 {
     protected static ?string $model = Question::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-question-mark-circle';
+    protected static BackedEnum|string|null $navigationIcon = 'heroicon-o-question-mark-circle';
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
+        return $schema
             ->schema([
                 Forms\Components\Select::make('type')
                     ->options([
@@ -58,7 +65,7 @@ class QuestionResource extends Resource
                     ->deletable(true)
                     ->reorderable(true)
                     ->columnSpanFull()
-                    ->visible(fn (Forms\Get $get) => in_array($get('type'), ['radio', 'checkbox']))
+                    ->visible(fn (Get $get) => in_array($get('type'), ['radio', 'checkbox']))
             ]);
     }
 
@@ -119,13 +126,13 @@ class QuestionResource extends Resource
                         'behavior' => 'Behavior',
                     ]),
             ])
-            ->actions([
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+            ->recordActions([
+                EditAction::make(),
+                DeleteAction::make(),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
                 ]),
             ]);
     }
