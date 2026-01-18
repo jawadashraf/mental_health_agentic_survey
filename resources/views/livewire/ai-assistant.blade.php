@@ -12,7 +12,7 @@
     </button>
 
     <div style="box-shadow: 0 0 #0000, 0 0 #0000, 0 1px 2px 0 rgb(0 0 0 / 0.05);"
-         class="fixed bottom-[calc(4rem+1.5rem)] right-0 mr-4 bg-white p-6 rounded-lg border border-[#e5e7eb] w-[440px] h-[634px]">
+         class="fixed bottom-22 right-0 mr-4 bg-white p-6 rounded-lg border border-[#e5e7eb] w-[440px] h-[634px]">
 
         <!-- Heading -->
         <div class="flex flex-col space-y-1.5 pb-6">
@@ -34,7 +34,7 @@
                         </svg>
                     </div>
                 </span>
-                <div class="w-full break-words">
+                <div class="w-full wrap-break-word">
                     <p class="leading-relaxed"><span class="block font-bold text-gray-700">AI </span>
                         <span wire:stream="answer"></span>
                     </p>

@@ -4,7 +4,7 @@
     </div>
     <div class="w-1/2 flex flex-col">
 <div class="max-w-xl mx-auto my-16 border border-slate-200 rounded-xl overflow-hidden flex-1 flex flex-col">
-    <div class="h-[80vh] bg-gradient-to-t from-slate-100 p-6 flex space-y-1.5 overflow-scroll flex-col-reverse">
+    <div class="h-[80vh] bg-linear-to-t from-slate-100 p-6 flex space-y-1.5 overflow-scroll flex-col-reverse">
         <div class="flex flex-col">
             @foreach($messages as $key => $message)
                 @if ($message['role'] === 'user')

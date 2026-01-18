@@ -4,7 +4,8 @@ Responsive Layout Declaration
 /* ///////////////////////////////////////////////////////////
 Font Family Declaration 
 /////////////////////////////////////////////////////////// */
-@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
+
 /* ///////////////////////////////////////////////////////////
 Color Declaration 
 /////////////////////////////////////////////////////////// */
@@ -11649,5 +11650,3 @@ Header CSS 01 Start
 .h5_footer-bottom-menu ul li a:hover {
   color: var(--clr-theme-primary);
 }
-
-/*# sourceMappingURL=main.css.map */
