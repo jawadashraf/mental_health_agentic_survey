@@ -8,8 +8,8 @@ use App\Settings\PromptSettings;
 use Illuminate\Support\Arr;
 use Livewire\Component;
 use Prism\Prism\Prism;
-use Request;
-use Session;
+use Illuminate\Support\Facades\Request;
+use Illuminate\Support\Facades\Session;
 use function Termwind\ask;
 
 class ChatResponse extends Component

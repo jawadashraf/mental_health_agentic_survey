@@ -7,7 +7,7 @@ use App\Models\SurveySession;
 use Livewire\Attributes\Validate;
 use Livewire\Component;
 use Request;
-use Session;
+use Illuminate\Support\Facades\Session;
 use Livewire\Attributes\On;
 
 class Chat extends Component
