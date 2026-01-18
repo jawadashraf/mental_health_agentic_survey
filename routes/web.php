@@ -9,11 +9,9 @@ use Illuminate\Support\Facades\Route;
 //    return view('index');
 //});
 Route::get('/clear/Session', function (Illuminate\Http\Request $request) {
-    if($request->code){
-        if( $request->code == '123456') {
-            session()->flush();
-            return "Session Cleared";
-        }
+    if ($request->code && $request->code == '123456') {
+        session()->flush();
+        return "Session Cleared";
     }
         return "...";
 });

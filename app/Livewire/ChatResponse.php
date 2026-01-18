@@ -46,7 +46,7 @@ class ChatResponse extends Component
 
     public ?string $response = null;
 
-    public $selectedOption = null; // For radio button responses
+    public $selectedOption; // For radio button responses
     public $textResponse = ''; // For text responses
 
     public function mount()

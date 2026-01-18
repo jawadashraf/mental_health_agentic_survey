@@ -21,7 +21,7 @@ class Chat extends Component
     public string $greetings = "Hi there! I'm here to chat about mental health awareness.
     Would you be interested in taking a short survey to help us understand your perspective better?";
 
-    public $systemPrompt = null;
+    public $systemPrompt;
 
 
     public $currentIndex;
@@ -99,18 +99,15 @@ class Chat extends Component
         $this->currentIndex = Session::get('survey_index');
 
         if($this->surveyStarted){
-            if ($this->currentIndex < count($this->questions) - 1) {
-
-            } else {
+            if ($this->currentIndex >= count($this->questions) - 1) {
                 session()->flash('message', 'Survey completed!');
-                $session = SurveySession::where('session_id', session()->getId());
+                $session = SurveySession::query()->where('session_id', session()->getId());
                 if($session){
                     $session->update([
                         'completed' => true,
                         'completed_at' => now(),
                     ]);
                 }
-
                 session()->flush();
                 return;
             }
@@ -120,7 +117,7 @@ class Chat extends Component
         }
 
         if($currentLivewireComponentId){
-            $this->js("hideBotDiv('". "next-bot-response-". $currentLivewireComponentId . "')");
+            $this->js('hideBotDiv(\'next-bot-response-'. $currentLivewireComponentId . "')");
         }
 
         $question = $this->questions[$this->currentIndex];
