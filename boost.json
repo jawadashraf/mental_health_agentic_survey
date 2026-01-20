@@ -3,6 +3,7 @@
         "claude_code",
         "codex",
         "gemini",
+        "opencode",
         "phpstorm"
     ],
     "editors": [
