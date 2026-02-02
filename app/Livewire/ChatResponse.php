@@ -44,9 +44,9 @@ class ChatResponse extends Component
 
     public array $prompt;
 
-    public array $messages;
+    public array $message;
 
-    public $metadata = []; // Metadata for the current message
+    public array $metadata = []; // Metadata for the current message
 
     public ?string $response = null;
 
@@ -57,35 +57,29 @@ class ChatResponse extends Component
     public function mount()
     {
         $this->questions = config('survey');
-
         $this->currentIndex = Session::get('survey_index');
 
-        $message = end($this->messages);
-        $metadata = end($this->metadata);
+        // Check if this specific message already has content
+        if (! empty($this->message['content']) && ($this->metadata['type'] ?? '') != 'question') {
+            $this->response = $this->message['content'];
 
-        // If the content is already provided, display it
-        if (! empty($message['content']) && $metadata['type'] != 'question') {
-            $this->response = $message['content'];
-
-            //            dd($message['content']);
             return;
         }
 
-        if (! empty($message['content']) && $metadata['type'] == 'question') {
-            //            dd($message['content']);
+        // If it's a question bubble, we don't need to trigger getResponse()
+        if (($this->metadata['type'] ?? '') == 'question') {
             return;
         }
 
-        $this->js('$wire.getResponse()');
+        // Only trigger getResponse if content is empty (indicating a stream starts)
+        if (empty($this->message['content'])) {
+            $this->js('$wire.getResponse()');
+        }
     }
 
     public function getResponse(): void
     {
-
         $intent = $this->detectIntentWithAI($this->prompt['content']);
-
-        ds($intent);
-
         $intent = str_replace("'", '', $intent);
         $promptForAssistant = '';
         switch ($intent) {
@@ -327,7 +321,8 @@ The user seems disengaged or uninterested. Generate a gentle, empathetic message
 
     public function render()
     {
-        return view('livewire.chat-response');
+        return view('components.chat.chat-response');
+        // livewire.components.chat.chat-response
     }
 
     protected function extractTerm(string $userInput): string

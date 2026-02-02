@@ -171,6 +171,6 @@ class Chat extends Component
 
     public function render()
     {
-        return view('livewire.chat');
+        return view('components.chat.chat');
     }
 }
