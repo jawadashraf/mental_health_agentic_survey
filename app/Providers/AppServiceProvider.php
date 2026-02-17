@@ -14,6 +14,10 @@ class AppServiceProvider extends ServiceProvider
         $this->app->singleton('openai', function () {
             return \OpenAI::client(config('openai.secret'));
         });
+
+        $this->app->singleton(\Laravel\Ai\Contracts\ConversationStore::class, function ($app) {
+            return new \App\Ai\Storage\CustomConversationStore;
+        });
     }
 
     /**

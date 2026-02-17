@@ -2,19 +2,23 @@
     "agents": [
         "claude_code",
         "codex",
-        "gemini",
-        "opencode",
-        "phpstorm"
+        "gemini"
     ],
-    "editors": [
-        "claude_code",
-        "codex",
-        "gemini",
-        "phpstorm",
-        "vscode"
+    "guidelines": true,
+    "herd_mcp": true,
+    "mcp": true,
+    "nightwatch_mcp": false,
+    "packages": [
+        "filament/filament",
+        "laravel/ai",
+        "prism-php/prism",
+        "filament/blueprint"
     ],
-    "guidelines": [
-        "filament/filament"
-    ],
-    "herd_mcp": true
+    "sail": false,
+    "skills": [
+        "livewire-development",
+        "tailwindcss-development",
+        "developing-with-ai-sdk",
+        "developing-with-prism"
+    ]
 }

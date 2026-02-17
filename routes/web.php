@@ -3,6 +3,7 @@
 use App\Http\Controllers\HomeController;
 use App\Livewire\AiAssistant;
 use App\Livewire\Chat;
+use App\Livewire\SimpleChat;
 use Illuminate\Support\Facades\Route;
 
 // Route::get('/', function () {
@@ -18,6 +19,8 @@ Route::get('/clear/Session', function (Illuminate\Http\Request $request) {
     return '...';
 });
 Route::get('/chat', Chat::class)->name('chat');
+Route::get('/chat-v2', \App\Livewire\ChatAi::class)->name('chat-v2');
+Route::get('/simple-chat', SimpleChat::class)->name('simple-chat');
 Route::get('/', [App\Http\Controllers\HomeController::class, 'index']);
 
 Route::get('{any}', [App\Http\Controllers\HomeController::class, 'pageView']);
