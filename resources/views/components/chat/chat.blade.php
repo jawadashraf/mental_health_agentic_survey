@@ -42,6 +42,7 @@
     </div>
 </div>
 
+{{--
 <script src="https://unpkg.com/@rive-app/canvas"></script>
 <script>
 
@@ -83,4 +84,4 @@
         document.getElementById(divId)?.classList.add('hidden');
         console.log('div disappeared');
     }
-</script>
+</script> --}}

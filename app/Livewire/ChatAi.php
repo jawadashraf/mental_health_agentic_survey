@@ -12,7 +12,7 @@ class ChatAi extends Component
 {
     public $questions = [];
 
-    protected $listeners = ['incrementCurrentIndex' => 'incrementCurrentIndex', 'askQuestion' => 'askQuestion'];
+    protected $listeners = ['incrementCurrentIndex' => 'incrementCurrentIndex', 'askQuestion' => 'askQuestion', 'refreshChat' => '$refresh'];
 
     public string $greetings = "Hi there! I'm here to chat about mental health awareness.
     Would you be interested in taking a short survey to help us understand your perspective better?";
@@ -129,10 +129,6 @@ class ChatAi extends Component
         
         Session::put('survey_ai_messages', $this->messages);
         Session::put('survey_ai_metadata', $this->metadata);
-        
-        // Note: We don't necessarily need to prompt the agent for the question itself 
-        // if we are just displaying a static question from config, 
-        // but we'll let the next user response trigger the agent.
     }
 
     public function convertQuestionToPlainText($question): string

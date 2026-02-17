@@ -37,15 +37,12 @@ class ChatAiResponse extends Component
         if (($this->metadata['type'] ?? '') == 'question') {
             return;
         }
-
-        if (empty($this->message['content'])) {
-            $this->js('$wire.getResponse()');
-        }
     }
 
     public function getResponse(): void
     {
-        $intent = $this->detectIntentWithAI($this->prompt['content']);
+        $userInput = $this->prompt['content'] ?? '';
+        $intent = $this->detectIntentWithAI($userInput);
         $intent = str_replace("'", '', $intent);
         
         $promptForAssistant = '';
@@ -61,21 +58,21 @@ class ChatAiResponse extends Component
                 return;
             case 'off-topic':
                 $this->js("updateExpression('5')");
-                $this->storeIntentForQuestion($intent, $this->prompt['content']);
+                $this->storeIntentForQuestion($intent, $userInput);
                 $promptForAssistant = $this->getOffTopicPrompt();
                 break;
             case 'refused':
                 $this->js("updateExpression('3')");
-                $this->storeIntentForQuestion($intent, $this->prompt['content']);
+                $this->storeIntentForQuestion($intent, $userInput);
                 $promptForAssistant = $this->generateEncouragingPrompt();
                 break;
             case 'clarify':
                 $this->js("updateExpression('2')");
-                $this->storeIntentForQuestion($intent, $this->prompt['content']);
+                $this->storeIntentForQuestion($intent, $userInput);
                 $promptForAssistant = $this->getClarifyPrompt($this->questions[$this->currentIndex]['question']);
                 break;
             case 'term-explanation':
-                $term = $this->extractTerm($this->prompt['content']);
+                $term = $this->extractTerm($userInput);
                 $promptForAssistant = $this->getTermExplanationPrompt($term);
                 break;
             case 'meta-question':
@@ -92,7 +89,7 @@ class ChatAiResponse extends Component
                 break;
             case 'answer':
             default:
-                $this->storeIntentForQuestion('default', $this->prompt['content']);
+                $this->storeIntentForQuestion('default', $userInput);
                 $promptForAssistant = $this->generateEncouragingPrompt();
         }
 
@@ -106,12 +103,17 @@ class ChatAiResponse extends Component
         
         $this->response = '';
         foreach ($streamResponse as $chunk) {
-            $content = $chunk->text;
-            $this->response .= $content;
-            $this->stream(to: 'stream-'.$this->getId(), content: $content, replace: false);
+            if ($chunk instanceof \Laravel\Ai\Streaming\Events\TextDelta) {
+                $content = $chunk->delta;
+                $this->response .= $content;
+                $this->stream(to: 'stream-'.$this->getId(), content: $content, replace: false);
+            }
         }
         
         $this->updateSessionMessage();
+        
+        // Notify parent to refresh from session if needed (optional but good practice)
+        $this->dispatch('refreshChat');
     }
 
     protected function updateSessionMessage()
@@ -142,7 +144,6 @@ class ChatAiResponse extends Component
         );
 
         $agent = new SurveyAgent();
-        // We use a clean agent prompt for intent detection to avoid cluttering the main conversation history
         return strtolower(trim($agent->prompt($prompt)->text));
     }
 

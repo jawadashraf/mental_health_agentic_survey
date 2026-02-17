@@ -1,12 +1,13 @@
-<div class="transition-all duration-300 ease-in-out">
+<div class="transition-all duration-300 ease-in-out" wire:key="resp-container-{{ $this->getId() }}"
+    @if(empty($message['content']) && ($metadata['type'] ?? '') !== 'question') wire:init="getResponse" @endif>
 
     @if($message['content'] === '')
-        <div class="w-3/4 space-y-0.5 has-[.stream:empty]:hidden"
+        <div class="w-3/4 space-y-0.5"
              id="next-bot-response-{{ $this->getId() }}">
 
             <div class="text-xs">Assist# (AI SDK)</div>
             <div class="bg-slate-200 rounded-xl rounded-tl-none px-3 py-1.5 text-sm">
-                <div wire:stream="stream-{{ $this->getId()  }}">{{ $response }}</div>
+                <div class="stream" wire:stream="stream-{{ $this->getId()  }}">{{ $response }}</div>
             </div>
         </div>
     @else
