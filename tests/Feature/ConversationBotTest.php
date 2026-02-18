@@ -32,13 +32,44 @@ class ConversationBotTest extends TestCase
 
     public function test_it_can_clear_conversation(): void
     {
-        session()->put('conversation_bot_id', 'old-id');
-
         Livewire::test(ConversationBot::class)
             ->call('clear')
             ->assertSet('conversationId', null)
             ->assertSee('Conversation cleared!');
+    }
 
-        $this->assertNull(session()->get('conversation_bot_id'));
+    public function test_it_resumes_previous_conversation(): void
+    {
+        // Simulate a previous conversation in the database
+        $conversationId = (string) \Illuminate\Support\Str::uuid7();
+        \Illuminate\Support\Facades\DB::table('agent_conversations')->insert([
+            'id' => $conversationId,
+            'user_id' => null,
+            'session_id' => session()->getId(),
+            'title' => 'Test Conversation',
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+
+        \Illuminate\Support\Facades\DB::table('agent_conversation_messages')->insert([
+            'id' => (string) \Illuminate\Support\Str::uuid7(),
+            'conversation_id' => $conversationId,
+            'user_id' => null,
+            'session_id' => session()->getId(),
+            'agent' => ConversationAssistant::class,
+            'role' => 'assistant',
+            'content' => 'Old message',
+            'attachments' => '[]',
+            'tool_calls' => '[]',
+            'tool_results' => '[]',
+            'usage' => '[]',
+            'meta' => '[]',
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+
+        Livewire::test(ConversationBot::class)
+            ->assertSet('conversationId', $conversationId)
+            ->assertSee('Old message');
     }
 }

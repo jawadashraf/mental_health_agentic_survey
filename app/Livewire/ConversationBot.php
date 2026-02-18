@@ -19,12 +19,13 @@ class ConversationBot extends Component
 
     public function mount(): void
     {
-        $this->conversationId = Session::get('conversation_bot_id');
+        $agent = new ConversationAssistant;
+        $participant = (object) ['id' => session()->getId()];
+
+        $agent->continueLastConversation($participant);
+        $this->conversationId = $agent->currentConversation();
 
         if ($this->conversationId) {
-            $agent = new ConversationAssistant;
-            $agent->continue($this->conversationId, (object) ['id' => session()->getId()]);
-
             $this->messages = collect($agent->messages())
                 ->map(fn ($message) => [
                     'role' => $message->role->value,
@@ -65,11 +66,7 @@ class ConversationBot extends Component
 
         $participant = (object) ['id' => session()->getId()];
 
-        if ($this->conversationId) {
-            $agent->continue($this->conversationId, $participant);
-        } else {
-            $agent->forUser($participant);
-        }
+        $agent->continueLastConversation($participant);
 
         $response = $agent->stream($userMessage);
 
@@ -91,7 +88,6 @@ class ConversationBot extends Component
 
         if (! $this->conversationId) {
             $this->conversationId = $response->conversationId;
-            Session::put('conversation_bot_id', $this->conversationId);
         }
 
         $this->isTyping = false;
