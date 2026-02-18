@@ -21,6 +21,7 @@ Route::get('/clear/Session', function (Illuminate\Http\Request $request) {
 Route::get('/chat', Chat::class)->name('chat');
 Route::get('/chat-v2', \App\Livewire\ChatAi::class)->name('chat-v2');
 Route::get('/simple-chat', SimpleChat::class)->name('simple-chat');
+Route::get('/conversation-bot', \App\Livewire\ConversationBot::class)->name('conversation-bot');
 Route::get('/', [App\Http\Controllers\HomeController::class, 'index']);
 
 Route::get('{any}', [App\Http\Controllers\HomeController::class, 'pageView']);
