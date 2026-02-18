@@ -162,20 +162,51 @@ class ChatResponse extends Component
 
     public function detectIntentWithAI($userInput): ?string
     {
+        $aiAgent = Prism::text()->using('openai', 'gpt-4');
         $question = $this->questions[$this->currentIndex]['question'];
-        $options = $this->questions[$this->currentIndex]['options'] ?? [];
+        $options = $this->questions[$this->currentIndex]['options'];
+
+        //        $prompt = "You are an advanced conversational AI conducting a survey.
+        //    Your task is to **classify user responses** into one of the following categories:
+        //    - **'consent'** → if the user is ready to proceed for the survey.
+        //    - **'refused'** → if the user is not ready to proceed for the survey.
+        //    - **'repeat'** → if the user asks you to repeat, reword, or rephrase the last question.
+        //    - **'clarify'** → if the user asks for more explanation, examples, or further details about the question.
+        //    - **'answer'** → if the user is responding to the question.
+        //    - **'off-topic'** → if the user says something unrelated to the survey, like asking personal questions or giving random statements.
+        //    - **'low-motivation'** → if the user is hesitant, reluctant, or unenthusiastic but hasn’t outright refused.
+        //    - **'no-motivation'** → if the user appears disengaged, apathetic, or shows no interest or willingness to proceed.
+        //
+        //    **Examples:**
+        //    - 'Can you repeat that?' → repeat
+        //    - 'Say that again' → repeat
+        //    - 'I don’t get it, explain' → clarify
+        //    - 'What do you mean by that?' → clarify
+        //    - 'My answer is Yes' → answer
+        //    - 'The website is slow' → answer
+        //    - 'What’s your name?' → off-topic
+        //    - 'Tell me a joke' → off-topic
+        //    - 'Maybe later, I am a bit tired' → low-motivation
+        //    - 'I do not care about this survey' → no-motivation
+        //
+        //    **User Input:** \"$userInput\"
+        //    **Response:** (only return consent, refused, repeat, clarify, answer, off-topic, no-motivation, low-motivation)";
+
+        $stored_intent_classification_prompt = app(PromptSettings::class)->intent_classification_prompt;
+
+        //        $prompt = str_replace(
+        //            ['{{userInput}}', '{{question}}', '{{options}}'],
+        //            [$userInput, $question, implode(', ', $options)],
+        //            $storedPrompt
+        //        );
 
         $prompt = str_replace(
             ['{{userInput}}', '{{question}}', '{{options}}'],
             [$userInput, $question, implode(', ', $options)],
-            app(PromptSettings::class)->intent_classification_prompt
+            $stored_intent_classification_prompt
         );
 
-        $agent = new \App\Ai\Agents\IntentClassificationAgent;
-
-        $response = $agent->prompt($prompt);
-
-        return $response['intent'] ?? 'answer';
+        return strtolower(trim($aiAgent->withPrompt($prompt)->generate()->text));
     }
 
     public function getProgressPrompt($currentIndex, $total): string
