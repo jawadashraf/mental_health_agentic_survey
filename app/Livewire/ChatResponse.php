@@ -9,7 +9,8 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Session;
 use Livewire\Component;
-use Prism\Prism\Prism;
+use Prism\Prism\Enums\Provider;
+use Prism\Prism\Facades\Prism;
 
 use function Termwind\ask;
 
@@ -57,7 +58,8 @@ class ChatResponse extends Component
     public function mount()
     {
         $this->questions = config('survey');
-        $this->currentIndex = Session::get('survey_index');
+        $this->currentIndex = Session::get('survey_index', 0);
+        $this->surveyStarted = Session::get('survey_started', false);
 
         // Check if this specific message already has content
         if (! empty($this->message['content']) && ($this->metadata['type'] ?? '') != 'question') {
@@ -80,7 +82,7 @@ class ChatResponse extends Component
     public function getResponse(): void
     {
         $intent = $this->detectIntentWithAI($this->prompt['content']);
-        $intent = str_replace("'", '', $intent);
+        $intent = strtolower(trim(str_replace("'", '', $intent)));
         $promptForAssistant = '';
         switch ($intent) {
 
@@ -162,51 +164,28 @@ class ChatResponse extends Component
 
     public function detectIntentWithAI($userInput): ?string
     {
-        $aiAgent = Prism::text()->using('openai', 'gpt-4');
-        $question = $this->questions[$this->currentIndex]['question'];
-        $options = $this->questions[$this->currentIndex]['options'];
-
-        //        $prompt = "You are an advanced conversational AI conducting a survey.
-        //    Your task is to **classify user responses** into one of the following categories:
-        //    - **'consent'** → if the user is ready to proceed for the survey.
-        //    - **'refused'** → if the user is not ready to proceed for the survey.
-        //    - **'repeat'** → if the user asks you to repeat, reword, or rephrase the last question.
-        //    - **'clarify'** → if the user asks for more explanation, examples, or further details about the question.
-        //    - **'answer'** → if the user is responding to the question.
-        //    - **'off-topic'** → if the user says something unrelated to the survey, like asking personal questions or giving random statements.
-        //    - **'low-motivation'** → if the user is hesitant, reluctant, or unenthusiastic but hasn’t outright refused.
-        //    - **'no-motivation'** → if the user appears disengaged, apathetic, or shows no interest or willingness to proceed.
-        //
-        //    **Examples:**
-        //    - 'Can you repeat that?' → repeat
-        //    - 'Say that again' → repeat
-        //    - 'I don’t get it, explain' → clarify
-        //    - 'What do you mean by that?' → clarify
-        //    - 'My answer is Yes' → answer
-        //    - 'The website is slow' → answer
-        //    - 'What’s your name?' → off-topic
-        //    - 'Tell me a joke' → off-topic
-        //    - 'Maybe later, I am a bit tired' → low-motivation
-        //    - 'I do not care about this survey' → no-motivation
-        //
-        //    **User Input:** \"$userInput\"
-        //    **Response:** (only return consent, refused, repeat, clarify, answer, off-topic, no-motivation, low-motivation)";
+        if ($this->surveyStarted) {
+            $question = $this->questions[$this->currentIndex]['question'];
+            $options = $this->questions[$this->currentIndex]['options'] ?? [];
+        } else {
+            $question = "Hi there! I'm here to chat about mental health awareness. Would you be interested in taking a short survey to help us understand your perspective better?";
+            $options = ['Yes', 'No'];
+        }
 
         $stored_intent_classification_prompt = app(PromptSettings::class)->intent_classification_prompt;
 
-        //        $prompt = str_replace(
-        //            ['{{userInput}}', '{{question}}', '{{options}}'],
-        //            [$userInput, $question, implode(', ', $options)],
-        //            $storedPrompt
-        //        );
-
         $prompt = str_replace(
             ['{{userInput}}', '{{question}}', '{{options}}'],
-            [$userInput, $question, implode(', ', $options)],
+            [$userInput, $question, is_array($options) ? implode(', ', $options) : $options],
             $stored_intent_classification_prompt
         );
 
-        return strtolower(trim($aiAgent->withPrompt($prompt)->generate()->text));
+        $response = Prism::text()
+            ->using(Provider::OpenAI, 'gpt-4')
+            ->withPrompt($prompt)
+            ->generate();
+
+        return strtolower(trim($response->text));
     }
 
     public function getProgressPrompt($currentIndex, $total): string

@@ -81,8 +81,8 @@ class Chat extends Component
 
         if (! Session::has('survey_started')) {
             Session::put('survey_started', false);
-            $this->surveyStarted = Session::get('survey_started');
         }
+        $this->surveyStarted = Session::get('survey_started');
     }
 
     public function incrementCurrentIndex(): void
@@ -98,6 +98,7 @@ class Chat extends Component
 
         if ($this->surveyStarted) {
             if ($this->currentIndex >= count($this->questions) - 1) {
+                // ... (survey completion logic)
                 session()->flash('message', 'Survey completed!');
                 $session = SurveySession::query()->where('session_id', session()->getId());
                 if ($session) {
@@ -107,12 +108,11 @@ class Chat extends Component
                     ]);
                 }
                 session()->flush();
-
                 return;
             }
-
         } else {
             $this->surveyStarted = true;
+            Session::put('survey_started', true);
         }
 
         if ($currentLivewireComponentId) {
@@ -132,6 +132,9 @@ class Chat extends Component
             'role' => 'assistant',
             'content' => $plainQuestion,
         ];
+
+        Session::put('survey_messages', $this->messages);
+        Session::put('survey_metadata', $this->metadata);
 
     }
 
@@ -161,12 +164,12 @@ class Chat extends Component
         $this->validate();
 
         $this->messages[] = ['role' => 'user', 'content' => $this->body];
-        $this->metadata[] = ['role' => 'user', 'content' => $this->body];
-
-        $this->messages[] = ['role' => 'assistant', 'content' => ''];
         $this->metadata[] = ['role' => 'assistant', 'content' => '', 'type' => 'stream'];
 
         $this->body = '';
+
+        Session::put('survey_messages', $this->messages);
+        Session::put('survey_metadata', $this->metadata);
     }
 
     public function render()
