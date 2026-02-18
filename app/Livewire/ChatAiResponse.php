@@ -6,21 +6,29 @@ use App\Ai\Agents\SurveyAgent;
 use App\Models\Intent;
 use App\Models\SurveyResponse;
 use App\Settings\PromptSettings;
-use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Session;
 use Livewire\Component;
 
 class ChatAiResponse extends Component
 {
     public $questions = [];
+
     public $responses = [];
+
     public $currentIndex = 0;
+
     public array $prompt;
+
     public array $message;
+
     public array $metadata = [];
+
     public ?string $response = null;
+
     public $selectedOption;
+
     public $textResponse = '';
+
     public $conversationId;
 
     public function mount()
@@ -31,6 +39,7 @@ class ChatAiResponse extends Component
 
         if (! empty($this->message['content']) && ($this->metadata['type'] ?? '') != 'question') {
             $this->response = $this->message['content'];
+
             return;
         }
 
@@ -44,9 +53,9 @@ class ChatAiResponse extends Component
         $userInput = $this->prompt['content'] ?? '';
         $intent = $this->detectIntentWithAI($userInput);
         $intent = str_replace("'", '', $intent);
-        
+
         $promptForAssistant = '';
-        
+
         switch ($intent) {
             case 'progress-question':
                 $promptForAssistant = $this->getProgressPrompt($this->currentIndex, count($this->questions));
@@ -55,6 +64,7 @@ class ChatAiResponse extends Component
             case 'repeat':
                 $this->js("updateExpression('2')");
                 $this->askQuestion();
+
                 return;
             case 'off-topic':
                 $this->js("updateExpression('5')");
@@ -93,14 +103,14 @@ class ChatAiResponse extends Component
                 $promptForAssistant = $this->generateEncouragingPrompt();
         }
 
-        $agent = new SurveyAgent();
-        
+        $agent = new SurveyAgent;
+
         $participant = (object) ['id' => session()->getId()];
 
         // Use the native continue() method with the stored conversationId
         $streamResponse = $agent->continue($this->conversationId, as: $participant)
             ->stream($promptForAssistant);
-        
+
         $this->response = '';
         foreach ($streamResponse as $chunk) {
             if ($chunk instanceof \Laravel\Ai\Streaming\Events\TextDelta) {
@@ -109,9 +119,9 @@ class ChatAiResponse extends Component
                 $this->stream(to: 'stream-'.$this->getId(), content: $content, replace: false);
             }
         }
-        
+
         $this->updateSessionMessage();
-        
+
         // Notify parent to refresh from session if needed (optional but good practice)
         $this->dispatch('refreshChat');
     }
@@ -120,14 +130,14 @@ class ChatAiResponse extends Component
     {
         $messages = Session::get('survey_ai_messages', []);
         $metadata = Session::get('survey_ai_metadata', []);
-        
+
         foreach ($metadata as $index => $meta) {
             if (($meta['type'] ?? '') === 'stream' && empty($messages[$index]['content'])) {
                 $messages[$index]['content'] = $this->response;
                 break;
             }
         }
-        
+
         Session::put('survey_ai_messages', $messages);
     }
 
@@ -135,16 +145,18 @@ class ChatAiResponse extends Component
     {
         $question = $this->questions[$this->currentIndex]['question'];
         $options = $this->questions[$this->currentIndex]['options'] ?? [];
-        $stored_intent_classification_prompt = app(PromptSettings::class)->intent_classification_prompt;
 
         $prompt = str_replace(
             ['{{userInput}}', '{{question}}', '{{options}}'],
             [$userInput, $question, implode(', ', $options)],
-            $stored_intent_classification_prompt
+            app(PromptSettings::class)->intent_classification_prompt
         );
 
-        $agent = new SurveyAgent();
-        return strtolower(trim($agent->prompt($prompt)->text));
+        $agent = new \App\Ai\Agents\IntentClassificationAgent;
+
+        $response = $agent->prompt($prompt);
+
+        return $response['intent'] ?? 'answer';
     }
 
     public function getProgressPrompt($currentIndex, $total): string
@@ -157,6 +169,7 @@ class ChatAiResponse extends Component
         } else {
             $msg = "Generate an encouraging statement, since the user is going further into the survey. Like: You're on a roll! Just {$remaining} more questions to go.";
         }
+
         return $msg;
     }
 
@@ -186,10 +199,10 @@ class ChatAiResponse extends Component
 
     public function generateEncouragingPrompt(): string
     {
-        return "You are a compassionate AI conducting a mental health awareness survey.
+        return 'You are a compassionate AI conducting a mental health awareness survey.
     Your responses should be **two lines, warm, encouraging, and non-judgmental**.
     The user seems to need encouragement or has strayed from the survey.
-    **Generate a comforting and encouraging statement to continue the survey.**";
+    **Generate a comforting and encouraging statement to continue the survey.**';
     }
 
     public function getClarifyPrompt($question): string
@@ -254,9 +267,11 @@ The user seems disengaged or uninterested. Generate a gentle, empathetic message
             if (preg_match($pattern, $userInput, $matches)) {
                 $term = trim($matches[1]);
                 $term = preg_replace('/\?|\.$/', '', $term);
+
                 return ucfirst($term);
             }
         }
+
         return $defaultTerm;
     }
 
