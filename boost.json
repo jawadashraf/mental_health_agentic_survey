@@ -2,7 +2,8 @@
     "agents": [
         "claude_code",
         "codex",
-        "gemini"
+        "gemini",
+        "opencode"
     ],
     "guidelines": true,
     "herd_mcp": true,
