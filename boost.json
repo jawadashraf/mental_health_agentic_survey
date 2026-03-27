@@ -6,7 +6,6 @@
         "opencode"
     ],
     "guidelines": true,
-    "herd_mcp": true,
     "mcp": true,
     "nightwatch_mcp": false,
     "packages": [
@@ -17,9 +16,10 @@
     ],
     "sail": false,
     "skills": [
+        "laravel-best-practices",
         "livewire-development",
         "tailwindcss-development",
-        "developing-with-ai-sdk",
+        "ai-sdk-development",
         "developing-with-prism"
     ]
 }

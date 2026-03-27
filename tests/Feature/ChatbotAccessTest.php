@@ -3,11 +3,13 @@
 namespace Tests\Feature;
 
 use App\Livewire\ChatbotAccess;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Livewire\Livewire;
 use Tests\TestCase;
 
 class ChatbotAccessTest extends TestCase
 {
+    use RefreshDatabase;
     public function test_it_redirects_unauthorized_users_from_chatbot_routes(): void
     {
         $this->get(route('chat'))

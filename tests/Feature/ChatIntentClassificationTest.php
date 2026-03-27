@@ -3,7 +3,7 @@
 namespace Tests\Feature;
 
 use App\Ai\Agents\IntentClassificationAgent;
-use App\Livewire\ChatResponse;
+use App\Livewire\ChatAiResponse;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Session;
@@ -49,7 +49,7 @@ class ChatIntentClassificationTest extends TestCase
             ['intent' => 'consent'],
         ]);
 
-        $component = Livewire::test(ChatResponse::class, [
+        $component = Livewire::test(ChatAiResponse::class, [
             'prompt' => ['content' => 'Yes, I want to start'],
             'message' => ['content' => ''],
             'metadata' => ['type' => 'user'],
@@ -70,7 +70,7 @@ class ChatIntentClassificationTest extends TestCase
             [],
         ]);
 
-        $component = Livewire::test(ChatResponse::class, [
+        $component = Livewire::test(ChatAiResponse::class, [
             'prompt' => ['content' => 'My answer is blue'],
             'message' => ['content' => ''],
             'metadata' => ['type' => 'user'],

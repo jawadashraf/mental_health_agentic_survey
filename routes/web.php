@@ -33,3 +33,11 @@ Route::get('{any}', [App\Http\Controllers\HomeController::class, 'pageView']);
 
 // Route::get('/', [HomeController::class , 'index'])->name('home');
 // Route::get('/chat', AiAssistant::class)->name('chat');
+Route::get('/dump-session', function() {
+    return response()->json(session()->all());
+});
+
+Route::get('/clear-chat', function() {
+    session()->forget(['survey_messages', 'survey_metadata', 'survey_index', 'survey_responses', 'survey_started']);
+    return "Chat cleared!";
+});

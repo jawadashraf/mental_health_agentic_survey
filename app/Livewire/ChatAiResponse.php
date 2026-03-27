@@ -36,6 +36,7 @@ class ChatAiResponse extends Component
         $this->questions = config('survey');
         $this->currentIndex = Session::get('survey_ai_index', 0);
         $this->conversationId = Session::get('survey_ai_conversation_id');
+        $this->responses = Session::get('survey_ai_responses', []);
 
         if (! empty($this->message['content']) && ($this->metadata['type'] ?? '') != 'question') {
             $this->response = $this->message['content'];
@@ -62,6 +63,8 @@ class ChatAiResponse extends Component
                 break;
             case 'consent':
             case 'repeat':
+                $this->response = ' ';
+                $this->updateSessionMessage();
                 $this->js("updateExpression('2')");
                 $this->askQuestion();
 
@@ -143,12 +146,19 @@ class ChatAiResponse extends Component
 
     public function detectIntentWithAI($userInput): ?string
     {
-        $question = $this->questions[$this->currentIndex]['question'];
-        $options = $this->questions[$this->currentIndex]['options'] ?? [];
+        $surveyStarted = Session::get('survey_ai_started', false);
+        
+        if ($surveyStarted) {
+            $question = $this->questions[$this->currentIndex]['question'];
+            $options = $this->questions[$this->currentIndex]['options'] ?? [];
+        } else {
+            $question = "Hi there! I'm here to chat about mental health awareness. Would you be interested in taking a short survey to help us understand your perspective better?";
+            $options = ['Yes', 'No'];
+        }
 
         $prompt = str_replace(
             ['{{userInput}}', '{{question}}', '{{options}}'],
-            [$userInput, $question, implode(', ', $options)],
+            [$userInput, $question, is_array($options) ? implode(', ', $options) : $options],
             app(PromptSettings::class)->intent_classification_prompt
         );
 

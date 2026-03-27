@@ -11,7 +11,7 @@ class Chat extends Component
 {
     public $questions = [];
 
-    protected $listeners = ['incrementCurrentIndex' => 'incrementCurrentIndex', 'askQuestion' => 'askQuestion'];
+    protected $listeners = ['incrementCurrentIndex' => 'incrementCurrentIndex', 'askQuestion' => 'askQuestion', 'refreshChat' => 'refreshChat'];
 
     public string $greetings = "Hi there! I'm here to chat about mental health awareness.
     Would you be interested in taking a short survey to help us understand your perspective better?";
@@ -95,6 +95,8 @@ class Chat extends Component
     public function askQuestion($currentLivewireComponentId = null): void
     {
         $this->currentIndex = Session::get('survey_index');
+        $this->messages = Session::get('survey_messages', []);
+        $this->metadata = Session::get('survey_metadata', []);
 
         if ($this->surveyStarted) {
             if ($this->currentIndex >= count($this->questions) - 1) {
@@ -116,7 +118,7 @@ class Chat extends Component
         }
 
         if ($currentLivewireComponentId) {
-            $this->js('hideBotDiv(\'next-bot-response-'.$currentLivewireComponentId."')");
+            // $this->js('hideBotDiv(\'next-bot-response-'.$currentLivewireComponentId."')");
         }
 
         $question = $this->questions[$this->currentIndex];
@@ -135,7 +137,6 @@ class Chat extends Component
 
         Session::put('survey_messages', $this->messages);
         Session::put('survey_metadata', $this->metadata);
-
     }
 
     public function convertQuestionToPlainText($question): string
@@ -163,13 +164,25 @@ class Chat extends Component
     {
         $this->validate();
 
+        $this->messages = Session::get('survey_messages', []);
+        $this->metadata = Session::get('survey_metadata', []);
+
         $this->messages[] = ['role' => 'user', 'content' => $this->body];
+        $this->metadata[] = ['role' => 'user', 'content' => $this->body];
+
+        $this->messages[] = ['role' => 'assistant', 'content' => ''];
         $this->metadata[] = ['role' => 'assistant', 'content' => '', 'type' => 'stream'];
 
         $this->body = '';
 
         Session::put('survey_messages', $this->messages);
         Session::put('survey_metadata', $this->metadata);
+    }
+
+    public function refreshChat()
+    {
+        $this->messages = Session::get('survey_messages', []);
+        $this->metadata = Session::get('survey_metadata', []);
     }
 
     public function render()

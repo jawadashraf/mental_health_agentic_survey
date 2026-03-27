@@ -10,6 +10,8 @@
                 <div class="stream" wire:stream="stream-{{ $this->getId()  }}">{{ $response }}</div>
             </div>
         </div>
+    @elseif(trim($message['content']) === '')
+        <!-- Do nothing -->
     @else
         @if(($metadata['type'] ?? '')  === 'question')
 

@@ -1,4 +1,5 @@
-<div class="transition-all duration-300 ease-in-out">
+<div class="transition-all duration-300 ease-in-out" wire:key="resp-container-{{ $this->getId() }}"
+    @if(empty($message['content']) && ($metadata['type'] ?? '') !== 'question') wire:init="getResponse" @endif>
 
     @if($message['content'] === '')
         <div class="w-3/4 space-y-0.5 has-[.stream:empty]:hidden"
@@ -9,6 +10,8 @@
                 <div wire:stream="stream-{{ $this->getId()  }}">{{ $response }}</div>
             </div>
         </div>
+    @elseif(trim($message['content']) === '')
+        <!-- Hidden completely -->
     @else
         @if(($metadata['type'] ?? '')  === 'question')
 

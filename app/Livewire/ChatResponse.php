@@ -60,6 +60,7 @@ class ChatResponse extends Component
         $this->questions = config('survey');
         $this->currentIndex = Session::get('survey_index', 0);
         $this->surveyStarted = Session::get('survey_started', false);
+        $this->responses = Session::get('survey_responses', []);
 
         // Check if this specific message already has content
         if (! empty($this->message['content']) && ($this->metadata['type'] ?? '') != 'question') {
@@ -74,9 +75,7 @@ class ChatResponse extends Component
         }
 
         // Only trigger getResponse if content is empty (indicating a stream starts)
-        if (empty($this->message['content'])) {
-            $this->js('$wire.getResponse()');
-        }
+        // (now handled via wire:init in blade)
     }
 
     public function getResponse(): void
@@ -91,7 +90,9 @@ class ChatResponse extends Component
                 break;
             case 'consent':
             case 'repeat':
-                $this->js("updateExpression('2')"); // Happy
+                $this->response = ' ';
+                $this->updateSessionMessage();
+                // $this->js("updateExpression('2')"); // Happy
                 $this->askQuestion();
 
                 return;
@@ -140,12 +141,14 @@ class ChatResponse extends Component
 
         }
 
-        $this->messages[] = ['role' => 'user', 'content' => $promptForAssistant];
-        $this->messages[] = ['role' => 'assistant', 'content' => ''];
+        $messages = Session::get('survey_messages', []);
+        $apiMessages = array_filter($messages, fn($msg) => !empty($msg['content']));
+        $apiMessages = array_map(fn($msg) => ['role' => $msg['role'], 'content' => $msg['content']], $apiMessages);
+        $apiMessages[] = ['role' => 'user', 'content' => $promptForAssistant];
 
         $stream = app('openai')->chat()->createStreamed([
             'model' => 'gpt-4',
-            'messages' => $this->messages,
+            'messages' => array_values($apiMessages),
             'temperature' => 1.0,
         ]);
 
@@ -160,6 +163,23 @@ class ChatResponse extends Component
                 replace: false
             );
         }
+        
+        $this->updateSessionMessage();
+    }
+
+    public function updateSessionMessage()
+    {
+        $messages = Session::get('survey_messages', []);
+        $metadata = Session::get('survey_metadata', []);
+
+        foreach ($metadata as $index => $meta) {
+            if (($meta['type'] ?? '') === 'stream' && empty($messages[$index]['content'])) {
+                $messages[$index]['content'] = $this->response;
+                break;
+            }
+        }
+
+        Session::put('survey_messages', $messages);
     }
 
     public function detectIntentWithAI($userInput): ?string
