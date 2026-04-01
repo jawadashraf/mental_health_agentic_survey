@@ -35,7 +35,7 @@ class RaftChatResponse extends Component
 
     public function mount()
     {
-        $this->questions = config('raft-survey');
+        $this->questions = config('raft-survey-test');
         $this->currentIndex = Session::get('raft_survey_index', 0);
         $this->surveyStarted = Session::get('raft_survey_started', false);
         $this->responses = Session::get('raft_survey_responses', []);

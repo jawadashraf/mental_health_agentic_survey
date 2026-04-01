@@ -49,7 +49,7 @@ class RaftChat extends Component
             ]
         );
 
-        $this->questions = config('raft-survey');
+        $this->questions = config('raft-survey-test');
         $this->systemPrompt = <<<'EOT'
     You are a compassionate AI conducting a foster care support survey for Raft, a foster care charity.
     Your responses should be **warm, encouraging, and non-judgmental**.
@@ -74,18 +74,20 @@ class RaftChat extends Component
 
         if (! Session::has('raft_survey_index')) {
             Session::put('raft_survey_index', 0);
-            $this->currentIndex = Session::get('raft_survey_index');
         }
+        $this->currentIndex = Session::get('raft_survey_index', 0);
 
         if (! Session::has('raft_survey_responses')) {
             Session::put('raft_survey_responses', []);
-            $this->responses = Session::get('raft_survey_responses');
         }
+        $this->responses = Session::get('raft_survey_responses', []);
 
         if (! Session::has('raft_survey_started')) {
             Session::put('raft_survey_started', false);
         }
         $this->surveyStarted = Session::get('raft_survey_started');
+
+        $this->surveyCompleted = Session::get('raft_survey_completed', false);
     }
 
     public function incrementCurrentIndex(): void
@@ -101,16 +103,8 @@ class RaftChat extends Component
         $this->metadata = Session::get('raft_survey_metadata', []);
 
         if ($this->surveyStarted) {
-            if ($this->currentIndex >= count($this->questions) - 1) {
-                session()->flash('message', 'Survey completed!');
-                $session = SurveySession::query()->where('session_id', session()->getId());
-                if ($session) {
-                    $session->update([
-                        'completed' => true,
-                        'completed_at' => now(),
-                    ]);
-                }
-                session()->flush();
+            if ($this->currentIndex >= count($this->questions)) {
+                $this->completeSurvey();
 
                 return;
             }
@@ -124,6 +118,25 @@ class RaftChat extends Component
         }
 
         $question = $this->questions[$this->currentIndex];
+
+        // Inject progress encouragement at the midpoint
+        $totalQuestions = count($this->questions);
+        $answeredCount = count(Session::get('raft_survey_responses', []));
+        $midpoint = (int) ceil($totalQuestions / 2);
+
+        if ($answeredCount === $midpoint && $totalQuestions > 2) {
+            $remaining = $totalQuestions - $answeredCount;
+            $this->metadata[] = [
+                'role' => 'assistant',
+                'content' => "You're doing great! You're halfway through — just {$remaining} more to go. Your responses are really valuable. 💪",
+                'type' => 'progress',
+            ];
+            $this->messages[] = [
+                'role' => 'assistant',
+                'content' => "You're doing great! You're halfway through — just {$remaining} more to go. Your responses are really valuable. 💪",
+            ];
+        }
+
         $this->metadata[] = [
             'role' => 'assistant',
             'content' => $question,
@@ -135,6 +148,38 @@ class RaftChat extends Component
         $this->messages[] = [
             'role' => 'assistant',
             'content' => $plainQuestion,
+        ];
+
+        Session::put('raft_survey_messages', $this->messages);
+        Session::put('raft_survey_metadata', $this->metadata);
+    }
+
+    /**
+     * Mark the survey as completed, persist the flag, and inject a conclusion message.
+     */
+    protected function completeSurvey(): void
+    {
+        $session = SurveySession::query()->where('session_id', session()->getId());
+        if ($session) {
+            $session->update([
+                'completed' => true,
+                'completed_at' => now(),
+            ]);
+        }
+
+        $this->surveyCompleted = true;
+        Session::put('raft_survey_completed', true);
+
+        $conclusionMessage = "🎉 **Thank you so much for completing the survey!**\n\nYour responses are incredibly valuable and will help Raft understand the real experiences of foster and adoptive families. Every answer contributes to shaping better support services.\n\nIf you'd like to learn more about Raft or get in touch, please visit our website. Take care of yourself — you're doing an amazing job! 💜";
+
+        $this->metadata[] = [
+            'role' => 'assistant',
+            'content' => $conclusionMessage,
+            'type' => 'conclusion',
+        ];
+        $this->messages[] = [
+            'role' => 'assistant',
+            'content' => $conclusionMessage,
         ];
 
         Session::put('raft_survey_messages', $this->messages);

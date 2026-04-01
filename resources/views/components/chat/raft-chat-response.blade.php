@@ -46,7 +46,7 @@
                         @endif
 
                         <button wire:click="handleUserInput" type="submit"
-                                class="mt-3 inline-flex items-center gap-2 bg-gradient-to-r from-purple-500 to-indigo-600 text-white text-sm font-medium px-5 py-2 rounded-xl shadow-lg shadow-purple-500/20 hover:shadow-purple-500/40 hover:scale-[1.02] active:scale-[0.98] transition-all duration-200">
+                                class="mt-3 inline-flex items-center gap-2 bg-linear-to-r from-purple-500 to-indigo-600 text-white text-sm font-medium px-5 py-2 rounded-xl shadow-lg shadow-purple-500/20 hover:shadow-purple-500/40 hover:scale-[1.02] active:scale-[0.98] transition-all duration-200">
                             <span>Submit</span>
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="size-4">
                                 <path fill-rule="evenodd" d="M3 10a.75.75 0 0 1 .75-.75h10.638L10.23 5.29a.75.75 0 1 1 1.04-1.08l5.5 5.25a.75.75 0 0 1 0 1.08l-5.5 5.25a.75.75 0 1 1-1.04-1.08l4.158-3.96H3.75A.75.75 0 0 1 3 10Z" clip-rule="evenodd" />
@@ -65,6 +65,25 @@
 
                 </div>
 
+            </div>
+        @elseif(($metadata['type'] ?? '') === 'progress')
+            {{-- Progress encouragement message --}}
+            <div class="max-w-[85%] sm:max-w-[75%] space-y-1 transition-opacity duration-300 ease-in-out animate-[fadeInUp_0.3s_ease-out]">
+                <div class="text-[11px] text-purple-300/60 font-medium">Raft AI</div>
+                <div class="bg-linear-to-r from-amber-500/15 to-orange-500/15 backdrop-blur-sm border border-amber-400/20 rounded-2xl rounded-tl-sm px-4 py-3 text-sm text-amber-100 leading-relaxed">
+                    <div class="flex items-start gap-2">
+                        <span class="text-lg leading-none mt-0.5">🔥</span>
+                        <span>{{ $message['content'] }}</span>
+                    </div>
+                </div>
+            </div>
+        @elseif(($metadata['type'] ?? '') === 'conclusion')
+            {{-- Survey conclusion message --}}
+            <div class="max-w-[90%] sm:max-w-[80%] space-y-1 transition-opacity duration-300 ease-in-out animate-[fadeInUp_0.4s_ease-out]">
+                <div class="text-[11px] text-purple-300/60 font-medium">Raft AI</div>
+                <div class="bg-linear-to-br from-emerald-500/15 to-teal-500/15 backdrop-blur-sm border border-emerald-400/20 rounded-2xl rounded-tl-sm px-5 py-4 text-sm text-emerald-100 leading-relaxed">
+                    <div class="whitespace-pre-line">{{ $message['content'] }}</div>
+                </div>
             </div>
         @else
         <div class="max-w-[85%] sm:max-w-[75%] space-y-1 transition-opacity duration-300 ease-in-out" x-data="{ show: true }" x-init="setTimeout(() => show = true, 100)" x-show="show">

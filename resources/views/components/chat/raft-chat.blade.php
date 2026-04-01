@@ -24,11 +24,38 @@
                 </div>
                 <span class="absolute -bottom-0.5 -right-0.5 size-3 bg-emerald-400 rounded-full border-2 border-slate-900 animate-pulse"></span>
             </div>
-            <div>
+            <div class="flex-1">
                 <h1 class="text-base sm:text-lg font-bold text-white tracking-tight">Raft AI Assistant</h1>
                 <p class="text-xs text-purple-300/80">Foster care survey · Anonymous</p>
             </div>
+            @if($surveyCompleted)
+                <div class="flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/20 border border-emerald-400/30">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="size-4 text-emerald-400">
+                        <path fill-rule="evenodd" d="M10 18a8 8 0 1 0 0-16 8 8 0 0 0 0 16Zm3.857-9.809a.75.75 0 0 0-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 1 0-1.06 1.061l2.5 2.5a.75.75 0 0 0 1.137-.089l4-5.5Z" clip-rule="evenodd" />
+                    </svg>
+                    <span class="text-xs font-semibold text-emerald-300">Complete</span>
+                </div>
+            @endif
         </div>
+
+        {{-- Progress bar --}}
+        @if($surveyStarted && !$surveyCompleted)
+            @php
+                $totalQuestions = count($questions);
+                $answeredCount = count($responses ?? []);
+                $progressPercent = $totalQuestions > 0 ? round(($answeredCount / $totalQuestions) * 100) : 0;
+            @endphp
+            <div class="px-4 sm:px-6 py-2 border-b border-white/5 bg-white/2">
+                <div class="flex items-center justify-between mb-1.5">
+                    <span class="text-[11px] font-medium text-purple-300/70">Progress</span>
+                    <span class="text-[11px] font-semibold text-purple-200">{{ $answeredCount }} / {{ $totalQuestions }}</span>
+                </div>
+                <div class="w-full h-1.5 rounded-full bg-white/10 overflow-hidden">
+                    <div class="h-full rounded-full bg-linear-to-r from-purple-500 to-indigo-500 transition-all duration-500 ease-out"
+                         style="width: {{ $progressPercent }}%"></div>
+                </div>
+            </div>
+        @endif
 
         {{-- Messages area --}}
         <div class="flex-1 overflow-y-auto p-4 sm:p-6 flex flex-col-reverse" id="raft-chat-messages">
@@ -52,7 +79,19 @@
             </div>
         </div>
 
-        {{-- Input bar --}}
+        {{-- Input bar (hidden when survey is completed) --}}
+        @if($surveyCompleted)
+            <div class="p-4 sm:p-6 border-t border-white/10 bg-white/5">
+                <div class="text-center">
+                    <div class="inline-flex items-center gap-2 px-5 py-3 rounded-2xl bg-emerald-500/10 border border-emerald-400/20">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="size-5 text-emerald-400">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 1 0 0-16 8 8 0 0 0 0 16Zm3.857-9.809a.75.75 0 0 0-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 1 0-1.06 1.061l2.5 2.5a.75.75 0 0 0 1.137-.089l4-5.5Z" clip-rule="evenodd" />
+                        </svg>
+                        <span class="text-sm font-medium text-emerald-300">Survey complete — thank you for your time!</span>
+                    </div>
+                </div>
+            </div>
+        @else
         <form wire:submit="send" class="p-3 sm:p-4 border-t border-white/10 bg-white/5">
             <div class="flex items-center gap-2 sm:gap-3">
                 <div class="relative flex-1 flex items-center rounded-2xl bg-white/10 border border-white/10 focus-within:border-purple-400/50 focus-within:bg-white/15 transition-all duration-300 focus-within:shadow-lg focus-within:shadow-purple-500/10">
@@ -68,6 +107,7 @@
                 </button>
             </div>
         </form>
+        @endif
     </div>
 </div>
 
