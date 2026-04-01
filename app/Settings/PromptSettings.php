@@ -8,6 +8,8 @@ class PromptSettings extends Settings
 {
     public string $intent_classification_prompt;
 
+    public string $raft_intent_classification_prompt;
+
     public static function group(): string
     {
         return 'prompt';
