@@ -4,6 +4,7 @@ namespace App\Livewire;
 
 use App\Models\SurveySession;
 use Illuminate\Support\Facades\Session;
+use Livewire\Attributes\Renderless;
 use Livewire\Attributes\Validate;
 use Livewire\Component;
 
@@ -28,6 +29,8 @@ class RaftChat extends Component
     public $responses;
 
     public $summary = '';
+
+    public string $theme = 'aurora';
 
     #[Validate('required|max:1000')]
     public string $body = '';
@@ -88,6 +91,8 @@ class RaftChat extends Component
         $this->surveyStarted = Session::get('raft_survey_started');
 
         $this->surveyCompleted = Session::get('raft_survey_completed', false);
+
+        $this->theme = Session::get('raft_chat_theme', 'aurora');
     }
 
     public function incrementCurrentIndex(): void
@@ -227,6 +232,17 @@ class RaftChat extends Component
     {
         $this->messages = Session::get('raft_survey_messages', []);
         $this->metadata = Session::get('raft_survey_metadata', []);
+    }
+
+    #[Renderless]
+    public function setTheme(string $theme): void
+    {
+        $allowedThemes = ['aurora', 'ocean', 'sunset', 'forest', 'midnight', 'skyblue', 'peach'];
+
+        if (in_array($theme, $allowedThemes)) {
+            $this->theme = $theme;
+            Session::put('raft_chat_theme', $theme);
+        }
     }
 
     public function render()

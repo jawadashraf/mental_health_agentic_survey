@@ -33,6 +33,8 @@ class RaftChatResponse extends Component
 
     public $textResponse = '';
 
+    public string $theme = 'aurora';
+
     public function mount()
     {
         $this->questions = config('raft-survey-test');
