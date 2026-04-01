@@ -2,26 +2,16 @@
 
 namespace App\Livewire;
 
-use App\Ai\Agents\SurveyAgent;
+use App\Ai\Agents\RaftAgent;
 use App\Models\SurveySession;
 use Illuminate\Support\Facades\Session;
+use Livewire\Attributes\On;
 use Livewire\Attributes\Validate;
 use Livewire\Component;
 
 class ChatAi extends Component
 {
-    public $questions = [];
-
-    protected $listeners = ['incrementCurrentIndex' => 'incrementCurrentIndex', 'askQuestion' => 'askQuestion', 'refreshChat' => '$refresh'];
-
-    public string $greetings = "Hi there! I'm here to chat about mental health awareness.
-    Would you be interested in taking a short survey to help us understand your perspective better?";
-
-    public $currentIndex;
-
     public $surveyStarted = false;
-
-    public $surveyCompleted = false;
 
     public $conversationId;
 
@@ -36,26 +26,33 @@ class ChatAi extends Component
     {
         $sessionId = session()->getId();
 
-        SurveySession::firstOrCreate(
-            [
-                'session_id' => $sessionId,
-            ]
-        );
+        SurveySession::firstOrCreate([
+            'session_id' => $sessionId,
+        ]);
 
-        $this->questions = config('survey');
+        if (request()->has('new')) {
+            Session::forget([
+                'survey_ai_conversation_id',
+                'survey_ai_messages',
+                'survey_ai_metadata',
+                'survey_ai_started',
+                'survey_ai_responses',
+            ]);
+        }
 
         if (! Session::has('survey_ai_conversation_id')) {
-            $agent = new SurveyAgent();
-            // Start a new conversation for this session
+            $agent = new RaftAgent;
             $participant = (object) ['id' => $sessionId];
-            $response = $agent->forUser($participant)->prompt($this->greetings);
+
+            $response = $agent->forUser($participant)->prompt('Begin the mental health awareness survey session with a warm greeting.');
+
             $this->conversationId = $response->conversationId;
-            
+
             Session::put('survey_ai_conversation_id', $this->conversationId);
-            
-            $this->messages[] = ['role' => 'assistant', 'content' => $this->greetings];
-            $this->metadata[] = ['role' => 'assistant', 'content' => $this->greetings, 'type' => 'greetings'];
-            
+
+            $this->messages[] = ['role' => 'assistant', 'content' => $response->text];
+            $this->metadata[] = ['role' => 'assistant', 'content' => $response->text, 'type' => 'default'];
+
             Session::put('survey_ai_messages', $this->messages);
             Session::put('survey_ai_metadata', $this->metadata);
         } else {
@@ -64,88 +61,20 @@ class ChatAi extends Component
             $this->metadata = Session::get('survey_ai_metadata', []);
         }
 
-        if (! Session::has('survey_ai_index')) {
-            Session::put('survey_ai_index', 0);
-            $this->currentIndex = 0;
-        } else {
-            $this->currentIndex = Session::get('survey_ai_index');
-        }
-
-        if (! Session::has('survey_ai_started')) {
-            Session::put('survey_ai_started', false);
-            $this->surveyStarted = false;
-        } else {
-            $this->surveyStarted = Session::get('survey_ai_started');
-        }
+        $this->surveyStarted = Session::get('survey_ai_started', false);
     }
 
-    public function incrementCurrentIndex(): void
+    #[On('refreshChat')]
+    public function handleRefresh($body = null)
     {
-        session()->increment('survey_ai_index');
-        $this->askQuestion();
-    }
-
-    public function askQuestion($currentLivewireComponentId = null): void
-    {
-        $this->currentIndex = Session::get('survey_ai_index');
-
-        if ($this->surveyStarted) {
-            if ($this->currentIndex >= count($this->questions)) {
-                session()->flash('message', 'Survey completed!');
-                $session = SurveySession::query()->where('session_id', session()->getId());
-                if ($session) {
-                    $session->update([
-                        'completed' => true,
-                        'completed_at' => now(),
-                    ]);
-                }
-                
-                return;
-            }
-        } else {
-            $this->surveyStarted = true;
-            Session::put('survey_ai_started', true);
+        if ($body) {
+            $this->messages[] = ['role' => 'user', 'content' => $body];
+            $this->metadata[] = ['role' => 'user', 'content' => $body];
+            Session::put('survey_ai_messages', $this->messages);
+            Session::put('survey_ai_metadata', $this->metadata);
         }
 
-        if ($currentLivewireComponentId) {
-            $this->js('hideBotDiv(\'next-bot-response-'.$currentLivewireComponentId."')");
-        }
-
-        $question = $this->questions[$this->currentIndex];
-        
-        // We track metadata for the frontend grouping/rendering
-        $this->metadata[] = [
-            'role' => 'assistant',
-            'content' => $question,
-            'type' => 'question',
-        ];
-
-        $plainQuestion = $this->convertQuestionToPlainText($question);
-
-        $this->messages[] = [
-            'role' => 'assistant',
-            'content' => $plainQuestion,
-        ];
-        
-        Session::put('survey_ai_messages', $this->messages);
-        Session::put('survey_ai_metadata', $this->metadata);
-    }
-
-    public function convertQuestionToPlainText($question): string
-    {
-        $questionText = 'Question-'.$question['id'].': '.$question['question'];
-
-        if ($question['type'] === 'radio') {
-            $optionsText = implode("\n", array_map(function ($option, $index) {
-                return ($index + 1).'. '.$option;
-            }, $question['options'], array_keys($question['options'])));
-
-            return $questionText." Please choose one of the following options:\n".$optionsText;
-        } elseif ($question['type'] === 'text') {
-            return $questionText;
-        } else {
-            return $questionText.' (Unknown question type)';
-        }
+        $this->dispatch('$refresh');
     }
 
     public function send(): void
@@ -159,7 +88,7 @@ class ChatAi extends Component
         $this->metadata[] = ['role' => 'assistant', 'content' => '', 'type' => 'stream'];
 
         $this->body = '';
-        
+
         Session::put('survey_ai_messages', $this->messages);
         Session::put('survey_ai_metadata', $this->metadata);
     }
