@@ -41,7 +41,7 @@
         <div class="mt-8 pt-8 border-t border-gray-100 dark:border-gray-700 text-center">
             <p class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-4">Or scan with your phone</p>
             <div class="inline-block p-3 bg-white rounded-2xl shadow-sm border border-gray-100 dark:border-gray-600">
-                <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data={{ urlencode(route('chat', ['access_code' => '123456'])) }}"
+                <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data={{ urlencode(route('raft-chat', ['access_code' => '123456'])) }}"
                     alt="QR Code Access" class="w-32 h-32">
             </div>
             <p class="mt-4 text-xs text-gray-500 dark:text-gray-400">
