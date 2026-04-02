@@ -22,7 +22,7 @@ class CheckChatbotAccess
         }
 
         if (! session('chatbot_access_granted')) {
-            return redirect()->route('chatbot-access');
+            return redirect()->route('chatbot-access', $request->only('mode'));
         }
 
         return $next($request);

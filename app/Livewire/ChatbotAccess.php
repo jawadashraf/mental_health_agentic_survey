@@ -17,7 +17,7 @@ class ChatbotAccess extends Component
         if ($this->code === '123456') {
             session(['chatbot_access_granted' => true]);
 
-            $this->redirectIntended(route('raft-chat'));
+            $this->redirectIntended(route('raft-chat', ['mode' => request()->query('mode')]));
 
             return;
         }

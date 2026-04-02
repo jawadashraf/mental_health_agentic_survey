@@ -32,7 +32,8 @@ class RaftChatTest extends TestCase
 
     public function test_raft_chat_shows_progress_bar_when_survey_started(): void
     {
-        $component = Livewire::withoutLazyLoading()
+        $component = Livewire::withQueryParams(['mode' => 'test'])
+            ->withoutLazyLoading()
             ->test(RaftChat::class);
 
         $component->call('askQuestion');
@@ -43,7 +44,8 @@ class RaftChatTest extends TestCase
 
     public function test_raft_chat_marks_survey_completed_after_all_questions(): void
     {
-        $component = Livewire::withoutLazyLoading()
+        $component = Livewire::withQueryParams(['mode' => 'test'])
+            ->withoutLazyLoading()
             ->test(RaftChat::class);
 
         $questions = config('raft-survey-test');
@@ -68,7 +70,8 @@ class RaftChatTest extends TestCase
 
     public function test_raft_chat_hides_input_form_when_completed(): void
     {
-        $component = Livewire::withoutLazyLoading()
+        $component = Livewire::withQueryParams(['mode' => 'test'])
+            ->withoutLazyLoading()
             ->test(RaftChat::class);
 
         $questions = config('raft-survey-test');

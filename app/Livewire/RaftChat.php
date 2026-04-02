@@ -43,16 +43,24 @@ class RaftChat extends Component
     {
         $sessionId = session()->getId();
 
+        $mode = request()->query('mode');
+        if ($mode) {
+            session(['raft_survey_mode' => $mode]);
+        }
+        $mode = session('raft_survey_mode');
+
         SurveySession::firstOrCreate(
             [
                 'session_id' => $sessionId,
             ],
             [
-                'survey_type' => 'raft',
+                'survey_type' => $mode === 'test' ? 'raft-test' : 'raft',
             ]
         );
 
-        $this->questions = config('raft-survey-test');
+        $this->questions = $mode === 'test'
+            ? config('raft-survey-test')
+            : config('raft-survey');
         $this->systemPrompt = <<<'EOT'
     You are a compassionate AI conducting a foster care support survey for Raft, a foster care charity.
     Your responses should be **warm, encouraging, and non-judgmental**.

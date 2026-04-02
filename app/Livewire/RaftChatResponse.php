@@ -37,7 +37,10 @@ class RaftChatResponse extends Component
 
     public function mount()
     {
-        $this->questions = config('raft-survey-test');
+        $mode = session('raft_survey_mode');
+        $this->questions = $mode === 'test'
+            ? config('raft-survey-test')
+            : config('raft-survey');
         $this->currentIndex = Session::get('raft_survey_index', 0);
         $this->surveyStarted = Session::get('raft_survey_started', false);
         $this->responses = Session::get('raft_survey_responses', []);
@@ -120,7 +123,7 @@ class RaftChatResponse extends Component
         $apiMessages[] = ['role' => 'user', 'content' => $promptForAssistant];
 
         $stream = app('openai')->chat()->createStreamed([
-            'model' => 'gpt-4',
+            'model' => 'gpt-5-nano',
             'messages' => array_values($apiMessages),
             'temperature' => 1.0,
         ]);
