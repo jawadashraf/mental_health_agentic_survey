@@ -617,7 +617,7 @@
                 <div class="row">
                     <div class="col-xl-5 col-lg-5">
                         <div class="inner_team-img mb-30 mb-lg-0">
-                            <img src="{{ asset('assets/images/team/JawadPic396x524.jpeg') }}" alt="" class="tp_fade_right w-50">
+                            <img src="{{ asset('assets/images/team/jawad_blue_coat.jpg') }}" alt="" class="tp_fade_right w-50">
                             <img src="{{ asset('assets/images/team/shape.png') }}" alt="" class="inner_team-img-shape tp_fade_bottom" style="width: 60%;">
                         </div>
                     </div>
