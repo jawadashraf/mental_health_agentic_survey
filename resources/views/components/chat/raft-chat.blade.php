@@ -20,7 +20,8 @@
              this.showThemePicker = false;
              $wire.setTheme(t);
              window.dispatchEvent(new CustomEvent('theme-changed', { detail: { theme: t } }));
-         }
+         },
+         isProcessing: @entangle('isProcessing')
      }"
      x-init="setTimeout(() => loaded = true, 100)"
      @click.away="showThemePicker = false"
@@ -253,11 +254,13 @@
                         :class="isLight ? 'text-gray-800 placeholder-gray-400' : 'text-white placeholder-white/30'"
                         placeholder="Type your message..." wire:model="body"
                         wire:loading.attr="disabled"
-                        wire:target="send" />
+                        wire:target="send"
+                        :disabled="isProcessing" />
                 </div>
                 <button type="submit"
                     wire:loading.attr="disabled"
                     wire:target="send"
+                    :disabled="isProcessing"
                     class="shrink-0 flex items-center justify-center size-11 sm:size-12 rounded-2xl text-white shadow-lg hover:scale-105 active:scale-95 transition-all duration-200 disabled:opacity-50 disabled:scale-100"
                     :class="{
                         'bg-linear-to-br from-purple-500 to-indigo-600 shadow-purple-500/30 hover:shadow-purple-500/50': theme === 'aurora',

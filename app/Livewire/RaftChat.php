@@ -12,7 +12,13 @@ class RaftChat extends Component
 {
     public $questions = [];
 
-    protected $listeners = ['incrementCurrentIndex' => 'incrementCurrentIndex', 'askQuestion' => 'askQuestion', 'refreshChat' => 'refreshChat'];
+    protected $listeners = [
+        'incrementCurrentIndex' => 'incrementCurrentIndex',
+        'askQuestion' => 'askQuestion',
+        'refreshChat' => 'refreshChat',
+        'stream-started' => 'setProcessingOn',
+        'stream-finished' => 'setProcessingOff',
+    ];
 
     public string $greetings = "Hi there! This conversation is designed to help Raft understand the experiences of families and carers. Your responses are anonymous and will only be used to understand common themes and improve support services.\n\nWould you be interested in taking a short survey?";
 
@@ -29,6 +35,8 @@ class RaftChat extends Component
     public $responses;
 
     public $summary = '';
+
+    public bool $isProcessing = false;
 
     public string $theme = 'alabaster';
 
@@ -219,6 +227,7 @@ class RaftChat extends Component
 
     public function send(): void
     {
+        $this->isProcessing = true;
         $this->validate();
 
         $this->messages = Session::get('raft_survey_messages', []);
@@ -251,6 +260,16 @@ class RaftChat extends Component
             $this->theme = $theme;
             Session::put('raft_chat_theme', $theme);
         }
+    }
+
+    public function setProcessingOn(): void
+    {
+        $this->isProcessing = true;
+    }
+
+    public function setProcessingOff(): void
+    {
+        $this->isProcessing = false;
     }
 
     public function render()

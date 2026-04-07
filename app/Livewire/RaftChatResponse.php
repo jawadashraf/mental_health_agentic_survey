@@ -58,6 +58,7 @@ class RaftChatResponse extends Component
 
     public function getResponse(): void
     {
+        $this->dispatch('stream-started');
         $intent = $this->detectIntentWithAI($this->prompt['content']);
         $intent = strtolower(trim(str_replace("'", '', $intent)));
         $promptForAssistant = '';
@@ -141,6 +142,7 @@ class RaftChatResponse extends Component
         }
 
         $this->updateSessionMessage();
+        $this->dispatch('stream-finished');
     }
 
     public function updateSessionMessage()
