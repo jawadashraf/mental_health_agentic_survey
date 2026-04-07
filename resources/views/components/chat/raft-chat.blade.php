@@ -67,11 +67,20 @@
     </div>
 
     {{-- Main chat card --}}
-    <div class="relative z-10 w-full max-w-2xl flex flex-col h-[95vh] sm:h-[90vh] rounded-2xl sm:rounded-3xl backdrop-blur-xl shadow-2xl overflow-hidden transition-all duration-700"
-         :class="isLight
-             ? 'bg-white/70 border border-black/10 shadow-black/10'
-             : 'bg-white/5 border border-white/10 shadow-purple-900/30'"
-         x-bind:class="loaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'">
+    <div class="relative z-10 w-full max-w-6xl flex flex-col lg:flex-row items-center justify-center gap-4 lg:gap-12 px-4 transition-all duration-700">
+        {{-- Side Image --}}
+        <div class="hidden lg:block w-1/2 max-w-sm animate-[fadeInLeft_0.8s_ease-out] transition-all duration-700">
+            <img src="{{ asset('assets/images/chat/chat_side_image.webp') }}"
+                 alt="Chat Background"
+                 class="w-full h-auto rounded-[2.5rem] shadow-2xl border border-white/10 ring-1 ring-white/5 mx-auto">
+        </div>
+
+        {{-- Main chat card --}}
+        <div class="w-full max-w-2xl flex flex-col h-[95vh] sm:h-[90vh] rounded-2xl sm:rounded-3xl backdrop-blur-xl shadow-2xl overflow-hidden transition-all duration-700"
+             :class="isLight
+                 ? 'bg-white/70 border border-black/10 shadow-black/10'
+                 : 'bg-white/5 border border-white/10 shadow-purple-900/30'"
+             x-bind:class="loaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'">
 
         {{-- Header --}}
         <div class="flex items-center gap-3 px-4 sm:px-6 py-3 sm:py-4 border-b transition-colors duration-500"
@@ -280,10 +289,22 @@
             </div>
         </form>
         @endif
+        </div>
     </div>
 </div>
 
 <style>
+    @keyframes fadeInLeft {
+        from {
+            opacity: 0;
+            transform: translateX(-30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+
     @keyframes fadeInUp {
         from {
             opacity: 0;
