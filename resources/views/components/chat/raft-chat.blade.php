@@ -11,9 +11,10 @@
              midnight: { label: 'Midnight',   icon: '🌙', bg: 'from-gray-950 via-slate-900 to-zinc-950' },
              skyblue:  { label: 'Sky Blue',   icon: '🏔️', bg: 'from-sky-200 via-blue-100 to-indigo-200' },
              peach:    { label: 'Peach',      icon: '🍑', bg: 'from-orange-200 via-amber-100 to-rose-200' },
+             alabaster:{ label: 'Alabaster',   icon: '☁️', bg: 'from-slate-50 via-gray-100 to-indigo-50' },
          },
-         get current() { return this.themes[this.theme] || this.themes.aurora; },
-         get isLight() { return this.theme === 'skyblue' || this.theme === 'peach'; },
+         get current() { return this.themes[this.theme] || this.themes.alabaster; },
+         get isLight() { return this.theme === 'skyblue' || this.theme === 'peach' || this.theme === 'alabaster'; },
          setTheme(t) {
              this.theme = t;
              this.showThemePicker = false;
@@ -36,6 +37,7 @@
                  'bg-slate-500/20': theme === 'midnight',
                  'bg-sky-400/40': theme === 'skyblue',
                  'bg-orange-300/40': theme === 'peach',
+                 'bg-slate-300/40': theme === 'alabaster',
              }"></div>
         <div class="absolute -bottom-32 -right-32 h-96 w-96 rounded-full blur-3xl animate-pulse transition-colors duration-700"
              :class="{
@@ -44,8 +46,9 @@
                  'bg-orange-500/20': theme === 'sunset',
                  'bg-green-500/20': theme === 'forest',
                  'bg-gray-500/20': theme === 'midnight',
-                 'bg-blue-300/40': theme === 'skyblue',
+                 'bg-sky-300/40': theme === 'skyblue',
                  'bg-rose-300/40': theme === 'peach',
+                 'bg-gray-200/40': theme === 'alabaster',
              }"
              style="animation-delay: 1.5s"></div>
         <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-64 w-64 rounded-full blur-3xl animate-pulse transition-colors duration-700"
@@ -57,6 +60,7 @@
                  'bg-zinc-400/10': theme === 'midnight',
                  'bg-indigo-300/30': theme === 'skyblue',
                  'bg-amber-300/30': theme === 'peach',
+                 'bg-indigo-100/30': theme === 'alabaster',
              }"
              style="animation-delay: 3s"></div>
     </div>
@@ -81,6 +85,7 @@
                          'bg-linear-to-br from-slate-400 to-gray-600 shadow-slate-500/30': theme === 'midnight',
                          'bg-linear-to-br from-sky-500 to-blue-600 shadow-sky-500/30': theme === 'skyblue',
                          'bg-linear-to-br from-orange-400 to-rose-500 shadow-orange-400/30': theme === 'peach',
+                         'bg-linear-to-br from-slate-200 to-gray-300 shadow-slate-300/30': theme === 'alabaster',
                      }">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-5 sm:size-6 text-white">
                         <path d="M4.913 2.658c2.075-.27 4.19-.408 6.337-.408 2.147 0 4.262.139 6.337.408 1.922.25 3.291 1.861 3.405 3.727a4.403 4.403 0 0 0-1.032-.211 50.89 50.89 0 0 0-8.42 0c-2.358.196-4.04 2.19-4.04 4.434v4.286a4.47 4.47 0 0 0 2.433 3.984L7.28 21.53A.75.75 0 0 1 6 21v-2.995a3.745 3.745 0 0 1-1.087-3.612V2.658Z" />
@@ -181,6 +186,7 @@
                              'bg-linear-to-r from-slate-400 to-gray-500': theme === 'midnight',
                              'bg-linear-to-r from-sky-500 to-blue-500': theme === 'skyblue',
                              'bg-linear-to-r from-orange-400 to-rose-400': theme === 'peach',
+                             'bg-linear-to-r from-slate-400 to-gray-400': theme === 'alabaster',
                          }"
                          style="width: {{ $progressPercent }}%"></div>
                 </div>
@@ -204,6 +210,7 @@
                                      'bg-linear-to-br from-slate-600 to-gray-600 shadow-slate-600/20': theme === 'midnight',
                                      'bg-linear-to-br from-sky-500 to-blue-600 shadow-sky-500/20': theme === 'skyblue',
                                      'bg-linear-to-br from-orange-500 to-rose-500 shadow-orange-500/20': theme === 'peach',
+                                     'bg-linear-to-br from-slate-500 to-gray-600 shadow-slate-500/20': theme === 'alabaster',
                                  }">
                                 {{ $message['content'] }}
                             </div>
@@ -254,6 +261,7 @@
                         'bg-linear-to-br from-slate-400 to-gray-600 shadow-slate-500/30 hover:shadow-slate-500/50': theme === 'midnight',
                         'bg-linear-to-br from-sky-500 to-blue-600 shadow-sky-500/30 hover:shadow-sky-500/50': theme === 'skyblue',
                         'bg-linear-to-br from-orange-400 to-rose-500 shadow-orange-400/30 hover:shadow-orange-400/50': theme === 'peach',
+                        'bg-linear-to-br from-slate-400 to-gray-500 shadow-slate-400/30 hover:shadow-slate-400/50': theme === 'alabaster',
                     }">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="size-5">
                         <path

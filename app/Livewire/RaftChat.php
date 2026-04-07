@@ -30,7 +30,7 @@ class RaftChat extends Component
 
     public $summary = '';
 
-    public string $theme = 'aurora';
+    public string $theme = 'alabaster';
 
     #[Validate('required|max:1000')]
     public string $body = '';
@@ -100,7 +100,7 @@ class RaftChat extends Component
 
         $this->surveyCompleted = Session::get('raft_survey_completed', false);
 
-        $this->theme = Session::get('raft_chat_theme', 'aurora');
+        $this->theme = Session::get('raft_chat_theme', 'alabaster');
     }
 
     public function incrementCurrentIndex(): void
@@ -245,7 +245,7 @@ class RaftChat extends Component
     #[Renderless]
     public function setTheme(string $theme): void
     {
-        $allowedThemes = ['aurora', 'ocean', 'sunset', 'forest', 'midnight', 'skyblue', 'peach'];
+        $allowedThemes = ['aurora', 'ocean', 'sunset', 'forest', 'midnight', 'skyblue', 'peach', 'alabaster'];
 
         if (in_array($theme, $allowedThemes)) {
             $this->theme = $theme;

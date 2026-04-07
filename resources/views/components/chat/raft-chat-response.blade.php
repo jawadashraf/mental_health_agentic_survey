@@ -2,7 +2,7 @@
     @if(empty($message['content']) && ($metadata['type'] ?? '') !== 'question') wire:init="getResponse" @endif
     x-data="{
         theme: @js($theme),
-        get isLight() { return this.theme === 'skyblue' || this.theme === 'peach'; },
+        get isLight() { return this.theme === 'skyblue' || this.theme === 'peach' || this.theme === 'alabaster'; },
     }"
     @theme-changed.window="theme = $event.detail.theme">
 
@@ -19,6 +19,7 @@
                      'text-slate-300/60': theme === 'midnight',
                      'text-sky-600/70': theme === 'skyblue',
                      'text-orange-600/70': theme === 'peach',
+                     'text-slate-500/70': theme === 'alabaster',
                  }">Raft AI</div>
             <div class="rounded-2xl rounded-tl-sm px-4 py-2.5 text-sm leading-relaxed transition-colors duration-300"
                  :class="isLight
@@ -45,6 +46,7 @@
                      'text-slate-300/60': theme === 'midnight',
                      'text-sky-600/70': theme === 'skyblue',
                      'text-orange-600/70': theme === 'peach',
+                     'text-slate-500/70': theme === 'alabaster',
                  }">Raft AI</div>
                 <div class="rounded-2xl rounded-tl-sm px-4 py-3 text-sm leading-relaxed transition-colors duration-300"
                      :class="isLight
@@ -74,6 +76,7 @@
                                                    'accent-slate-500': theme === 'midnight',
                                                    'accent-sky-500': theme === 'skyblue',
                                                    'accent-orange-500': theme === 'peach',
+                                                   'accent-slate-500': theme === 'alabaster',
                                                }">
                                         <span class="transition-colors duration-200"
                                               :class="isLight
@@ -103,6 +106,7 @@
                                     'from-slate-400 to-gray-600 shadow-slate-500/20 hover:shadow-slate-500/40': theme === 'midnight',
                                     'from-sky-500 to-blue-600 shadow-sky-500/20 hover:shadow-sky-500/40': theme === 'skyblue',
                                     'from-orange-400 to-rose-500 shadow-orange-400/20 hover:shadow-orange-400/40': theme === 'peach',
+                                    'from-slate-400 to-gray-600 shadow-slate-400/20 hover:shadow-slate-400/40': theme === 'alabaster',
                                 }">
                             <span>Submit</span>
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="size-4">
@@ -136,6 +140,7 @@
                          'text-slate-300/60': theme === 'midnight',
                          'text-sky-600/70': theme === 'skyblue',
                          'text-orange-600/70': theme === 'peach',
+                         'text-slate-500/70': theme === 'alabaster',
                      }">Raft AI</div>
                 <div class="rounded-2xl rounded-tl-sm px-4 py-3 text-sm leading-relaxed transition-colors duration-300"
                      :class="isLight
@@ -159,6 +164,7 @@
                          'text-slate-300/60': theme === 'midnight',
                          'text-sky-600/70': theme === 'skyblue',
                          'text-orange-600/70': theme === 'peach',
+                         'text-slate-500/70': theme === 'alabaster',
                      }">Raft AI</div>
                 <div class="rounded-2xl rounded-tl-sm px-5 py-4 text-sm leading-relaxed transition-colors duration-300"
                      :class="isLight
@@ -178,6 +184,7 @@
                      'text-slate-300/60': theme === 'midnight',
                      'text-sky-600/70': theme === 'skyblue',
                      'text-orange-600/70': theme === 'peach',
+                     'text-slate-500/70': theme === 'alabaster',
                  }">Raft AI</div>
                 <div class="rounded-2xl rounded-tl-sm px-4 py-2.5 text-sm leading-relaxed transition-colors duration-300"
                      :class="isLight
