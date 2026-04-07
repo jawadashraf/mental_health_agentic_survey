@@ -60,13 +60,15 @@
                             <div class="space-y-2">
                                 @foreach($question['options'] as $index => $option)
                                     <label for="option-{{ $index }}-{{ $question['id'] }}"
-                                           class="flex items-center gap-3 px-3 py-2 rounded-xl cursor-pointer border transition-all duration-200 group"
+                                           class="flex items-center gap-3 px-3 py-2 rounded-xl cursor-pointer border transition-all duration-200 group has-disabled:opacity-50 has-disabled:cursor-not-allowed"
                                            :class="isLight
                                                ? 'border-black/8 hover:border-black/15 hover:bg-black/5'
                                                : 'border-white/5 hover:border-white/20 hover:bg-white/5'">
                                         <input type="radio" id="option-{{ $index }}-{{ $question['id'] }}"
                                                wire:model="selectedOption" value="{{ $option }}"
                                                name="options"
+                                               wire:loading.attr="disabled"
+                                               wire:target="handleUserInput"
                                                class="size-4 shrink-0"
                                                :class="{
                                                    'accent-purple-500': theme === 'aurora',
@@ -88,7 +90,9 @@
                         @elseif($question['type'] === 'text')
                             <div class="mt-2">
                                 <input type="text" wire:model.defer="textResponse"
-                                       class="w-full border rounded-xl px-4 py-2.5 text-sm focus:outline-none transition-all duration-200"
+                                       wire:loading.attr="disabled"
+                                       wire:target="handleUserInput"
+                                       class="w-full border rounded-xl px-4 py-2.5 text-sm focus:outline-none transition-all duration-200 disabled:opacity-50"
                                        :class="isLight
                                            ? 'bg-white/80 border-black/10 text-gray-800 placeholder-gray-400 focus:border-black/20'
                                            : 'bg-white/10 border-white/10 text-white placeholder-white/30 focus:border-white/30 focus:bg-white/15'"
@@ -97,10 +101,12 @@
                         @endif
 
                         <button wire:click="handleUserInput" type="submit"
-                                class="mt-3 inline-flex items-center gap-2 bg-linear-to-r text-white text-sm font-medium px-5 py-2 rounded-xl shadow-lg hover:scale-[1.02] active:scale-[0.98] transition-all duration-200"
+                                wire:loading.attr="disabled"
+                                wire:target="handleUserInput"
+                                class="mt-3 inline-flex items-center gap-2 bg-linear-to-r text-white text-sm font-medium px-5 py-2 rounded-xl shadow-lg hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 disabled:opacity-50 disabled:scale-100"
                                 :class="{
                                     'from-purple-500 to-indigo-600 shadow-purple-500/20 hover:shadow-purple-500/40': theme === 'aurora',
-                                    'from-cyan-500 to-blue-600 shadow-cyan-500/20 hover:shadow-cyan-500/40': theme === 'ocean',
+                                    'from-cyan-500 to-blue-600 shadow-cyan-500/30 hover:shadow-cyan-500/40': theme === 'ocean',
                                     'from-rose-500 to-orange-600 shadow-rose-500/20 hover:shadow-rose-500/40': theme === 'sunset',
                                     'from-emerald-500 to-teal-600 shadow-emerald-500/20 hover:shadow-emerald-500/40': theme === 'forest',
                                     'from-slate-400 to-gray-600 shadow-slate-500/20 hover:shadow-slate-500/40': theme === 'midnight',

@@ -136,6 +136,8 @@
                          :class="isLight ? 'text-gray-400' : 'text-white/40'">Choose Theme</div>
                     <template x-for="(data, key) in themes" :key="key">
                         <button @click="setTheme(key)"
+                                wire:loading.attr="disabled"
+                                wire:target="setTheme"
                                 class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm transition-all duration-200"
                                 :class="theme === key
                                     ? (isLight ? 'bg-black/8 text-gray-900 font-medium' : 'bg-white/15 text-white font-medium')
@@ -247,12 +249,16 @@
                      :class="isLight
                          ? 'bg-white/80 border-black/10 focus-within:border-black/20 focus-within:shadow-black/5'
                          : 'bg-white/10 border-white/10 focus-within:bg-white/15 focus-within:border-white/20 focus-within:shadow-purple-500/10'">
-                    <input class="w-full bg-transparent px-4 py-3 text-sm focus:outline-none transition-colors duration-500"
+                    <input class="w-full bg-transparent px-4 py-3 text-sm focus:outline-none transition-colors duration-500 disabled:opacity-50"
                         :class="isLight ? 'text-gray-800 placeholder-gray-400' : 'text-white placeholder-white/30'"
-                        placeholder="Type your message..." wire:model="body" />
+                        placeholder="Type your message..." wire:model="body"
+                        wire:loading.attr="disabled"
+                        wire:target="send" />
                 </div>
                 <button type="submit"
-                    class="shrink-0 flex items-center justify-center size-11 sm:size-12 rounded-2xl text-white shadow-lg hover:scale-105 active:scale-95 transition-all duration-200"
+                    wire:loading.attr="disabled"
+                    wire:target="send"
+                    class="shrink-0 flex items-center justify-center size-11 sm:size-12 rounded-2xl text-white shadow-lg hover:scale-105 active:scale-95 transition-all duration-200 disabled:opacity-50 disabled:scale-100"
                     :class="{
                         'bg-linear-to-br from-purple-500 to-indigo-600 shadow-purple-500/30 hover:shadow-purple-500/50': theme === 'aurora',
                         'bg-linear-to-br from-cyan-500 to-blue-600 shadow-cyan-500/30 hover:shadow-cyan-500/50': theme === 'ocean',
