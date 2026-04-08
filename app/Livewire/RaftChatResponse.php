@@ -71,6 +71,7 @@ class RaftChatResponse extends Component
             case 'repeat':
                 $this->response = ' ';
                 $this->updateSessionMessage();
+                $this->dispatch('stream-finished');
                 $this->askQuestion();
 
                 return;
@@ -116,6 +117,21 @@ class RaftChatResponse extends Component
                 $this->storeIntentForQuestion('default', $this->prompt['content']);
                 $promptForAssistant = $this->generateEncouragingPrompt();
 
+        }
+
+        $questionObj = $this->questions[$this->currentIndex] ?? [];
+        $aiGuidance = $questionObj['ai_guidance'] ?? null;
+        $expectedBehavior = $questionObj['participant_behavior'] ?? null;
+
+        if ($aiGuidance && !in_array($intent, ['progress-question', 'technical-issue'])) {
+            $guidancePrompt = "\n\nCRITICAL CONTEXT FOR THIS QUESTION: ";
+            if ($expectedBehavior) {
+                $guidancePrompt .= "If the user exhibits the behavior/intent '{$expectedBehavior}', you MUST prioritize this guidance: ";
+            } else {
+                $guidancePrompt .= "You MUST prioritize this guidance: ";
+            }
+            $guidancePrompt .= "{$aiGuidance}\nEnsure your response natively weaves this guidance into a comforting answer.";
+            $promptForAssistant .= $guidancePrompt;
         }
 
         $messages = Session::get('raft_survey_messages', []);
@@ -292,8 +308,8 @@ The user seems disengaged or uninterested. Generate a gentle, empathetic message
 
     public function handleUserInput(): void
     {
-        $question = $this->questions[session()->get('raft_survey_index', 0)];
-        $response = $this->questions[$this->currentIndex]['type'] === 'radio' ? $this->selectedOption : $this->textResponse;
+        $question = $this->questions[$this->currentIndex];
+        $response = $question['type'] === 'radio' ? $this->selectedOption : $this->textResponse;
 
         if (! $response) {
             return;
@@ -306,7 +322,11 @@ The user seems disengaged or uninterested. Generate a gentle, empathetic message
         $this->selectedOption = null;
         $this->textResponse = '';
 
-        $this->dispatch('incrementCurrentIndex');
+        if ($this->currentIndex === session()->get('raft_survey_index', 0)) {
+            $this->dispatch('incrementCurrentIndex');
+        } else {
+            $this->dispatch('refreshChat');
+        }
     }
 
     public function storeResponse($questionId, $response, $question): void

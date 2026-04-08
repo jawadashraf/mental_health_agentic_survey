@@ -21,9 +21,48 @@
              $wire.setTheme(t);
              window.dispatchEvent(new CustomEvent('theme-changed', { detail: { theme: t } }));
          },
-         isProcessing: @entangle('isProcessing')
+         isProcessing: @entangle('isProcessing'),
+         takesTime: @entangle('currentQuestionTakesTime'),
+         nudgeTimer: null,
+         initNudgeTimer() {
+             this.clearNudgeTimer();
+             if (!this.isProcessing && this.takesTime) {
+                 this.nudgeTimer = setTimeout(() => {
+                     $wire.triggerNudge();
+                 }, 60000); // 60 seconds
+             }
+         },
+         clearNudgeTimer() {
+             if (this.nudgeTimer) {
+                 clearTimeout(this.nudgeTimer);
+                 this.nudgeTimer = null;
+             }
+         },
+         scrollToBottom(force = false) {
+             const el = document.getElementById('raft-chat-messages');
+             if (el) {
+                 const isNearBottom = el.scrollHeight - el.scrollTop - el.clientHeight < 150;
+                 if (force || isNearBottom) {
+                     el.scrollTop = el.scrollHeight;
+                 }
+             }
+         }
      }"
-     x-init="setTimeout(() => loaded = true, 100)"
+     x-init="
+         setTimeout(() => loaded = true, 100);
+         $watch('isProcessing', (val) => {
+             initNudgeTimer();
+             if (val) setTimeout(() => scrollToBottom(true), 50);
+         });
+         $watch('takesTime', () => initNudgeTimer());
+         
+         const messagesEl = document.getElementById('raft-chat-messages');
+         if (messagesEl) {
+             const observer = new MutationObserver(() => scrollToBottom(false));
+             observer.observe(messagesEl, { childList: true, subtree: true, characterData: true });
+         }
+     "
+     @keyup="clearNudgeTimer(); if (!isProcessing) { initNudgeTimer(); }"
      @click.away="showThemePicker = false"
      :class="'bg-linear-to-br ' + current.bg">
 
@@ -266,6 +305,20 @@
                         wire:target="send"
                         :disabled="isProcessing" />
                 </div>
+                
+                {{-- Skip Button --}}
+                <button type="button"
+                    wire:click="skipQuestion"
+                    wire:loading.attr="disabled"
+                    :disabled="isProcessing"
+                    class="shrink-0 flex items-center justify-center px-4 py-2.5 rounded-2xl text-xs font-semibold shadow-lg hover:scale-105 active:scale-95 transition-all duration-200 disabled:opacity-50 disabled:scale-100"
+                    :class="isLight 
+                        ? 'bg-white text-gray-700 border border-black/10 hover:bg-gray-50' 
+                        : 'bg-white/10 text-white/90 border border-white/10 hover:bg-white/20'">
+                    Skip
+                </button>
+
+                {{-- Send Button --}}
                 <button type="submit"
                     wire:loading.attr="disabled"
                     wire:target="send"

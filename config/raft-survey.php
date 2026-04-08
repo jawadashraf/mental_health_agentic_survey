@@ -9,6 +9,8 @@ return [
         'label' => 'Helpful Support Types',
         'order' => 1,
         'question' => 'What types of support are currently most helpful to your family?',
+        'participant_behavior' => 'Not Sure',
+        'ai_guidance' => 'Mention social workers, therapists, support groups, schools, or family. Share anything helpful.',
     ],
     [
         'id' => 2,
@@ -17,6 +19,8 @@ return [
         'label' => 'Most Supported',
         'order' => 2,
         'question' => 'Where do you feel most supported right now?',
+        'participant_behavior' => 'Clarification: People? Home? Outside?',
+        'ai_guidance' => 'Includes family, friends, schools, Raft, healthcare, or community groups.',
     ],
     [
         'id' => 3,
@@ -25,6 +29,9 @@ return [
         'label' => 'Least Supported',
         'order' => 3,
         'question' => 'Where do you feel least supported right now?',
+        'participant_behavior' => 'Takes long to answer',
+        'ai_guidance' => 'Some people find this question difficult. Take your time or skip and come back later.',
+        'takes_time' => true,
     ],
     [
         'id' => 4,
@@ -34,6 +41,9 @@ return [
         'order' => 4,
         'question' => 'What has been the most challenging part of fostering/adopting so far?',
         'transition_message' => 'Thank you for sharing your experiences so far. The next questions focus on emotional and mental health support.',
+        'participant_behavior' => 'Takes long to answer',
+        'ai_guidance' => 'Describe any significant challenge (e.g., trauma behaviors, navigating services, school).',
+        'takes_time' => true,
     ],
 
     // Category – Emotional & Mental Health Support
@@ -45,6 +55,8 @@ return [
         'order' => 5,
         'question' => 'Are trauma-informed services accessible in your area?',
         'options' => ['Yes', 'No', 'Not sure'],
+        'participant_behavior' => 'What kind of services count?',
+        'ai_guidance' => '**RAFT input needed**',
     ],
     [
         'id' => 6,
@@ -53,6 +65,8 @@ return [
         'label' => 'Mental Health Barriers',
         'order' => 6,
         'question' => 'What barriers have you (as the parent / carer) faced in accessing mental health support for your child?',
+        'participant_behavior' => 'Clarification: Services or funding?',
+        'ai_guidance' => 'Barriers: waiting lists, cost, lack of info, transport, or \'not knowing where to start\'.',
     ],
     [
         'id' => 7,
@@ -62,6 +76,8 @@ return [
         'order' => 7,
         'question' => 'Would you benefit from parent-specific support groups?',
         'options' => ['Yes', 'No', 'Not sure'],
+        'participant_behavior' => 'What would this involve?',
+        'ai_guidance' => '**RAFT input needed.** It is fine to say \'not sure\'.',
     ],
     [
         'id' => 8,
@@ -71,6 +87,9 @@ return [
         'order' => 8,
         'question' => 'How do you manage caregiver stress or burnout?',
         'transition_message' => 'Thank you for sharing your thoughts about emotional and mental health support. The next questions focus on training and learning opportunities.',
+        'participant_behavior' => 'Hesitation / Takes time',
+        'ai_guidance' => 'Acknowledge demands of complex needs. Share as much/little as comfortable.',
+        'takes_time' => true,
     ],
 
     // Category – Training & Education
@@ -81,6 +100,8 @@ return [
         'label' => 'Helpful Training',
         'order' => 9,
         'question' => 'What additional training would be helpful to you right now?',
+        'participant_behavior' => 'What options are there?',
+        'ai_guidance' => 'Topics: trauma parenting, behavior management, attachment, emotional development.',
     ],
     [
         'id' => 10,
@@ -90,6 +111,8 @@ return [
         'order' => 10,
         'question' => 'Do you feel adequately prepared to manage trauma-related behaviours?',
         'options' => ['Yes', 'No', 'Not sure'],
+        'participant_behavior' => 'Not Sure / Definition of "adequately"',
+        'ai_guidance' => 'Refers to having enough knowledge/support. If unsure, answer \'not sure\'.',
     ],
     [
         'id' => 11,
@@ -99,6 +122,8 @@ return [
         'order' => 11,
         'question' => 'Would you like more information on topics such as attachment, grief/loss, or behavioural regulation?',
         'options' => ['Yes', 'No'],
+        'participant_behavior' => 'Information vs. Training?',
+        'ai_guidance' => 'Focus is on guidance/info, but user can suggest training if preferred.',
     ],
     [
         'id' => 12,
@@ -107,6 +132,8 @@ return [
         'label' => 'Training Accessibility',
         'order' => 12,
         'question' => 'How accessible are ongoing training opportunities?',
+        'participant_behavior' => 'Clarification: Cost or location?',
+        'ai_guidance' => 'Includes availability, location, cost, timing, or format.',
     ],
     [
         'id' => 13,
@@ -117,6 +144,8 @@ return [
         'question' => 'What format do you prefer for training (in-person, virtual, self-paced)?',
         'transition_message' => 'Thank you for sharing your thoughts about training and learning opportunities. Your responses are very helpful in understanding what kinds of support might benefit families and carers.',
         'break_after' => true,
+        'participant_behavior' => 'Definition of "self-paced"',
+        'ai_guidance' => 'Self-paced = materials accessed at your own speed. Multiple formats allowed.',
     ],
 
     // Category – Respite & Practical Support
@@ -128,6 +157,8 @@ return [
         'order' => 14,
         'question' => 'Do you have access to reliable respite care?',
         'options' => ['Yes', 'No', 'Not sure'],
+        'participant_behavior' => 'What counts as respite?',
+        'ai_guidance' => '**RAFT input needed**',
     ],
     [
         'id' => 15,
@@ -136,6 +167,8 @@ return [
         'label' => 'Break Frequency',
         'order' => 15,
         'question' => 'How often do you feel you need a break but cannot get one?',
+        'participant_behavior' => 'Measurement (days/weeks)?',
+        'ai_guidance' => 'Answer in any way (days, weeks, or situations). Refers to time away from duties.',
     ],
     [
         'id' => 16,
@@ -144,6 +177,8 @@ return [
         'label' => 'Practical Stress Supports',
         'order' => 16,
         'question' => 'What practical supports would reduce stress (childcare, transportation, meal support, other)?',
+        'participant_behavior' => '(No specific prompt)',
+        'ai_guidance' => 'E.g., childcare, transportation, meal support.',
     ],
     [
         'id' => 17,
@@ -152,6 +187,8 @@ return [
         'label' => 'Financial Strains',
         'order' => 17,
         'question' => 'Are there financial strains related to fostering/adoption? Please expand.',
+        'participant_behavior' => 'Do I have to explain?',
+        'ai_guidance' => 'If comfortable, briefly describe the pressures your family experiences.',
     ],
     [
         'id' => 18,
@@ -161,6 +198,8 @@ return [
         'order' => 18,
         'question' => 'What additional financial resources would be helpful?',
         'transition_message' => 'Thank you for sharing your thoughts about practical support and resources. The next questions focus on your child\'s experience in school and educational support.',
+        'participant_behavior' => 'What options are there?',
+        'ai_guidance' => 'E.g., funding, subsidies, assistance with therapy or education costs.',
     ],
 
     // Category – School & Educational Advocacy
@@ -172,6 +211,8 @@ return [
         'order' => 19,
         'question' => 'Do you feel your child\'s school understands their needs?',
         'options' => ['Yes', 'No', 'Not sure'],
+        'participant_behavior' => 'Not sure',
+        'ai_guidance' => 'If unsure, say \'not sure\'.',
     ],
     [
         'id' => 20,
@@ -181,6 +222,8 @@ return [
         'order' => 20,
         'question' => 'Have you experienced challenges advocating for your child at school?',
         'options' => ['Yes', 'No'],
+        'participant_behavior' => 'Definition of "advocating"',
+        'ai_guidance' => 'Speaking with schools to ensure support. Follow up: "Would you like to share an example?"',
     ],
     [
         'id' => 21,
@@ -190,6 +233,8 @@ return [
         'order' => 21,
         'question' => 'Do you need help navigating SEN support and / or EHCPs?',
         'options' => ['Yes', 'No', 'Not sure'],
+        'participant_behavior' => 'What is SEN/EHCP?',
+        'ai_guidance' => '**RAFT input needed**',
     ],
     [
         'id' => 22,
@@ -200,6 +245,8 @@ return [
         'question' => 'What educational supports would benefit your child?',
         'transition_message' => 'Thank you for sharing your experiences with school and educational support.',
         'break_after' => true,
+        'participant_behavior' => 'What kinds exist?',
+        'ai_guidance' => '**RAFT input needed**',
     ],
 
     // Category – Medical & Specialised Services
@@ -211,6 +258,8 @@ return [
         'order' => 23,
         'question' => 'Are medical providers knowledgeable about adoption/foster-related trauma?',
         'options' => ['Yes', 'No', 'Not sure'],
+        'participant_behavior' => 'Which doctors?',
+        'ai_guidance' => 'Includes GPs, paediatricians, therapists, or healthcare professionals.',
     ],
     [
         'id' => 24,
@@ -221,6 +270,8 @@ return [
         'question' => 'Do you need assistance finding specialised services (such as OT, speech / behavioural therapy, additional needs diagnoses)?',
         'options' => ['Yes', 'No'],
         'transition_message' => 'Thank you for sharing your thoughts about healthcare and specialised services. The next questions focus on social and community support.',
+        'participant_behavior' => '(No specific prompt)',
+        'ai_guidance' => 'E.g., OT, speech/behavioural therapy, diagnoses.',
     ],
 
     // Category – Social & Community Support
@@ -232,6 +283,8 @@ return [
         'order' => 25,
         'question' => 'Do you feel connected to other foster/adoptive families?',
         'options' => ['Yes', 'No'],
+        'participant_behavior' => '(No specific prompt)',
+        'ai_guidance' => 'Follow up: "Would you find it helpful if Raft supported connection opportunities?"',
     ],
     [
         'id' => 26,
@@ -241,6 +294,8 @@ return [
         'order' => 26,
         'question' => 'Would you participate in peer support groups if available?',
         'options' => ['Yes', 'No', 'Not sure'],
+        'participant_behavior' => 'What is a peer group?',
+        'ai_guidance' => '**RAFT input needed**',
     ],
     [
         'id' => 27,
@@ -251,6 +306,8 @@ return [
         'question' => 'Do extended family and friends understand your child\'s needs?',
         'options' => ['Yes', 'No', 'Not sure'],
         'transition_message' => 'Thank you for sharing your thoughts about social and community support. The final questions focus on future planning and the kinds of support that could help families thrive over time.',
+        'participant_behavior' => '(No specific prompt)',
+        'ai_guidance' => '(Standard Y/N response)',
     ],
 
     // Category – Long-Term & Future Planning
@@ -261,6 +318,8 @@ return [
         'label' => 'Child Future Concerns',
         'order' => 28,
         'question' => 'What concerns do you have about your child\'s future (such as adolescence, adulthood, transitions)?',
+        'participant_behavior' => 'Not Sure',
+        'ai_guidance' => 'Share anything important regarding adolescence, adulthood, or transitions.',
     ],
     [
         'id' => 29,
@@ -269,6 +328,8 @@ return [
         'label' => 'Long-Term Support',
         'order' => 29,
         'question' => 'What additional supports would help your family thrive long-term?',
+        'participant_behavior' => 'What kind of supports?',
+        'ai_guidance' => '**RAFT input needed**',
     ],
     [
         'id' => 30,
@@ -277,5 +338,7 @@ return [
         'label' => 'New Support Service Design',
         'order' => 30,
         'question' => 'If you could design one new support service, what would it be?',
+        'participant_behavior' => 'Not Sure',
+        'ai_guidance' => 'Idea can be simple or ambitious.',
     ],
 ];

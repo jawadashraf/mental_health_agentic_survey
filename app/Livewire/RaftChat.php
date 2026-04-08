@@ -11,9 +11,11 @@ use Livewire\Component;
 class RaftChat extends Component
 {
     public $questions = [];
+    public array $skipped = [];
 
     protected $listeners = [
         'incrementCurrentIndex' => 'incrementCurrentIndex',
+        'skipQuestion' => 'skipQuestion',
         'askQuestion' => 'askQuestion',
         'refreshChat' => 'refreshChat',
         'stream-started' => 'setProcessingOn',
@@ -25,6 +27,8 @@ class RaftChat extends Component
     public $systemPrompt;
 
     public $currentIndex;
+    
+    public bool $currentQuestionTakesTime = false;
 
     public $surveyStarted = false;
 
@@ -101,6 +105,11 @@ class RaftChat extends Component
         }
         $this->responses = Session::get('raft_survey_responses', []);
 
+        if (! Session::has('raft_survey_skipped')) {
+            Session::put('raft_survey_skipped', []);
+        }
+        $this->skipped = Session::get('raft_survey_skipped', []);
+
         if (! Session::has('raft_survey_started')) {
             Session::put('raft_survey_started', false);
         }
@@ -111,20 +120,75 @@ class RaftChat extends Component
         $this->theme = Session::get('raft_chat_theme', 'alabaster');
     }
 
+    public function skipQuestion(): void
+    {
+        $linearIndex = Session::get('raft_survey_index', 0);
+        $total = count($this->questions);
+        $skipped = Session::get('raft_survey_skipped', []);
+        
+        if ($linearIndex < $total) {
+            $skipped[] = $linearIndex;
+            Session::put('raft_survey_skipped', $skipped);
+            session()->increment('raft_survey_index');
+        } else {
+            if (count($skipped) > 0) {
+                $skippedQuestion = array_shift($skipped);
+                $skipped[] = $skippedQuestion;
+                Session::put('raft_survey_skipped', $skipped);
+            }
+        }
+        
+        $this->askQuestion();
+    }
+
     public function incrementCurrentIndex(): void
     {
-        session()->increment('raft_survey_index');
+        $linearIndex = Session::get('raft_survey_index', 0);
+        $total = count($this->questions);
+        
+        if ($linearIndex < $total) {
+            session()->increment('raft_survey_index');
+        } else {
+            $skipped = Session::get('raft_survey_skipped', []);
+            if (count($skipped) > 0) {
+                array_shift($skipped);
+                Session::put('raft_survey_skipped', $skipped);
+            }
+        }
+        
         $this->askQuestion();
     }
 
     public function askQuestion($currentLivewireComponentId = null): void
     {
-        $this->currentIndex = Session::get('raft_survey_index');
         $this->messages = Session::get('raft_survey_messages', []);
         $this->metadata = Session::get('raft_survey_metadata', []);
+        $this->responses = Session::get('raft_survey_responses', []);
+
+        $linearIndex = Session::get('raft_survey_index', 0);
+        $skipped = Session::get('raft_survey_skipped', []);
+        $totalQuestions = count($this->questions);
+        
+        $responses = Session::get('raft_survey_responses', []);
+
+        if (count($skipped) > 0) {
+            $skipped = array_filter($skipped, function ($idx) use ($responses) {
+                $qId = $this->questions[$idx]['id'] ?? null;
+                return $qId && !isset($responses[$qId]['response']);
+            });
+            $skipped = array_values($skipped);
+            Session::put('raft_survey_skipped', $skipped);
+        }
+
+        $askingIndex = null;
+        if ($linearIndex < $totalQuestions) {
+            $askingIndex = $linearIndex;
+        } elseif (count($skipped) > 0) {
+            $askingIndex = $skipped[0];
+        }
 
         if ($this->surveyStarted) {
-            if ($this->currentIndex >= count($this->questions)) {
+            if ($askingIndex === null) {
                 $this->completeSurvey();
 
                 return;
@@ -134,35 +198,63 @@ class RaftChat extends Component
             Session::put('raft_survey_started', true);
         }
 
+        $this->currentIndex = $askingIndex;
+
         if ($currentLivewireComponentId) {
             // $this->js('hideBotDiv(\'next-bot-response-'.$currentLivewireComponentId."')");
         }
 
         $question = $this->questions[$this->currentIndex];
+        $this->currentQuestionTakesTime = $question['takes_time'] ?? false;
+
+        if ($linearIndex > 0 && $linearIndex < $totalQuestions && $askingIndex === $linearIndex) {
+            $previousQuestion = $this->questions[$linearIndex - 1];
+            if (isset($previousQuestion['transition_message'])) {
+                $this->messages[] = [
+                    'role' => 'assistant',
+                    'content' => $previousQuestion['transition_message'],
+                ];
+                $this->metadata[] = [
+                    'role' => 'assistant',
+                    'content' => $previousQuestion['transition_message'],
+                    'type' => 'transition',
+                ];
+            }
+        }
 
         // Inject progress encouragement at the midpoint
-        $totalQuestions = count($this->questions);
         $answeredCount = count(Session::get('raft_survey_responses', []));
         $midpoint = (int) ceil($totalQuestions / 2);
 
-        if ($answeredCount === $midpoint && $totalQuestions > 2) {
-            $remaining = $totalQuestions - $answeredCount;
+        if ($answeredCount === $midpoint && $totalQuestions > 2 && !Session::get('raft_survey_midpoint_shown', false)) {
+            $remaining = $totalQuestions - $answeredCount + count($skipped);
             $this->metadata[] = [
                 'role' => 'assistant',
-                'content' => "You're doing great! You're halfway through — just {$remaining} more to go. Your responses are really valuable. 💪",
+                'content' => "You're doing great! You're halfway through. Your responses are really valuable. 💪",
                 'type' => 'progress',
             ];
             $this->messages[] = [
                 'role' => 'assistant',
-                'content' => "You're doing great! You're halfway through — just {$remaining} more to go. Your responses are really valuable. 💪",
+                'content' => "You're doing great! You're halfway through. Your responses are really valuable. 💪",
             ];
+            Session::put('raft_survey_midpoint_shown', true);
         }
 
-        $this->metadata[] = [
+        $questionMetadata = [
             'role' => 'assistant',
             'content' => $question,
             'type' => 'question',
         ];
+
+        if (isset($question['participant_behavior']) && isset($question['ai_guidance'])) {
+            $questionMetadata['participant_behavior'] = $question['participant_behavior'];
+            $questionMetadata['ai_guidance'] = $question['ai_guidance'];
+        }
+        if (isset($question['takes_time'])) {
+            $questionMetadata['takes_time'] = $question['takes_time'];
+        }
+
+        $this->metadata[] = $questionMetadata;
 
         $plainQuestion = $this->convertQuestionToPlainText($question);
 
@@ -249,6 +341,30 @@ class RaftChat extends Component
     {
         $this->messages = Session::get('raft_survey_messages', []);
         $this->metadata = Session::get('raft_survey_metadata', []);
+        $this->responses = Session::get('raft_survey_responses', []);
+    }
+
+    public function triggerNudge(): void
+    {
+        if ($this->surveyCompleted) return;
+
+        $this->messages = Session::get('raft_survey_messages', []);
+        $this->metadata = Session::get('raft_survey_metadata', []);
+
+        $content = "Take your time. Feel free to skip this question and come back to it later, or ask me for clarification if you're not sure!";
+
+        $this->messages[] = [
+            'role' => 'assistant',
+            'content' => $content,
+        ];
+        $this->metadata[] = [
+            'role' => 'assistant',
+            'content' => $content,
+            'type' => 'nudge',
+        ];
+
+        Session::put('raft_survey_messages', $this->messages);
+        Session::put('raft_survey_metadata', $this->metadata);
     }
 
     #[Renderless]
