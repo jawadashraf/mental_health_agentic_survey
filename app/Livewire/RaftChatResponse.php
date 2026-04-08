@@ -140,7 +140,7 @@ class RaftChatResponse extends Component
         $apiMessages[] = ['role' => 'user', 'content' => $promptForAssistant];
 
         $stream = app('openai')->chat()->createStreamed([
-            'model' => 'gpt-5-nano',
+            'model' => 'gpt-5',
             'messages' => array_values($apiMessages),
             'temperature' => 1.0,
         ]);
