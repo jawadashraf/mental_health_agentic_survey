@@ -112,7 +112,7 @@ return [
         'question' => 'Do you feel adequately prepared to manage trauma-related behaviours?',
         'options' => ['Yes', 'No', 'Not sure'],
         'participant_behavior' => 'Not Sure / Definition of "adequately"',
-        'ai_guidance' => 'Refers to having enough knowledge/support. If unsure, answer \'not sure\'.',
+        'ai_guidance' => 'Say: "This refers to having enough knowledge or support to manage trauma-related behaviours. If you\'re unsure, you can answer \'not sure\'."',
     ],
     [
         'id' => 11,
@@ -223,7 +223,7 @@ return [
         'question' => 'Have you experienced challenges advocating for your child at school?',
         'options' => ['Yes', 'No'],
         'participant_behavior' => 'Definition of "advocating"',
-        'ai_guidance' => 'Speaking with schools to ensure support. Follow up: "Would you like to share an example?"',
+        'ai_guidance' => 'Say: "Advocating means speaking with schools to ensure support for your child." Then ask: "Would you like to share an example?"',
     ],
     [
         'id' => 21,
@@ -284,7 +284,7 @@ return [
         'question' => 'Do you feel connected to other foster/adoptive families?',
         'options' => ['Yes', 'No'],
         'participant_behavior' => '(No specific prompt)',
-        'ai_guidance' => 'Follow up: "Would you find it helpful if Raft supported connection opportunities?"',
+        'ai_guidance' => 'Say: "Would you find it helpful if Raft supported connection opportunities?"',
     ],
     [
         'id' => 26,
@@ -307,7 +307,7 @@ return [
         'options' => ['Yes', 'No', 'Not sure'],
         'transition_message' => 'Thank you for sharing your thoughts about social and community support. The final questions focus on future planning and the kinds of support that could help families thrive over time.',
         'participant_behavior' => '(No specific prompt)',
-        'ai_guidance' => '(Standard Y/N response)',
+        'ai_guidance' => 'Say: "This question can be answered with a simple Yes or No."',
     ],
 
     // Category – Long-Term & Future Planning
