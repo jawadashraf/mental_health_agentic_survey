@@ -56,7 +56,7 @@ return [
         'question' => 'Are trauma-informed services accessible in your area?',
         'options' => ['Yes', 'No', 'Not sure'],
         'participant_behavior' => 'What kind of services count?',
-        'ai_guidance' => '**RAFT input needed**',
+        'ai_guidance' => 'Say: "I don\'t have knowledge about this, I will notify Raft about this."',
     ],
     [
         'id' => 6,
@@ -77,7 +77,7 @@ return [
         'question' => 'Would you benefit from parent-specific support groups?',
         'options' => ['Yes', 'No', 'Not sure'],
         'participant_behavior' => 'What would this involve?',
-        'ai_guidance' => '**RAFT input needed.** It is fine to say \'not sure\'.',
+        'ai_guidance' => 'Say: "I don\'t have knowledge about this, I will notify Raft about this."',
     ],
     [
         'id' => 8,
@@ -158,7 +158,7 @@ return [
         'question' => 'Do you have access to reliable respite care?',
         'options' => ['Yes', 'No', 'Not sure'],
         'participant_behavior' => 'What counts as respite?',
-        'ai_guidance' => '**RAFT input needed**',
+        'ai_guidance' => 'Say: "I don\'t have knowledge about this, I will notify Raft about this."',
     ],
     [
         'id' => 15,
@@ -212,7 +212,7 @@ return [
         'question' => 'Do you feel your child\'s school understands their needs?',
         'options' => ['Yes', 'No', 'Not sure'],
         'participant_behavior' => 'Not sure',
-        'ai_guidance' => 'If unsure, say \'not sure\'.',
+        'ai_guidance' => 'Say: "I don\'t have knowledge about this, I will notify Raft about this."',
     ],
     [
         'id' => 20,
@@ -234,7 +234,7 @@ return [
         'question' => 'Do you need help navigating SEN support and / or EHCPs?',
         'options' => ['Yes', 'No', 'Not sure'],
         'participant_behavior' => 'What is SEN/EHCP?',
-        'ai_guidance' => '**RAFT input needed**',
+        'ai_guidance' => 'Say: "I don\'t have knowledge about this, I will notify Raft about this."',
     ],
     [
         'id' => 22,
@@ -295,7 +295,7 @@ return [
         'question' => 'Would you participate in peer support groups if available?',
         'options' => ['Yes', 'No', 'Not sure'],
         'participant_behavior' => 'What is a peer group?',
-        'ai_guidance' => '**RAFT input needed**',
+        'ai_guidance' => 'Say: "I don\'t have knowledge about this, I will notify Raft about this."',
     ],
     [
         'id' => 27,
@@ -329,7 +329,7 @@ return [
         'order' => 29,
         'question' => 'What additional supports would help your family thrive long-term?',
         'participant_behavior' => 'What kind of supports?',
-        'ai_guidance' => '**RAFT input needed**',
+        'ai_guidance' => 'Say: "I don\'t have knowledge about this, I will notify Raft about this."',
     ],
     [
         'id' => 30,

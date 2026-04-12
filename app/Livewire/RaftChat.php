@@ -11,6 +11,7 @@ use Livewire\Component;
 class RaftChat extends Component
 {
     public $questions = [];
+
     public array $skipped = [];
 
     protected $listeners = [
@@ -27,7 +28,7 @@ class RaftChat extends Component
     public $systemPrompt;
 
     public $currentIndex;
-    
+
     public bool $currentQuestionTakesTime = false;
 
     public $surveyStarted = false;
@@ -125,7 +126,7 @@ class RaftChat extends Component
         $linearIndex = Session::get('raft_survey_index', 0);
         $total = count($this->questions);
         $skipped = Session::get('raft_survey_skipped', []);
-        
+
         if ($linearIndex < $total) {
             $skipped[] = $linearIndex;
             Session::put('raft_survey_skipped', $skipped);
@@ -137,7 +138,7 @@ class RaftChat extends Component
                 Session::put('raft_survey_skipped', $skipped);
             }
         }
-        
+
         $this->askQuestion();
     }
 
@@ -145,7 +146,7 @@ class RaftChat extends Component
     {
         $linearIndex = Session::get('raft_survey_index', 0);
         $total = count($this->questions);
-        
+
         if ($linearIndex < $total) {
             session()->increment('raft_survey_index');
         } else {
@@ -155,7 +156,7 @@ class RaftChat extends Component
                 Session::put('raft_survey_skipped', $skipped);
             }
         }
-        
+
         $this->askQuestion();
     }
 
@@ -168,13 +169,14 @@ class RaftChat extends Component
         $linearIndex = Session::get('raft_survey_index', 0);
         $skipped = Session::get('raft_survey_skipped', []);
         $totalQuestions = count($this->questions);
-        
+
         $responses = Session::get('raft_survey_responses', []);
 
         if (count($skipped) > 0) {
             $skipped = array_filter($skipped, function ($idx) use ($responses) {
                 $qId = $this->questions[$idx]['id'] ?? null;
-                return $qId && !isset($responses[$qId]['response']);
+
+                return $qId && ! isset($responses[$qId]['response']);
             });
             $skipped = array_values($skipped);
             Session::put('raft_survey_skipped', $skipped);
@@ -226,7 +228,7 @@ class RaftChat extends Component
         $answeredCount = count(Session::get('raft_survey_responses', []));
         $midpoint = (int) ceil($totalQuestions / 2);
 
-        if ($answeredCount === $midpoint && $totalQuestions > 2 && !Session::get('raft_survey_midpoint_shown', false)) {
+        if ($answeredCount === $midpoint && $totalQuestions > 2 && ! Session::get('raft_survey_midpoint_shown', false)) {
             $remaining = $totalQuestions - $answeredCount + count($skipped);
             $this->metadata[] = [
                 'role' => 'assistant',
@@ -346,7 +348,9 @@ class RaftChat extends Component
 
     public function triggerNudge(): void
     {
-        if ($this->surveyCompleted) return;
+        if ($this->surveyCompleted) {
+            return;
+        }
 
         $this->messages = Session::get('raft_survey_messages', []);
         $this->metadata = Session::get('raft_survey_metadata', []);

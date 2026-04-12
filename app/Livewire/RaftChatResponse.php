@@ -58,7 +58,7 @@ class RaftChatResponse extends Component
 
     public function getResponse(): void
     {
-        $this->dispatch('stream-started');
+        $this->dispatch('stream-started')->to(RaftChat::class);
         $intent = $this->detectIntentWithAI($this->prompt['content']);
         $intent = strtolower(trim(str_replace("'", '', $intent)));
         $promptForAssistant = '';
@@ -71,7 +71,7 @@ class RaftChatResponse extends Component
             case 'repeat':
                 $this->response = ' ';
                 $this->updateSessionMessage();
-                $this->dispatch('stream-finished');
+                $this->dispatch('stream-finished')->to(RaftChat::class);
                 $this->askQuestion();
 
                 return;
@@ -89,7 +89,9 @@ class RaftChatResponse extends Component
             case 'clarify':
                 $this->js("updateExpression('2')");
                 $this->storeIntentForQuestion($intent, $this->prompt['content']);
-                $promptForAssistant = $this->getClarifyPrompt($this->questions[$this->currentIndex]['question']);
+                $questionObj = $this->questions[$this->currentIndex] ?? [];
+                $aiGuidance = $questionObj['ai_guidance'] ?? null;
+                $promptForAssistant = $this->getClarifyPrompt($this->questions[$this->currentIndex]['question'], $aiGuidance);
                 break;
 
             case 'term-explanation':
@@ -123,12 +125,14 @@ class RaftChatResponse extends Component
         $aiGuidance = $questionObj['ai_guidance'] ?? null;
         $expectedBehavior = $questionObj['participant_behavior'] ?? null;
 
-        if ($aiGuidance && !in_array($intent, ['progress-question', 'technical-issue'])) {
+        $alreadyIncludedInPrompt = ($intent === 'clarify' && $aiGuidance && str_starts_with($aiGuidance, '<'));
+
+        if ($aiGuidance && ! in_array($intent, ['progress-question', 'technical-issue']) && ! $alreadyIncludedInPrompt) {
             $guidancePrompt = "\n\nCRITICAL CONTEXT FOR THIS QUESTION: ";
             if ($expectedBehavior) {
                 $guidancePrompt .= "If the user exhibits the behavior/intent '{$expectedBehavior}', you MUST prioritize this guidance: ";
             } else {
-                $guidancePrompt .= "You MUST prioritize this guidance: ";
+                $guidancePrompt .= 'You MUST prioritize this guidance: ';
             }
             $guidancePrompt .= "{$aiGuidance}\nEnsure your response natively weaves this guidance into a comforting answer.";
             $promptForAssistant .= $guidancePrompt;
@@ -158,7 +162,7 @@ class RaftChatResponse extends Component
         }
 
         $this->updateSessionMessage();
-        $this->dispatch('stream-finished');
+        $this->dispatch('stream-finished')->to(RaftChat::class);
     }
 
     public function updateSessionMessage()
@@ -252,15 +256,24 @@ class RaftChatResponse extends Component
     **Generate a comforting and encouraging statement to take survey.**';
     }
 
-    public function getClarifyPrompt($question): string
+    public function getClarifyPrompt($question, ?string $aiGuidance = null): string
     {
+        if ($aiGuidance && str_starts_with($aiGuidance, '<')) {
+            return "You are a compassionate AI conducting a foster care support survey for Raft charity.
+The user asked for clarification about: \"$question\"
+
+Follow this guidance: {$aiGuidance}
+
+**Generate a warm, empathetic two-line response acknowledging their question and offering the guidance above. Ask if they'd like to continue or need anything else.**";
+        }
+
         return "You are a compassionate AI conducting a foster care support survey for Raft charity.
         user wants clarification about the question asked.
-    Your responses should be **two lines, warm, encouraging, and non-judgmental**.
+Your responses should be **two lines, warm, encouraging, and non-judgmental**.
 
-    The user was asked: \"$question\"
+The user was asked: \"$question\"
 
-    **Now generate an empathetic and comforting clarification of the question:**";
+**Now generate an empathetic and comforting clarification of the question:**";
     }
 
     public function getTermExplanationPrompt($term): string
@@ -321,6 +334,8 @@ The user seems disengaged or uninterested. Generate a gentle, empathetic message
 
         $this->selectedOption = null;
         $this->textResponse = '';
+
+        $this->dispatch('stream-finished')->to(RaftChat::class);
 
         if ($this->currentIndex === session()->get('raft_survey_index', 0)) {
             $this->dispatch('incrementCurrentIndex');
