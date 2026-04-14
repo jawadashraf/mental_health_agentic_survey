@@ -97,18 +97,15 @@ class ChatResponse extends Component
 
                 return;
             case 'off-topic':
-                $this->js("updateExpression('5')"); // Surprised
                 $this->storeIntentForQuestion($intent, $this->prompt['content']);
                 $promptForAssistant = $this->getOffTopicPrompt();
                 break;
             case 'refused':
-                $this->js("updateExpression('3')"); // Sad
                 $this->storeIntentForQuestion($intent, $this->prompt['content']);
                 $promptForAssistant = $this->generateEncouragingPrompt();
                 break;
 
             case 'clarify':
-                $this->js("updateExpression('2')"); // Happy
                 $this->storeIntentForQuestion($intent, $this->prompt['content']);
                 $promptForAssistant = $this->getClarifyPrompt($this->questions[$this->currentIndex]['question']);
                 break;

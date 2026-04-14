@@ -50,11 +50,17 @@
      }"
      x-init="
          setTimeout(() => loaded = true, 100);
-         $watch('isProcessing', (val) => {
-             initNudgeTimer();
-             if (val) setTimeout(() => scrollToBottom(true), 50);
-         });
-         $watch('takesTime', () => initNudgeTimer());
+          $watch('isProcessing', (val) => {
+              initNudgeTimer();
+              if (val) {
+                  setTimeout(() => scrollToBottom(true), 50);
+                  // Failsafe: Re-enable input if stuck for more than 60 seconds
+                  setTimeout(() => {
+                      if (this.isProcessing) this.isProcessing = false;
+                  }, 60000);
+              }
+          });
+          $watch('takesTime', () => initNudgeTimer());
          
          const messagesEl = document.getElementById('raft-chat-messages');
          if (messagesEl) {
@@ -291,7 +297,7 @@
                 </div>
             </div>
         @else
-        <form wire:submit="send" class="p-3 sm:p-4 border-t transition-colors duration-500"
+        <form @submit.prevent="if($wire.body.trim() !== '') { $wire.send(); isProcessing = true; }" class="p-3 sm:p-4 border-t transition-colors duration-500"
               :class="isLight ? 'border-black/10 bg-white/50' : 'border-white/10 bg-white/5'">
             <div class="flex items-center gap-2 sm:gap-3">
                 <div class="relative flex-1 flex items-center rounded-2xl border transition-all duration-300 focus-within:shadow-lg"
@@ -301,15 +307,13 @@
                     <input class="w-full bg-transparent px-4 py-3 text-sm focus:outline-none transition-colors duration-500 disabled:opacity-50"
                         :class="isLight ? 'text-gray-800 placeholder-gray-400' : 'text-white placeholder-white/30'"
                         placeholder="Type your message..." wire:model="body"
-                        wire:loading.attr="disabled"
-                        wire:target="send"
-                        :disabled="isProcessing" />
+                        :disabled="isProcessing"
+                        x-effect="if (!isProcessing) { $el.removeAttribute('disabled'); }" />
                 </div>
                 
                 {{-- Skip Button --}}
                 <button type="button"
                     wire:click="skipQuestion"
-                    wire:loading.attr="disabled"
                     :disabled="isProcessing"
                     class="shrink-0 flex items-center justify-center px-4 py-2.5 rounded-2xl text-xs font-semibold shadow-lg hover:scale-105 active:scale-95 transition-all duration-200 disabled:opacity-50 disabled:scale-100"
                     :class="isLight 
@@ -320,8 +324,6 @@
 
                 {{-- Send Button --}}
                 <button type="submit"
-                    wire:loading.attr="disabled"
-                    wire:target="send"
                     :disabled="isProcessing"
                     class="shrink-0 flex items-center justify-center size-11 sm:size-12 rounded-2xl text-white shadow-lg hover:scale-105 active:scale-95 transition-all duration-200 disabled:opacity-50 disabled:scale-100"
                     :class="{
