@@ -21,22 +21,23 @@ class LatestSessions extends BaseWidget
             ->defaultPaginationPageOption(5)
             ->defaultSort('created_at', 'desc')
             ->columns([
+                Tables\Columns\TextColumn::make('session_id')
+                    ->label('Session')
+                    ->searchable()
+                    ->limit(8),
+                Tables\Columns\TextColumn::make('survey_type')
+                    ->label('Type')
+                    ->badge()
+                    ->color('gray'),
                 Tables\Columns\TextColumn::make('created_at')
                     ->label('Started At')
-                    ->date()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('completed_at')
-                    ->label('Completed At')
-                    ->date()
+                    ->dateTime()
                     ->sortable(),
                 TextColumn::make('completed')->sortable()
-                    ->formatStateUsing(fn (string $state): string => $state === '1' ? 'Yes' : 'No')
+                    ->formatStateUsing(fn (bool $state): string => $state ? 'Yes' : 'No')
                     ->label('Completed')
                     ->badge()
-                    ->color(fn (string $state): string => match ($state) {
-                        '1' => 'success',
-                        '0' => 'danger',
-                    }),
+                    ->color(fn (bool $state): string => $state ? 'success' : 'danger'),
                 TextColumn::make('responses_count')
                     ->counts('responses')
                     ->label('Responses'),

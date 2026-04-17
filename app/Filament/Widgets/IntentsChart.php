@@ -10,27 +10,37 @@ class IntentsChart extends ChartWidget
 
     protected static ?int $sort = 2;
 
-    public static function setHeading(): ?string
-    {
-        return 'Sessions per month';
-    }
+    protected ?string $heading = 'Intent Distribution';
 
     protected function getType(): string
     {
-        return 'line';
+        return 'doughnut';
     }
 
     protected function getData(): array
     {
+        $data = \App\Models\Intent::query()
+            ->select('intent', \Illuminate\Support\Facades\DB::raw('count(*) as count'))
+            ->groupBy('intent')
+            ->pluck('count', 'intent')
+            ->toArray();
+
         return [
             'datasets' => [
                 [
-                    'label' => 'Orders',
-                    'data' => [2433, 3454, 4566, 3300, 5545, 5765, 6787, 8767, 7565, 8576, 9686, 8996],
-                    'fill' => 'start',
+                    'label' => 'User Intents',
+                    'data' => array_values($data),
+                    'backgroundColor' => [
+                        '#36A2EB',
+                        '#FF6384',
+                        '#FFCE56',
+                        '#4BC0C0',
+                        '#9966FF',
+                        '#FF9F40',
+                    ],
                 ],
             ],
-            'labels' => ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+            'labels' => array_keys($data),
         ];
     }
 }
