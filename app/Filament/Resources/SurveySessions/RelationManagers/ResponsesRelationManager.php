@@ -15,11 +15,23 @@ class ResponsesRelationManager extends RelationManager
         return $table
             ->recordTitleAttribute('title')
             ->columns([
-                Tables\Columns\TextColumn::make('question_id'),
-                Tables\Columns\TextColumn::make('question')->wrap(),
-                Tables\Columns\TextColumn::make('response')->wrap(),
-                Tables\Columns\TextColumn::make('created_at'),
-                Tables\Columns\TextColumn::make('updated_at'),
+                Tables\Columns\TextColumn::make('question_id')
+                    ->sortable()
+                    ->label('ID'),
+                Tables\Columns\TextColumn::make('question')
+                    ->searchable()
+                    ->wrap(),
+                Tables\Columns\TextColumn::make('response')
+                    ->searchable()
+                    ->wrap(),
+                Tables\Columns\TextColumn::make('created_at')
+                    ->dateTime()
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+                Tables\Columns\TextColumn::make('updated_at')
+                    ->dateTime()
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
                 //

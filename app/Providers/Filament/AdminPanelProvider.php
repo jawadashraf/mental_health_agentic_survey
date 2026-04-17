@@ -47,6 +47,7 @@ class AdminPanelProvider extends PanelProvider
                 LatestSessions::class,
                 IntentsChart::class,
             ])
+            ->databaseNotifications()
             ->middleware([
                 EncryptCookies::class,
                 AddQueuedCookiesToResponse::class,
