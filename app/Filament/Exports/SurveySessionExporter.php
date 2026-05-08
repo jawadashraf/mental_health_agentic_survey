@@ -61,13 +61,15 @@ class SurveySessionExporter extends Exporter
 
                         return $record->responses->firstWhere('question_id', $questionId)?->response;
                     })
-                    ->enabledByDefault(function (array $options) use ($type) {
+                    ->enabledByDefault(function () use ($type) {
                         // If a specific survey type is filtered, only enable those columns by default
-                        if (! ($options['survey_type'] ?? null)) {
+                        $surveyType = request()->input('tableFilters.survey_type.value');
+
+                        if (! $surveyType) {
                             return $type === 'survey'; // Default to standard if no filter
                         }
 
-                        return $options['survey_type'] === $type;
+                        return $surveyType === $type;
                     });
             }
         }
