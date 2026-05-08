@@ -29,17 +29,47 @@ class SurveySessionExporter extends Exporter
                 ->label('Started At'),
         ];
 
-        $surveyConfig = config('survey', []);
+        $surveys = [
+            'survey' => config('survey', []),
+            'raft' => config('raft-survey', []),
+            'raft-test' => config('raft-survey-test', []),
+            'mini' => config('survey_mini', []),
+        ];
 
-        foreach ($surveyConfig as $question) {
-            $questionId = $question['id'];
-            $label = $question['label'] ?: (strlen($question['question']) > 50 ? substr($question['question'], 0, 47) . '...' : $question['question']);
+        foreach ($surveys as $type => $questions) {
+            foreach ($questions as $question) {
+                $questionId = $question['id'];
+                $label = ($question['label'] ?? null) ?: (strlen($question['question']) > 50 ? substr($question['question'], 0, 47).'...' : $question['question']);
 
-            $columns[] = ExportColumn::make("q_{$questionId}")
-                ->label($label)
-                ->state(function (SurveySession $record) use ($questionId) {
-                    return $record->responses->firstWhere('question_id', $questionId)?->response;
-                });
+                // Prefix label with survey type for clarity in column selection
+                $prefixedLabel = match ($type) {
+                    'survey' => "Standard: {$label}",
+                    'raft' => "Raft: {$label}",
+                    'raft-test' => "Raft Test: {$label}",
+                    'mini' => "Mini: {$label}",
+                    default => "{$type}: {$label}",
+                };
+
+                $columns[] = ExportColumn::make("{$type}_q_{$questionId}")
+                    ->label($prefixedLabel)
+                    ->state(function (SurveySession $record) use ($type, $questionId) {
+                        $recordType = $record->survey_type ?: 'survey';
+
+                        if ($recordType !== $type) {
+                            return null;
+                        }
+
+                        return $record->responses->firstWhere('question_id', $questionId)?->response;
+                    })
+                    ->enabledByDefault(function (array $options) use ($type) {
+                        // If a specific survey type is filtered, only enable those columns by default
+                        if (! ($options['survey_type'] ?? null)) {
+                            return $type === 'survey'; // Default to standard if no filter
+                        }
+
+                        return $options['survey_type'] === $type;
+                    });
+            }
         }
 
         return $columns;
@@ -47,10 +77,10 @@ class SurveySessionExporter extends Exporter
 
     public static function getCompletedNotificationBody(Export $export): string
     {
-        $body = 'Your survey session export has completed and ' . number_format($export->successful_rows) . ' ' . str('row')->plural($export->successful_rows) . ' were exported.';
+        $body = 'Your survey session export has completed and '.number_format($export->successful_rows).' '.str('row')->plural($export->successful_rows).' were exported.';
 
         if ($failedRowsCount = $export->getFailedRowsCount()) {
-            $body .= ' ' . number_format($failedRowsCount) . ' ' . str('row')->plural($failedRowsCount) . ' failed to export.';
+            $body .= ' '.number_format($failedRowsCount).' '.str('row')->plural($failedRowsCount).' failed to export.';
         }
 
         return $body;

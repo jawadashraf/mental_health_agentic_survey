@@ -6,13 +6,14 @@ use App\Filament\Exports\SurveySessionExporter;
 use App\Models\SurveySession;
 use App\Settings\PromptSettings;
 use BackedEnum;
+use Carbon\Carbon;
+use Filament\Actions\EditAction;
+use Filament\Actions\ExportAction;
+use Filament\Actions\ExportBulkAction;
 use Filament\Forms;
 use Filament\Forms\Components\DatePicker;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
-use Filament\Actions\EditAction;
-use Filament\Actions\ExportAction;
-use Filament\Actions\ExportBulkAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\SelectFilter;
@@ -108,10 +109,10 @@ class SurveySessionResource extends Resource
                     ->indicateUsing(function (array $data): array {
                         $indicators = [];
                         if ($data['from'] ?? null) {
-                            $indicators[] = 'From ' . \Carbon\Carbon::parse($data['from'])->toFormattedDateString();
+                            $indicators[] = 'From '.Carbon::parse($data['from'])->toFormattedDateString();
                         }
                         if ($data['until'] ?? null) {
-                            $indicators[] = 'Until ' . \Carbon\Carbon::parse($data['until'])->toFormattedDateString();
+                            $indicators[] = 'Until '.Carbon::parse($data['until'])->toFormattedDateString();
                         }
 
                         return $indicators;
@@ -122,11 +123,17 @@ class SurveySessionResource extends Resource
             ])
             ->toolbarActions([
                 ExportAction::make()
-                    ->exporter(SurveySessionExporter::class),
+                    ->exporter(SurveySessionExporter::class)
+                    ->options(fn ($livewire) => [
+                        'survey_type' => $livewire->tableFilters['survey_type']['value'] ?? null,
+                    ]),
             ])
             ->bulkActions([
                 ExportBulkAction::make()
-                    ->exporter(SurveySessionExporter::class),
+                    ->exporter(SurveySessionExporter::class)
+                    ->options(fn ($livewire) => [
+                        'survey_type' => $livewire->tableFilters['survey_type']['value'] ?? null,
+                    ]),
             ]);
     }
 
