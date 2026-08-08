@@ -311,12 +311,23 @@
                 <div class="relative flex-1 flex items-center rounded-2xl border transition-all duration-300 focus-within:shadow-lg"
                      :class="isLight
                          ? 'bg-white/80 border-black/10 focus-within:border-black/20 focus-within:shadow-black/5'
-                         : 'bg-white/10 border-white/10 focus-within:bg-white/15 focus-within:border-white/20 focus-within:shadow-purple-500/10'">
-                    <input class="w-full bg-transparent px-4 py-3 text-sm focus:outline-none transition-colors duration-500 disabled:opacity-50"
-                        :class="isLight ? 'text-gray-800 placeholder-gray-400' : 'text-white placeholder-white/30'"
-                        placeholder="Type your message..." wire:model="body"
-                        :disabled="isProcessing"
-                        x-effect="if (!isProcessing) { $el.removeAttribute('disabled'); }" />
+                         : 'bg-white/10 border-white/10 focus-within:bg-white/15 focus-within:border-white/20 focus-within:shadow-purple-500/10'"
+                     x-data="{
+                         resize() {
+                             $refs.chatInput.style.height = 'auto';
+                             $refs.chatInput.style.height = Math.min($refs.chatInput.scrollHeight, 160) + 'px';
+                         }
+                     }">
+                    <textarea x-ref="chatInput"
+                              class="w-full bg-transparent px-4 py-2.5 text-sm focus:outline-none transition-colors duration-500 disabled:opacity-50 resize-none overflow-y-auto"
+                              :class="isLight ? 'text-gray-800 placeholder-gray-400' : 'text-white placeholder-white/30'"
+                              placeholder="Type your message..."
+                              wire:model="body"
+                              :disabled="isProcessing"
+                              rows="1"
+                              @input="resize()"
+                              @keydown.enter="if (!$event.shiftKey) { $event.preventDefault(); if ($wire.body.trim() !== '' && !isProcessing) { $wire.send(); isProcessing = true; } }"
+                              x-effect="if (!isProcessing) { $el.removeAttribute('disabled'); }"></textarea>
                 </div>
                 
                 {{-- Skip Button --}}

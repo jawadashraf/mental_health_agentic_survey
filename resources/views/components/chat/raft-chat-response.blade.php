@@ -95,15 +95,25 @@
                                 @endforeach
                             </div>
                         @elseif($question['type'] === 'text')
-                            <div class="mt-2">
-                                <input type="text" wire:model="textResponse"
-                                       wire:loading.attr="disabled"
-                                       wire:target="handleUserInput"
-                                       class="w-full border rounded-xl px-4 py-2.5 text-sm focus:outline-none transition-all duration-200 disabled:opacity-50"
-                                       :class="isLight
-                                           ? 'bg-white/80 border-black/10 text-gray-800 placeholder-gray-400 focus:border-black/20'
-                                           : 'bg-white/10 border-white/10 text-white placeholder-white/30 focus:border-white/30 focus:bg-white/15'"
-                                       placeholder="Type your answer here...">
+                            <div class="mt-2" x-data="{
+                                resize() {
+                                    $refs.textarea.style.height = 'auto';
+                                    $refs.textarea.style.height = Math.min($refs.textarea.scrollHeight, 180) + 'px';
+                                }
+                            }">
+                                <textarea x-ref="textarea"
+                                          wire:model="textResponse"
+                                          wire:loading.attr="disabled"
+                                          wire:target="handleUserInput"
+                                          @input="resize()"
+                                          @keydown.enter.cmd="$wire.handleUserInput()"
+                                          @keydown.enter.ctrl="$wire.handleUserInput()"
+                                          rows="2"
+                                          class="w-full border rounded-xl px-4 py-2.5 text-sm focus:outline-none transition-all duration-200 disabled:opacity-50 resize-none overflow-y-auto"
+                                          :class="isLight
+                                              ? 'bg-white/80 border-black/10 text-gray-800 placeholder-gray-400 focus:border-black/20'
+                                              : 'bg-white/10 border-white/10 text-white placeholder-white/30 focus:border-white/30 focus:bg-white/15'"
+                                          placeholder="Type your answer here..."></textarea>
                             </div>
                         @endif
 
