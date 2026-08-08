@@ -2,24 +2,26 @@
     "agents": [
         "claude_code",
         "codex",
-        "gemini",
-        "opencode"
+        "opencode",
+        "antigravity"
     ],
+    "cloud": false,
     "guidelines": true,
     "mcp": true,
-    "nightwatch_mcp": false,
+    "nightwatch": false,
     "packages": [
         "filament/filament",
-        "laravel/ai",
         "prism-php/prism",
         "filament/blueprint"
     ],
     "sail": false,
     "skills": [
+        "infer-conventions",
+        "ai-sdk-development",
         "laravel-best-practices",
         "livewire-development",
         "tailwindcss-development",
-        "ai-sdk-development",
-        "developing-with-prism"
+        "developing-with-prism",
+        "filament-security-audit"
     ]
 }

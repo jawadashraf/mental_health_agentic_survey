@@ -10,4 +10,3 @@ SITE_PATH = "/Users/jawadashraf/Herd/scope-ai"
 [mcp_servers.laravel-boost]
 command = "php"
 args = ["artisan", "boost:mcp"]
-cwd = "/Users/jawadashraf/Herd/scope-ai"
