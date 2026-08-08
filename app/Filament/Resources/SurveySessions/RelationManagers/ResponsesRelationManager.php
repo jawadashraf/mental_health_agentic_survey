@@ -24,6 +24,21 @@ class ResponsesRelationManager extends RelationManager
                 Tables\Columns\TextColumn::make('response')
                     ->searchable()
                     ->wrap(),
+                Tables\Columns\TextColumn::make('flag_type')
+                    ->label('Flag Type')
+                    ->badge()
+                    ->color(fn (?string $state): string => match ($state) {
+                        'safeguarding' => 'danger',
+                        'struggle_burnout', 'ill_equipped' => 'warning',
+                        'event_safety', 'accessibility_complaint' => 'info',
+                        default => 'gray',
+                    })
+                    ->formatStateUsing(fn (?string $state): string => $state ? str($state)->headline() : 'None')
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('flag_reason')
+                    ->label('Flag Reason')
+                    ->wrap()
+                    ->toggleable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()

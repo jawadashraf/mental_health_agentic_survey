@@ -23,6 +23,11 @@ class SurveySessionExporter extends Exporter
             ExportColumn::make('completed')
                 ->formatStateUsing(fn (bool $state): string => $state ? 'Yes' : 'No')
                 ->label('Completed'),
+            ExportColumn::make('has_flags')
+                ->formatStateUsing(fn (bool $state): string => $state ? 'Yes' : 'No')
+                ->label('Has Red Flags'),
+            ExportColumn::make('flag_count')
+                ->label('Flag Count'),
             ExportColumn::make('completed_at')
                 ->label('Completed At'),
             ExportColumn::make('created_at')

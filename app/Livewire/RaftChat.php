@@ -135,6 +135,21 @@ class RaftChat extends Component
         $this->updateSkipPhaseState();
     }
 
+    public function getCurrentSectionTitleProperty(): ?string
+    {
+        return $this->questions[$this->currentIndex]['section_title'] ?? null;
+    }
+
+    public function getCurrentSectionNumberProperty(): int
+    {
+        return $this->questions[$this->currentIndex]['section_number'] ?? 1;
+    }
+
+    public function getTotalSectionsProperty(): int
+    {
+        return $this->questions[$this->currentIndex]['total_sections'] ?? 3;
+    }
+
     protected function resetSurveyState(): void
     {
         foreach ([
@@ -325,6 +340,13 @@ class RaftChat extends Component
                 'content' => "You're doing great! You're halfway through. Your responses are really valuable. 💪",
             ];
             Session::put('raft_survey_midpoint_shown', true);
+        }
+
+        $lastMeta = end($this->metadata);
+        if ($lastMeta && ($lastMeta['type'] ?? '') === 'question' && ($lastMeta['content']['id'] ?? null) === ($question['id'] ?? null)) {
+            $this->updateSkipPhaseState();
+
+            return;
         }
 
         $questionMetadata = [

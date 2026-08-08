@@ -52,6 +52,13 @@
                      :class="isLight
                          ? 'bg-black/5 border border-black/8 text-gray-700'
                          : 'bg-white/10 backdrop-blur-sm border border-white/10 text-purple-100'">
+                    @if(isset($question['section_title']))
+                        <div class="mb-2 inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-semibold transition-all duration-300"
+                             :class="isLight ? 'bg-indigo-100/80 text-indigo-800 border border-indigo-200' : 'bg-indigo-500/20 text-indigo-200 border border-indigo-500/30'">
+                            <span>Section {{ $question['section_number'] ?? 1 }} of {{ $question['total_sections'] ?? 3 }}:</span>
+                            <span class="font-bold">{{ $question['section_title'] }}</span>
+                        </div>
+                    @endif
                     <div class="mb-3 font-semibold transition-colors duration-300"
                          :class="isLight ? 'text-gray-900' : 'text-white'">Q{{ $question['id'] }}: {{ $question['question'] }}</div>
 

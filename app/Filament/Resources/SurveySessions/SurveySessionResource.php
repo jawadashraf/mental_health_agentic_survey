@@ -77,19 +77,31 @@ class SurveySessionResource extends Resource
                 TextColumn::make('created_at')->sortable()->dateTime(),
                 TextColumn::make('updated_at')->sortable()->dateTime(),
                 TextColumn::make('completed_at')->sortable()->dateTime(),
+                TextColumn::make('has_flags')
+                    ->label('Flag Status')
+                    ->formatStateUsing(fn ($record): string => $record->has_flags ? "Flagged ({$record->flag_count})" : 'Clean')
+                    ->badge()
+                    ->color(fn ($state): string => $state ? 'danger' : 'success')
+                    ->sortable(),
                 TextColumn::make('completed')->sortable()
-                    ->formatStateUsing(fn (string $state): string => $state === '1' ? 'Yes' : 'No')
+                    ->formatStateUsing(fn (string $state): string => $state === '1' || $state === 'true' ? 'Yes' : 'No')
                     ->label('Completed')
                     ->badge()
                     ->color(fn (string $state): string => match ($state) {
-                        '1' => 'success',
-                        '0' => 'danger',
+                        '1', 'true' => 'success',
+                        default => 'gray',
                     }),
             ])
             ->filters([
                 SelectFilter::make('survey_type')
                     ->options(fn () => SurveySession::distinct()->whereNotNull('survey_type')->pluck('survey_type', 'survey_type')->toArray())
                     ->label('Type'),
+                SelectFilter::make('has_flags')
+                    ->label('Flagged Sessions')
+                    ->options([
+                        '1' => 'Flagged Sessions Only',
+                        '0' => 'Clean Sessions Only',
+                    ]),
                 Filter::make('created_at')
                     ->form([
                         DatePicker::make('from'),

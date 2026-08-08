@@ -227,8 +227,16 @@
             <div class="px-4 sm:px-6 py-2 border-b transition-colors duration-500"
                  :class="isLight ? 'border-black/5 bg-black/3' : 'border-white/5 bg-white/2'">
                 <div class="flex items-center justify-between mb-1.5">
-                    <span class="text-[11px] font-medium transition-colors duration-500"
-                          :class="isLight ? 'text-gray-400' : 'text-white/40'">Progress</span>
+                    <div class="flex items-center gap-2">
+                        <span class="text-[11px] font-medium transition-colors duration-500"
+                              :class="isLight ? 'text-gray-400' : 'text-white/40'">Progress</span>
+                        @if($this->currentSectionTitle)
+                            <span class="px-2 py-0.5 rounded-md text-[10px] font-bold tracking-wider transition-all duration-300"
+                                  :class="isLight ? 'bg-indigo-50 text-indigo-700 border border-indigo-200' : 'bg-indigo-500/20 text-indigo-200 border border-indigo-500/30'">
+                                Section {{ $this->currentSectionNumber }} of {{ $this->totalSections }}: {{ $this->currentSectionTitle }}
+                            </span>
+                        @endif
+                    </div>
                     <span class="text-[11px] font-semibold transition-colors duration-500"
                           :class="isLight ? 'text-gray-600' : 'text-white/70'">{{ $answeredCount }} / {{ $totalQuestions }}</span>
                 </div>

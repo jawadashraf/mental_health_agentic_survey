@@ -6,11 +6,18 @@ use App\Livewire\RaftChat;
 use App\Livewire\RaftChatResponse;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Livewire\Livewire;
+use Prism\Prism\Facades\Prism;
 use Tests\TestCase;
 
 class RaftChatTest extends TestCase
 {
     use RefreshDatabase;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+        Prism::fake();
+    }
 
     public function test_raft_chat_loads_test_config_with_three_questions(): void
     {
@@ -18,8 +25,11 @@ class RaftChatTest extends TestCase
 
         $this->assertCount(3, $questions);
         $this->assertEquals('text', $questions[0]['type']);
-        $this->assertEquals('radio', $questions[1]['type']);
+        $this->assertEquals('text', $questions[1]['type']);
         $this->assertEquals('text', $questions[2]['type']);
+        $this->assertEquals('Children', $questions[0]['section_title']);
+        $this->assertEquals('Parents & Carers', $questions[1]['section_title']);
+        $this->assertEquals('Training & Development', $questions[2]['section_title']);
     }
 
     public function test_raft_chat_mounts_with_initial_state(): void
@@ -266,13 +276,18 @@ class RaftChatTest extends TestCase
             ->withoutLazyLoading()
             ->test(RaftChat::class);
 
-        $questions = config('raft-survey-test');
+        $radioQuestion = [
+            'id' => 99,
+            'type' => 'radio',
+            'question' => 'Sample Radio Question',
+            'options' => ['Option A', 'Option B'],
+        ];
 
         Livewire::test(RaftChatResponse::class, [
             'message' => ['role' => 'assistant', 'content' => 'plain text'],
-            'metadata' => ['role' => 'assistant', 'content' => $questions[1], 'type' => 'question'],
+            'metadata' => ['role' => 'assistant', 'content' => $radioQuestion, 'type' => 'question'],
             'prompt' => [],
-        ])->assertSee('name="options-'.$questions[1]['id'].'"', false);
+        ])->assertSee('name="options-99"', false);
     }
 
     public function test_send_appends_message_even_when_client_has_already_set_processing_flag(): void

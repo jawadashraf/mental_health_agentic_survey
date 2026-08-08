@@ -2,11 +2,15 @@
 
 namespace App\Livewire;
 
+use App\Mail\SafeguardingAlertMail;
 use App\Models\Intent;
 use App\Models\SurveyResponse;
+use App\Models\SurveySession;
+use App\Services\RaftFlagDetectionService;
 use App\Services\RaftRagService;
 use App\Settings\PromptSettings;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Session;
 use Livewire\Component;
 use Prism\Prism\Enums\Provider;
@@ -84,8 +88,23 @@ class RaftChatResponse extends Component
             $aiGuidance = $questionObj['ai_guidance'] ?? null;
             $expectedBehavior = $questionObj['participant_behavior'] ?? null;
 
-            $ragService = app(RaftRagService::class);
-            $relevantChunks = $ragService->searchSimilarChunks($this->prompt['content'], topK: 3, minScore: 0.05);
+            $isQuestion = preg_match('/\?|what|who|where|when|why|how|can|is|are|does|do/i', strtolower(trim($this->prompt['content'])));
+
+            if ($intent === 'consent' && ! $isQuestion) {
+                $this->response = ' ';
+                $this->updateSessionMessage();
+                $this->askQuestion();
+
+                return;
+            }
+
+            $relevantChunks = collect();
+            $ragSystemPrompt = null;
+
+            if ($isQuestion || ! in_array($intent, ['consent', 'progress-question', 'repeat'])) {
+                $ragService = app(RaftRagService::class);
+                $relevantChunks = $ragService->searchSimilarChunks($this->prompt['content'], topK: 3, minScore: 0.05);
+            }
 
             if ($relevantChunks->isNotEmpty()) {
                 $this->storeIntentForQuestion('rag-knowledge', $this->prompt['content']);
@@ -113,20 +132,11 @@ RAG;
 
                 $promptForAssistant = $this->prompt['content'];
             } else {
-                // If query contains a question mark or starts with a question word, do not force consent
-                $isQuestion = preg_match('/\?|what|who|where|when|why|how|can|is|are|does|do/i', strtolower(trim($this->prompt['content'])));
-
                 switch ($intent) {
                     case 'progress-question':
                         $promptForAssistant = $this->getProgressPrompt($this->currentIndex, count($this->questions));
                         break;
                     case 'consent':
-                        if ($isQuestion) {
-                            $this->storeIntentForQuestion('meta-question', $this->prompt['content']);
-                            $promptForAssistant = $this->getMetaQuestionPrompt();
-                            break;
-                        }
-
                         $this->response = ' ';
                         $this->updateSessionMessage();
                         $this->askQuestion();
@@ -221,6 +231,11 @@ RAG;
             }
 
             $this->updateSessionMessage();
+
+            $currentQ = $this->currentQuestion();
+            if ($this->surveyStarted && $currentQ && ! isset($this->responses[$currentQ['id']]['response'])) {
+                $this->askQuestion();
+            }
         } catch (\Throwable $e) {
             \Log::error('RaftChat error in getResponse: '.$e->getMessage());
 
@@ -256,6 +271,20 @@ RAG;
 
     public function detectIntentWithAI($userInput): ?string
     {
+        $cleanInput = strtolower(trim($userInput));
+        $consentKeywords = [
+            'yes', 'yep', 'yeah', 'sure', 'ok', 'okay', 'ready', 'resume', 'continue',
+            'start', 'let\'s start', 'lets start', 'let\'s continue', 'lets continue',
+            'resume survey', 'continue survey', 'start survey', 'go ahead', 'begin',
+        ];
+
+        if (in_array($cleanInput, $consentKeywords) ||
+            str_contains($cleanInput, 'resume survey') ||
+            str_contains($cleanInput, 'continue survey') ||
+            str_contains($cleanInput, 'start survey')) {
+            return 'consent';
+        }
+
         $currentQuestion = $this->currentQuestion();
 
         if ($this->surveyStarted && $currentQuestion) {
@@ -479,6 +508,10 @@ The user seems disengaged or uninterested. Generate a gentle, empathetic message
     public function storeResponse($questionId, $response, $question): void
     {
         $sessionId = session()->getId();
+        $questionData = collect($this->questions)->firstWhere('id', $questionId) ?? ['question' => $question];
+
+        $flagService = app(RaftFlagDetectionService::class);
+        $flagEvaluation = $flagService->evaluateResponse($response, $questionData);
 
         SurveyResponse::updateOrCreate(
             [
@@ -488,8 +521,57 @@ The user seems disengaged or uninterested. Generate a gentle, empathetic message
             [
                 'response' => $response,
                 'question' => $question,
+                'is_flagged' => $flagEvaluation['is_flagged'],
+                'flag_type' => $flagEvaluation['flag_type'],
+                'flag_severity' => $flagEvaluation['flag_severity'],
+                'flag_reason' => $flagEvaluation['flag_reason'],
+                'flag_action_taken' => $flagEvaluation['flag_action_taken'],
+                'flagged_at' => $flagEvaluation['is_flagged'] ? now() : null,
             ]
         );
+
+        if ($flagEvaluation['is_flagged']) {
+            $session = SurveySession::query()->where('session_id', $sessionId)->first();
+            if ($session) {
+                $flagCount = SurveyResponse::query()->where('session_id', $sessionId)->where('is_flagged', true)->count();
+                $session->update([
+                    'has_flags' => true,
+                    'flag_count' => $flagCount,
+                ]);
+            }
+
+            if ($flagEvaluation['flag_severity'] === 'critical' || $flagEvaluation['flag_type'] === 'safeguarding') {
+                try {
+                    Mail::to('safeguarding@theraftleicester.co.uk')->send(new SafeguardingAlertMail(
+                        sessionId: $sessionId,
+                        questionId: $questionId,
+                        questionText: $question,
+                        userResponse: $response,
+                        flagType: $flagEvaluation['flag_type'],
+                        flagSeverity: $flagEvaluation['flag_severity'],
+                        flagReason: $flagEvaluation['flag_reason'],
+                        recipientEmail: 'safeguarding@theraftleicester.co.uk'
+                    ));
+                } catch (\Throwable $e) {
+                    \Log::error('Failed sending safeguarding email alert: '.$e->getMessage());
+                }
+            } elseif (in_array($flagEvaluation['flag_type'], ['accessibility_complaint', 'event_safety'])) {
+                try {
+                    Mail::to('info@theraftleicester.co.uk')->send(new SafeguardingAlertMail(
+                        sessionId: $sessionId,
+                        questionId: $questionId,
+                        questionText: $question,
+                        userResponse: $response,
+                        flagType: $flagEvaluation['flag_type'],
+                        flagSeverity: $flagEvaluation['flag_severity'],
+                        flagReason: $flagEvaluation['flag_reason'],
+                        recipientEmail: 'info@theraftleicester.co.uk'
+                    ));
+                } catch (\Throwable $e) {
+                    \Log::error('Failed sending info email alert: '.$e->getMessage());
+                }
+            }
+        }
     }
 
     public function saveResponseInSession($response, $question, $questionId): void
