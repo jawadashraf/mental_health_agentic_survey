@@ -35,11 +35,9 @@ class RaftChat extends Component
 
     public $surveyCompleted = false;
 
-    public $response = '';
-
     public $responses;
 
-    public $summary = '';
+    public bool $inSkipPhase = false;
 
     public bool $isProcessing = false;
 
@@ -57,6 +55,16 @@ class RaftChat extends Component
         $sessionId = session()->getId();
 
         $mode = request()->query('mode');
+        $storedMode = session('raft_survey_mode');
+
+        if ($mode && $storedMode && $mode !== $storedMode && Session::has('raft_survey_messages')) {
+            $this->resetSurveyState();
+
+            SurveySession::query()->where('session_id', $sessionId)->update([
+                'survey_type' => $mode === 'test' ? 'raft-test' : 'raft',
+            ]);
+        }
+
         if ($mode) {
             session(['raft_survey_mode' => $mode]);
         }
@@ -111,6 +119,10 @@ class RaftChat extends Component
         }
         $this->skipped = Session::get('raft_survey_skipped', []);
 
+        if (! Session::has('raft_survey_skip_counts')) {
+            Session::put('raft_survey_skip_counts', []);
+        }
+
         if (! Session::has('raft_survey_started')) {
             Session::put('raft_survey_started', false);
         }
@@ -119,31 +131,102 @@ class RaftChat extends Component
         $this->surveyCompleted = Session::get('raft_survey_completed', false);
 
         $this->theme = Session::get('raft_chat_theme', 'alabaster');
+
+        $this->updateSkipPhaseState();
+    }
+
+    protected function resetSurveyState(): void
+    {
+        foreach ([
+            'raft_survey_messages',
+            'raft_survey_metadata',
+            'raft_survey_index',
+            'raft_survey_asking_index',
+            'raft_survey_responses',
+            'raft_survey_skipped',
+            'raft_survey_skip_counts',
+            'raft_survey_started',
+            'raft_survey_completed',
+            'raft_survey_midpoint_shown',
+        ] as $key) {
+            Session::forget($key);
+        }
+    }
+
+    protected function updateSkipPhaseState(): void
+    {
+        $skipped = Session::get('raft_survey_skipped', []);
+        $responses = Session::get('raft_survey_responses', []);
+
+        $pending = array_filter($skipped, function ($idx) use ($responses) {
+            $qId = $this->questions[$idx]['id'] ?? null;
+
+            return $qId && ! isset($responses[$qId]['response']);
+        });
+
+        $this->inSkipPhase = Session::get('raft_survey_index', 0) >= count($this->questions) && count($pending) > 0;
     }
 
     public function skipQuestion(): void
     {
+        if ($this->surveyCompleted) {
+            return;
+        }
+
         $linearIndex = Session::get('raft_survey_index', 0);
         $total = count($this->questions);
         $skipped = Session::get('raft_survey_skipped', []);
+        $skipCounts = Session::get('raft_survey_skip_counts', []);
 
         if ($linearIndex < $total) {
+            $questionId = $this->questions[$linearIndex]['id'] ?? null;
+
+            if ($questionId !== null) {
+                $skipCounts[$questionId] = ($skipCounts[$questionId] ?? 0) + 1;
+                Session::put('raft_survey_skip_counts', $skipCounts);
+            }
+
             $skipped[] = $linearIndex;
             Session::put('raft_survey_skipped', $skipped);
             session()->increment('raft_survey_index');
-        } else {
-            if (count($skipped) > 0) {
-                $skippedQuestion = array_shift($skipped);
+        } elseif (count($skipped) > 0) {
+            $skippedQuestion = array_shift($skipped);
+            $questionId = $this->questions[$skippedQuestion]['id'] ?? null;
+            $count = $questionId !== null ? ($skipCounts[$questionId] ?? 1) : 2;
+
+            if ($count < 2) {
+                if ($questionId !== null) {
+                    $skipCounts[$questionId] = $count + 1;
+                    Session::put('raft_survey_skip_counts', $skipCounts);
+                }
+
                 $skipped[] = $skippedQuestion;
-                Session::put('raft_survey_skipped', $skipped);
             }
+
+            Session::put('raft_survey_skipped', $skipped);
         }
+
+        $this->askQuestion();
+    }
+
+    public function finishSurvey(): void
+    {
+        if ($this->surveyCompleted || ! $this->surveyStarted) {
+            return;
+        }
+
+        Session::put('raft_survey_index', count($this->questions));
+        Session::put('raft_survey_skipped', []);
 
         $this->askQuestion();
     }
 
     public function incrementCurrentIndex(): void
     {
+        if ($this->surveyCompleted) {
+            return;
+        }
+
         $linearIndex = Session::get('raft_survey_index', 0);
         $total = count($this->questions);
 
@@ -160,8 +243,14 @@ class RaftChat extends Component
         $this->askQuestion();
     }
 
-    public function askQuestion($currentLivewireComponentId = null): void
+    public function askQuestion(): void
     {
+        if (Session::get('raft_survey_completed', false)) {
+            $this->surveyCompleted = true;
+
+            return;
+        }
+
         $this->messages = Session::get('raft_survey_messages', []);
         $this->metadata = Session::get('raft_survey_metadata', []);
         $this->responses = Session::get('raft_survey_responses', []);
@@ -201,17 +290,14 @@ class RaftChat extends Component
         }
 
         $this->currentIndex = $askingIndex;
-
-        if ($currentLivewireComponentId) {
-            // $this->js('hideBotDiv(\'next-bot-response-'.$currentLivewireComponentId."')");
-        }
+        Session::put('raft_survey_asking_index', $askingIndex);
 
         $question = $this->questions[$this->currentIndex];
         $this->currentQuestionTakesTime = $question['takes_time'] ?? false;
 
         if ($linearIndex > 0 && $linearIndex < $totalQuestions && $askingIndex === $linearIndex) {
             $previousQuestion = $this->questions[$linearIndex - 1];
-            if (isset($previousQuestion['transition_message'])) {
+            if (isset($previousQuestion['transition_message']) && isset($responses[$previousQuestion['id']]['response'])) {
                 $this->messages[] = [
                     'role' => 'assistant',
                     'content' => $previousQuestion['transition_message'],
@@ -229,7 +315,6 @@ class RaftChat extends Component
         $midpoint = (int) ceil($totalQuestions / 2);
 
         if ($answeredCount === $midpoint && $totalQuestions > 2 && ! Session::get('raft_survey_midpoint_shown', false)) {
-            $remaining = $totalQuestions - $answeredCount + count($skipped);
             $this->metadata[] = [
                 'role' => 'assistant',
                 'content' => "You're doing great! You're halfway through. Your responses are really valuable. 💪",
@@ -267,6 +352,8 @@ class RaftChat extends Component
 
         Session::put('raft_survey_messages', $this->messages);
         Session::put('raft_survey_metadata', $this->metadata);
+
+        $this->updateSkipPhaseState();
     }
 
     /**
@@ -274,15 +361,19 @@ class RaftChat extends Component
      */
     protected function completeSurvey(): void
     {
-        $session = SurveySession::query()->where('session_id', session()->getId());
-        if ($session) {
-            $session->update([
-                'completed' => true,
-                'completed_at' => now(),
-            ]);
+        if (Session::get('raft_survey_completed', false)) {
+            $this->surveyCompleted = true;
+
+            return;
         }
 
+        SurveySession::query()->where('session_id', session()->getId())->first()?->update([
+            'completed' => true,
+            'completed_at' => now(),
+        ]);
+
         $this->surveyCompleted = true;
+        $this->inSkipPhase = false;
         Session::put('raft_survey_completed', true);
 
         $conclusionMessage = "🎉 **Thank you so much for completing the survey!**\n\nYour responses are incredibly valuable and will help Raft understand the real experiences of foster and adoptive families. Every answer contributes to shaping better support services.\n\nIf you'd like to learn more about Raft or get in touch, please visit our website. Take care of yourself — you're doing an amazing job! 💜";
@@ -321,6 +412,10 @@ class RaftChat extends Component
 
     public function send(): void
     {
+        if ($this->surveyCompleted) {
+            return;
+        }
+
         $this->isProcessing = true;
         $this->validate();
 
@@ -344,6 +439,8 @@ class RaftChat extends Component
         $this->messages = Session::get('raft_survey_messages', []);
         $this->metadata = Session::get('raft_survey_metadata', []);
         $this->responses = Session::get('raft_survey_responses', []);
+        $this->skipped = Session::get('raft_survey_skipped', []);
+        $this->updateSkipPhaseState();
     }
 
     public function triggerNudge(): void

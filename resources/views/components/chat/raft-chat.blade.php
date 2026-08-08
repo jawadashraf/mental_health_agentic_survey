@@ -277,7 +277,7 @@
                     @if ($message['role'] === 'assistant')
                         <livewire:raft-chat-response
                             :wire:key="'ai-resp-' . $key . '-' . (isset($metadata[$key]['type']) ? $metadata[$key]['type'] : 'default')"
-                            :message="$message" :metadata="$metadata[$key] ?? []" :prompt="$messages[$key - 1] ?? []" :theme="$theme" />
+                            :message="$message" :metadata="$metadata[$key] ?? []" :prompt="$messages[$key - 1] ?? []" :theme="$theme" :msg-index="$key" />
                     @endif
                 @endforeach
             </div>
@@ -312,15 +312,27 @@
                 </div>
                 
                 {{-- Skip Button --}}
+                @if($surveyStarted)
                 <button type="button"
                     wire:click="skipQuestion"
                     :disabled="isProcessing"
                     class="shrink-0 flex items-center justify-center px-4 py-2.5 rounded-2xl text-xs font-semibold shadow-lg hover:scale-105 active:scale-95 transition-all duration-200 disabled:opacity-50 disabled:scale-100"
-                    :class="isLight 
-                        ? 'bg-white text-gray-700 border border-black/10 hover:bg-gray-50' 
+                    :class="isLight
+                        ? 'bg-white text-gray-700 border border-black/10 hover:bg-gray-50'
                         : 'bg-white/10 text-white/90 border border-white/10 hover:bg-white/20'">
                     Skip
                 </button>
+                @endif
+
+                {{-- Finish Button (skip phase only) --}}
+                @if($inSkipPhase)
+                <button type="button"
+                    wire:click="finishSurvey"
+                    :disabled="isProcessing"
+                    class="shrink-0 flex items-center justify-center px-4 py-2.5 rounded-2xl text-xs font-semibold shadow-lg hover:scale-105 active:scale-95 transition-all duration-200 disabled:opacity-50 disabled:scale-100 bg-emerald-500/80 text-white border border-emerald-400/30 hover:bg-emerald-500">
+                    Finish
+                </button>
+                @endif
 
                 {{-- Send Button --}}
                 <button type="submit"

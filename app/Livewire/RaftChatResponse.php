@@ -27,6 +27,8 @@ class RaftChatResponse extends Component
 
     public array $metadata = [];
 
+    public ?int $msgIndex = null;
+
     public ?string $response = null;
 
     public $selectedOption;
@@ -41,7 +43,7 @@ class RaftChatResponse extends Component
         $this->questions = $mode === 'test'
             ? config('raft-survey-test')
             : config('raft-survey');
-        $this->currentIndex = Session::get('raft_survey_index', 0);
+        $this->currentIndex = $this->resolveAskingIndex();
         $this->surveyStarted = Session::get('raft_survey_started', false);
         $this->responses = Session::get('raft_survey_responses', []);
 
@@ -56,6 +58,18 @@ class RaftChatResponse extends Component
         }
     }
 
+    protected function resolveAskingIndex(): int
+    {
+        $index = Session::get('raft_survey_asking_index', Session::get('raft_survey_index', 0));
+
+        return isset($this->questions[$index]) ? $index : 0;
+    }
+
+    protected function currentQuestion(): ?array
+    {
+        return $this->questions[$this->currentIndex] ?? null;
+    }
+
     public function getResponse(): void
     {
         try {
@@ -65,17 +79,23 @@ class RaftChatResponse extends Component
             $intent = strtolower(trim(str_replace("'", '', $intent)));
             $promptForAssistant = '';
 
+            $questionObj = $this->currentQuestion() ?? [];
+            $aiGuidance = $questionObj['ai_guidance'] ?? null;
+            $expectedBehavior = $questionObj['participant_behavior'] ?? null;
+
             switch ($intent) {
                 case 'progress-question':
                     $promptForAssistant = $this->getProgressPrompt($this->currentIndex, count($this->questions));
                     break;
                 case 'consent':
-                case 'repeat':
                     $this->response = ' ';
                     $this->updateSessionMessage();
                     $this->askQuestion();
 
                     return;
+                case 'repeat':
+                    $promptForAssistant = $this->getRepeatPrompt();
+                    break;
                 case 'off-topic':
                     $this->storeIntentForQuestion($intent, $this->prompt['content']);
                     $promptForAssistant = $this->getOffTopicPrompt();
@@ -87,9 +107,7 @@ class RaftChatResponse extends Component
 
                 case 'clarify':
                     $this->storeIntentForQuestion($intent, $this->prompt['content']);
-                    $questionObj = $this->questions[$this->currentIndex] ?? [];
-                    $aiGuidance = $questionObj['ai_guidance'] ?? null;
-                    $promptForAssistant = $this->getClarifyPrompt($this->questions[$this->currentIndex]['question'], $aiGuidance);
+                    $promptForAssistant = $this->getClarifyPrompt($questionObj['question'] ?? 'the current question', $aiGuidance);
                     break;
 
                 case 'term-explanation':
@@ -115,16 +133,10 @@ class RaftChatResponse extends Component
 
                 default:
                     $this->storeIntentForQuestion('default', $this->prompt['content']);
-                    $promptForAssistant = $this->generateEncouragingPrompt();
+                    $promptForAssistant = $this->getDefaultPrompt();
             }
 
-            $questionObj = $this->questions[$this->currentIndex] ?? [];
-            $aiGuidance = $questionObj['ai_guidance'] ?? null;
-            $expectedBehavior = $questionObj['participant_behavior'] ?? null;
-
-            $alreadyIncludedInPrompt = ($intent === 'clarify' && $aiGuidance && str_starts_with($aiGuidance, '<'));
-
-            if ($aiGuidance && ! in_array($intent, ['progress-question', 'technical-issue']) && ! $alreadyIncludedInPrompt) {
+            if ($aiGuidance && ! in_array($intent, ['progress-question', 'technical-issue', 'clarify'])) {
                 $guidancePrompt = "\n\nCRITICAL CONTEXT FOR THIS QUESTION: ";
                 if ($expectedBehavior) {
                     $guidancePrompt .= "If the user exhibits the behavior/intent '{$expectedBehavior}', you MUST prioritize this guidance: ";
@@ -161,6 +173,9 @@ class RaftChatResponse extends Component
             $this->updateSessionMessage();
         } catch (\Throwable $e) {
             \Log::error('RaftChat error in getResponse: '.$e->getMessage());
+
+            $this->response = "I'm sorry, something went wrong on my end. Please try again — your previous answers are safe.";
+            $this->updateSessionMessage();
         } finally {
             $this->dispatch('stream-finished');
         }
@@ -169,11 +184,19 @@ class RaftChatResponse extends Component
     public function updateSessionMessage()
     {
         $messages = Session::get('raft_survey_messages', []);
+
+        if ($this->msgIndex !== null && isset($messages[$this->msgIndex])) {
+            $messages[$this->msgIndex]['content'] = $this->response ?? '';
+            Session::put('raft_survey_messages', $messages);
+
+            return;
+        }
+
         $metadata = Session::get('raft_survey_metadata', []);
 
         foreach ($metadata as $index => $meta) {
             if (($meta['type'] ?? '') === 'stream' && empty($messages[$index]['content'])) {
-                $messages[$index]['content'] = $this->response;
+                $messages[$index]['content'] = $this->response ?? '';
                 break;
             }
         }
@@ -183,9 +206,11 @@ class RaftChatResponse extends Component
 
     public function detectIntentWithAI($userInput): ?string
     {
-        if ($this->surveyStarted) {
-            $question = $this->questions[$this->currentIndex]['question'];
-            $options = $this->questions[$this->currentIndex]['options'] ?? [];
+        $currentQuestion = $this->currentQuestion();
+
+        if ($this->surveyStarted && $currentQuestion) {
+            $question = $currentQuestion['question'];
+            $options = $currentQuestion['options'] ?? [];
         } else {
             $question = 'Hi there! This conversation is designed to help Raft understand the experiences of families and carers. Would you be interested in taking a short survey?';
             $options = ['Yes', 'No'];
@@ -213,9 +238,9 @@ class RaftChatResponse extends Component
         if ($remaining == $total) {
             $msg = '**Generate a statement to inform user about the total number of questions, that is:'.$total.' questions.**';
         } elseif ($remaining <= 3) {
-            $msg = "Generate an encouraging statement, since the user is at the start of the survey. Like: You're doing great! Just $remaining more questions to go.";
+            $msg = "Generate an encouraging statement, since the user is almost at the end of the survey. Like: You're nearly there! Just $remaining more questions to go.";
         } else {
-            $msg = "Generate an encouraging statement, since the user is going further into the survey. Like: You're on a roll! Just {$remaining} more questions to go.";
+            $msg = "Generate an encouraging statement, since the user is making steady progress through the survey. Like: You're on a roll! Just {$remaining} more questions to go.";
         }
 
         return $msg;
@@ -223,18 +248,21 @@ class RaftChatResponse extends Component
 
     public function askQuestion(): void
     {
-        $this->dispatch('askQuestion', currentLivewireComponentId: $this->getId());
+        $this->dispatch('askQuestion');
     }
 
     public function storeIntentForQuestion($intent, $prompt): void
     {
-        $question = $this->questions[session()->get('raft_survey_index', 0)];
-        $sessionId = session()->getId();
+        $question = $this->currentQuestion();
+
+        if (! $question) {
+            return;
+        }
 
         Intent::create(
             [
                 'question_id' => $question['id'],
-                'session_id' => $sessionId,
+                'session_id' => session()->getId(),
                 'question' => $question['question'],
                 'intent' => $intent,
                 'prompt' => $prompt,
@@ -257,9 +285,43 @@ class RaftChatResponse extends Component
     **Generate a comforting and encouraging statement to take survey.**';
     }
 
+    public function getRepeatPrompt(): string
+    {
+        if (! $this->surveyStarted) {
+            return 'You are a compassionate AI conducting a foster care support survey for Raft charity.
+
+The user asked you to repeat what you said.
+
+**Warmly restate the introduction: this conversation helps Raft understand the experiences of families and carers, responses are anonymous, and ask politely if they would be interested in taking a short survey. Two lines.**';
+        }
+
+        $question = $this->currentQuestion();
+        $questionText = $question['question'] ?? '';
+        $options = $question['options'] ?? [];
+        $optionsText = count($options) > 0 ? ' The options are: '.implode(', ', $options).'.' : '';
+
+        return "You are a compassionate AI conducting a foster care support survey for Raft charity.
+
+The user asked you to repeat the current question.
+
+**Warmly restate this survey question once, without adding new information: \"{$questionText}\"{$optionsText} Keep it to two lines.**";
+    }
+
+    public function getDefaultPrompt(): string
+    {
+        $questionText = $this->currentQuestion()['question'] ?? '';
+
+        return "You are a compassionate AI conducting a foster care support survey for Raft charity.
+Your responses should be **two lines, warm, encouraging, and non-judgmental**.
+
+The user said something that doesn't directly answer the current question: \"{$questionText}\"
+
+**Gently acknowledge what they said and guide them back to the question above.**";
+    }
+
     public function getClarifyPrompt($question, ?string $aiGuidance = null): string
     {
-        if ($aiGuidance && str_starts_with($aiGuidance, '<')) {
+        if ($aiGuidance) {
             return "You are a compassionate AI conducting a foster care support survey for Raft charity.
 The user asked for clarification about: \"$question\"
 
@@ -322,7 +384,16 @@ The user seems disengaged or uninterested. Generate a gentle, empathetic message
 
     public function handleUserInput(): void
     {
-        $question = $this->questions[$this->currentIndex];
+        if (Session::get('raft_survey_completed', false)) {
+            return;
+        }
+
+        $question = $this->metadata['content'] ?? null;
+
+        if (! is_array($question) || ! isset($question['id'], $question['type'], $question['question'])) {
+            return;
+        }
+
         $response = $question['type'] === 'radio' ? $this->selectedOption : $this->textResponse;
 
         if (! $response) {
@@ -330,7 +401,7 @@ The user seems disengaged or uninterested. Generate a gentle, empathetic message
         }
 
         $this->storeResponse($question['id'], $response, $question['question']);
-        $this->saveResponseInSession($this->currentIndex, $response, $question['question'], $question['id']);
+        $this->saveResponseInSession($response, $question['question'], $question['id']);
         session()->flash('message', 'Response submitted!');
 
         $this->selectedOption = null;
@@ -338,9 +409,19 @@ The user seems disengaged or uninterested. Generate a gentle, empathetic message
 
         $this->dispatch('stream-finished')->to(RaftChat::class);
 
-        if ($this->currentIndex === session()->get('raft_survey_index', 0)) {
+        $askingIndex = Session::get('raft_survey_asking_index', Session::get('raft_survey_index', 0));
+        $askingQuestion = $this->questions[$askingIndex] ?? null;
+
+        if ($askingQuestion && $askingQuestion['id'] === $question['id']) {
             $this->dispatch('incrementCurrentIndex');
         } else {
+            $skipped = Session::get('raft_survey_skipped', []);
+            $skipped = array_values(array_filter(
+                $skipped,
+                fn ($idx) => ($this->questions[$idx]['id'] ?? null) !== $question['id']
+            ));
+            Session::put('raft_survey_skipped', $skipped);
+
             $this->dispatch('refreshChat');
         }
     }
@@ -361,7 +442,7 @@ The user seems disengaged or uninterested. Generate a gentle, empathetic message
         );
     }
 
-    public function saveResponseInSession($currentIndex, $response, $question, $questionId): void
+    public function saveResponseInSession($response, $question, $questionId): void
     {
         $this->responses = Session::get('raft_survey_responses', []);
         $this->responses[$questionId] = [

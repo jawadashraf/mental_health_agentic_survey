@@ -65,8 +65,8 @@
                                                ? 'border-black/8 hover:border-black/15 hover:bg-black/5'
                                                : 'border-white/5 hover:border-white/20 hover:bg-white/5'">
                                         <input type="radio" id="option-{{ $index }}-{{ $question['id'] }}"
-                                               wire:model="selectedOption" value="{{ $option }}"
-                                               name="options"
+                                                wire:model="selectedOption" value="{{ $option }}"
+                                                name="options-{{ $question['id'] }}"
                                                wire:loading.attr="disabled"
                                                wire:target="handleUserInput"
                                                class="size-4 shrink-0"
@@ -89,7 +89,7 @@
                             </div>
                         @elseif($question['type'] === 'text')
                             <div class="mt-2">
-                                <input type="text" wire:model.defer="textResponse"
+                                <input type="text" wire:model="textResponse"
                                        wire:loading.attr="disabled"
                                        wire:target="handleUserInput"
                                        class="w-full border rounded-xl px-4 py-2.5 text-sm focus:outline-none transition-all duration-200 disabled:opacity-50"
