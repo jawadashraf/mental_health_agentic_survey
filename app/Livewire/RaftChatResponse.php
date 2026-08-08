@@ -4,6 +4,7 @@ namespace App\Livewire;
 
 use App\Models\Intent;
 use App\Models\SurveyResponse;
+use App\Services\RaftRagService;
 use App\Settings\PromptSettings;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Session;
@@ -83,60 +84,99 @@ class RaftChatResponse extends Component
             $aiGuidance = $questionObj['ai_guidance'] ?? null;
             $expectedBehavior = $questionObj['participant_behavior'] ?? null;
 
-            switch ($intent) {
-                case 'progress-question':
-                    $promptForAssistant = $this->getProgressPrompt($this->currentIndex, count($this->questions));
-                    break;
-                case 'consent':
-                    $this->response = ' ';
-                    $this->updateSessionMessage();
-                    $this->askQuestion();
+            $ragService = app(RaftRagService::class);
+            $relevantChunks = $ragService->searchSimilarChunks($this->prompt['content'], topK: 3, minScore: 0.05);
 
-                    return;
-                case 'repeat':
-                    $promptForAssistant = $this->getRepeatPrompt();
-                    break;
-                case 'off-topic':
-                    $this->storeIntentForQuestion($intent, $this->prompt['content']);
-                    $promptForAssistant = $this->getOffTopicPrompt();
-                    break;
-                case 'refused':
-                    $this->storeIntentForQuestion($intent, $this->prompt['content']);
-                    $promptForAssistant = $this->generateEncouragingPrompt();
-                    break;
+            if ($relevantChunks->isNotEmpty()) {
+                $this->storeIntentForQuestion('rag-knowledge', $this->prompt['content']);
+                $contextText = $relevantChunks->map(fn ($c) => "Source: {$c->source_file} ({$c->section_heading})\n{$c->content}")->implode("\n\n---\n\n");
 
-                case 'clarify':
-                    $this->storeIntentForQuestion($intent, $this->prompt['content']);
-                    $promptForAssistant = $this->getClarifyPrompt($questionObj['question'] ?? 'the current question', $aiGuidance);
-                    break;
+                $ragSystemPrompt = <<<RAG
+You are the official Knowledge & Policy Assistant for The Raft.
+Answer user questions STRICTLY using ONLY the official context provided below.
 
-                case 'term-explanation':
-                    $term = $this->extractTerm($this->prompt['content']);
-                    $promptForAssistant = $this->getTermExplanationPrompt($term);
-                    break;
+CONTEXT FROM THE RAFT DOCUMENTS:
+---
+{$contextText}
+---
 
-                case 'meta-question':
-                    $promptForAssistant = $this->getMetaQuestionPrompt();
-                    break;
+STRICT RULES:
+1. If the user asks for core values, principles, or lists, present them as a clear bulleted list using the EXACT names from the context:
+   - We are living it
+   - We’re together
+   - We’re safe
+   - We’re informed
+   - We’re fun
+2. Do NOT use outside knowledge, general assumptions, or unlisted terms.
+3. Keep the response brief and warm. After answering, politely invite the user to continue with the survey when ready.
+RAG;
 
-                case 'technical-issue':
-                    $promptForAssistant = $this->getTechnicalIssuePrompt();
-                    break;
+                $promptForAssistant = $this->prompt['content'];
+            } else {
+                // If query contains a question mark or starts with a question word, do not force consent
+                $isQuestion = preg_match('/\?|what|who|where|when|why|how|can|is|are|does|do/i', strtolower(trim($this->prompt['content'])));
 
-                case 'low-motivation':
-                    $promptForAssistant = $this->getLowMotivationPrompt();
-                    break;
+                switch ($intent) {
+                    case 'progress-question':
+                        $promptForAssistant = $this->getProgressPrompt($this->currentIndex, count($this->questions));
+                        break;
+                    case 'consent':
+                        if ($isQuestion) {
+                            $this->storeIntentForQuestion('meta-question', $this->prompt['content']);
+                            $promptForAssistant = $this->getMetaQuestionPrompt();
+                            break;
+                        }
 
-                case 'no-motivation':
-                    $promptForAssistant = $this->getNoMotivationPrompt();
-                    break;
+                        $this->response = ' ';
+                        $this->updateSessionMessage();
+                        $this->askQuestion();
 
-                default:
-                    $this->storeIntentForQuestion('default', $this->prompt['content']);
-                    $promptForAssistant = $this->getDefaultPrompt();
+                        return;
+                    case 'repeat':
+                        $promptForAssistant = $this->getRepeatPrompt();
+                        break;
+                    case 'off-topic':
+                        $this->storeIntentForQuestion($intent, $this->prompt['content']);
+                        $promptForAssistant = $this->getOffTopicPrompt();
+                        break;
+                    case 'refused':
+                        $this->storeIntentForQuestion($intent, $this->prompt['content']);
+                        $promptForAssistant = $this->generateEncouragingPrompt();
+                        break;
+
+                    case 'clarify':
+                        $this->storeIntentForQuestion($intent, $this->prompt['content']);
+                        $promptForAssistant = $this->getClarifyPrompt($questionObj['question'] ?? 'the current question', $aiGuidance);
+                        break;
+
+                    case 'term-explanation':
+                        $term = $this->extractTerm($this->prompt['content']);
+                        $promptForAssistant = $this->getTermExplanationPrompt($term);
+                        break;
+
+                    case 'meta-question':
+                        $promptForAssistant = $this->getMetaQuestionPrompt();
+                        break;
+
+                    case 'technical-issue':
+                        $promptForAssistant = $this->getTechnicalIssuePrompt();
+                        break;
+
+                    case 'low-motivation':
+                        $promptForAssistant = $this->getLowMotivationPrompt();
+                        break;
+
+                    case 'no-motivation':
+                        $promptForAssistant = $this->getNoMotivationPrompt();
+                        break;
+
+                    default:
+                        $this->storeIntentForQuestion('default', $this->prompt['content']);
+                        $promptForAssistant = $this->getDefaultPrompt();
+                }
             }
 
-            if ($aiGuidance && ! in_array($intent, ['progress-question', 'technical-issue', 'clarify'])) {
+            if ($relevantChunks->isEmpty() && $aiGuidance && ! in_array($intent, ['progress-question', 'technical-issue', 'clarify'])) {
                 $guidancePrompt = "\n\nCRITICAL CONTEXT FOR THIS QUESTION: ";
                 if ($expectedBehavior) {
                     $guidancePrompt .= "If the user exhibits the behavior/intent '{$expectedBehavior}', you MUST prioritize this guidance: ";
@@ -150,12 +190,22 @@ class RaftChatResponse extends Component
             $messages = Session::get('raft_survey_messages', []);
             $apiMessages = array_filter($messages, fn ($msg) => ! empty($msg['content']));
             $apiMessages = array_map(fn ($msg) => ['role' => $msg['role'], 'content' => $msg['content']], $apiMessages);
-            $apiMessages[] = ['role' => 'user', 'content' => $promptForAssistant];
+
+            if ($relevantChunks->isNotEmpty() && isset($ragSystemPrompt)) {
+                // Replace system prompt with strict RAG directive
+                if (isset($apiMessages[0]) && $apiMessages[0]['role'] === 'system') {
+                    $apiMessages[0]['content'] = $ragSystemPrompt;
+                } else {
+                    array_unshift($apiMessages, ['role' => 'system', 'content' => $ragSystemPrompt]);
+                }
+            } else {
+                $apiMessages[] = ['role' => 'user', 'content' => $promptForAssistant];
+            }
 
             $stream = app('openai')->chat()->createStreamed([
-                'model' => 'gpt-5',
+                'model' => 'gpt-4o-mini',
                 'messages' => array_values($apiMessages),
-                'temperature' => 1.0,
+                'temperature' => 0.7,
             ]);
 
             foreach ($stream as $response) {

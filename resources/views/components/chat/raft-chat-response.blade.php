@@ -25,7 +25,7 @@
                  :class="isLight
                      ? 'bg-black/5 border border-black/8 text-gray-700'
                      : 'bg-white/10 backdrop-blur-sm border border-white/10 text-purple-100'">
-                <div wire:stream="stream-{{ $this->getId()  }}">{{ $response }}</div>
+                <div class="whitespace-pre-line [&_ul]:list-disc [&_ul]:pl-5 [&_ul]:my-2 [&_li]:my-1 [&_ol]:list-decimal [&_ol]:pl-5" wire:stream="stream-{{ $this->getId()  }}">{!! \Illuminate\Support\Str::markdown($response ?? '') !!}</div>
             </div>
         </div>
     @elseif(trim($message['content']) === '')
@@ -196,7 +196,7 @@
                      :class="isLight
                          ? 'bg-black/5 border border-black/8 text-gray-700'
                          : 'bg-white/10 backdrop-blur-sm border border-white/10 text-purple-100'">
-                    <div>{{ $message['content'] }}</div>
+                    <div class="whitespace-pre-line [&_ul]:list-disc [&_ul]:pl-5 [&_ul]:my-2 [&_li]:my-1 [&_ol]:list-decimal [&_ol]:pl-5">{!! \Illuminate\Support\Str::markdown($message['content'] ?? '') !!}</div>
                 </div>
             </div>
         @endif
