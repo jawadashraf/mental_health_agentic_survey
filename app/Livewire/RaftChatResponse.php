@@ -8,6 +8,7 @@ use App\Models\SurveyResponse;
 use App\Models\SurveySession;
 use App\Services\RaftFlagDetectionService;
 use App\Services\RaftRagService;
+use App\Settings\MailSettings;
 use App\Settings\PromptSettings;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Mail;
@@ -540,9 +541,13 @@ The user seems disengaged or uninterested. Generate a gentle, empathetic message
                 ]);
             }
 
+            /** @var MailSettings $mailSettings */
+            $mailSettings = app(MailSettings::class);
+
             if ($flagEvaluation['flag_severity'] === 'critical' || $flagEvaluation['flag_type'] === 'safeguarding') {
                 try {
-                    Mail::to('safeguarding@theraftleicester.co.uk')->send(new SafeguardingAlertMail(
+                    $recipient = $mailSettings->safeguarding_recipient_email ?? 'jawadashraf78@gmail.com';
+                    $mailable = new SafeguardingAlertMail(
                         sessionId: $sessionId,
                         questionId: $questionId,
                         questionText: $question,
@@ -550,14 +555,21 @@ The user seems disengaged or uninterested. Generate a gentle, empathetic message
                         flagType: $flagEvaluation['flag_type'],
                         flagSeverity: $flagEvaluation['flag_severity'],
                         flagReason: $flagEvaluation['flag_reason'],
-                        recipientEmail: 'safeguarding@theraftleicester.co.uk'
-                    ));
+                        recipientEmail: $recipient
+                    );
+
+                    if ($mailSettings->enable_background_queue ?? true) {
+                        Mail::to($recipient)->queue($mailable);
+                    } else {
+                        Mail::to($recipient)->send($mailable);
+                    }
                 } catch (\Throwable $e) {
                     \Log::error('Failed sending safeguarding email alert: '.$e->getMessage());
                 }
             } elseif (in_array($flagEvaluation['flag_type'], ['accessibility_complaint', 'event_safety'])) {
                 try {
-                    Mail::to('info@theraftleicester.co.uk')->send(new SafeguardingAlertMail(
+                    $recipient = $mailSettings->info_recipient_email ?? 'jawadashraf78@gmail.com';
+                    $mailable = new SafeguardingAlertMail(
                         sessionId: $sessionId,
                         questionId: $questionId,
                         questionText: $question,
@@ -565,8 +577,14 @@ The user seems disengaged or uninterested. Generate a gentle, empathetic message
                         flagType: $flagEvaluation['flag_type'],
                         flagSeverity: $flagEvaluation['flag_severity'],
                         flagReason: $flagEvaluation['flag_reason'],
-                        recipientEmail: 'info@theraftleicester.co.uk'
-                    ));
+                        recipientEmail: $recipient
+                    );
+
+                    if ($mailSettings->enable_background_queue ?? true) {
+                        Mail::to($recipient)->queue($mailable);
+                    } else {
+                        Mail::to($recipient)->send($mailable);
+                    }
                 } catch (\Throwable $e) {
                     \Log::error('Failed sending info email alert: '.$e->getMessage());
                 }
