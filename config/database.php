@@ -46,7 +46,7 @@ return [
         'sqlite_vector' => [
             'driver' => 'sqlite',
             'url' => env('DB_URL'),
-            'database' => database_path('vectors.sqlite'),
+            'database' => env('DB_VECTOR_DATABASE', database_path('vectors.sqlite')),
             'prefix' => '',
             'foreign_key_constraints' => env('DB_FOREIGN_KEYS', true),
             'busy_timeout' => null,

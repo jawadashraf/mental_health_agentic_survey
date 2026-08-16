@@ -6,6 +6,7 @@ use App\Ai\Agents\RaftKnowledgeAgent;
 use App\Models\DocumentChunk;
 use App\Services\RaftRagService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\File;
 use Laravel\Ai\Embeddings;
 use Tests\TestCase;
@@ -17,6 +18,8 @@ class RaftRagServiceTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
+
+        Artisan::call('migrate', ['--database' => 'sqlite_vector']);
 
         DocumentChunk::truncate();
 

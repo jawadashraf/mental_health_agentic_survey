@@ -91,14 +91,6 @@ class RaftChatResponse extends Component
 
             $isQuestion = preg_match('/\?|what|who|where|when|why|how|can|is|are|does|do/i', strtolower(trim($this->prompt['content'])));
 
-            if ($intent === 'consent' && ! $isQuestion) {
-                $this->response = ' ';
-                $this->updateSessionMessage();
-                $this->askQuestion();
-
-                return;
-            }
-
             $relevantChunks = collect();
             $ragSystemPrompt = null;
 
@@ -128,21 +120,21 @@ STRICT RULES:
    - We’re informed
    - We’re fun
 2. Do NOT use outside knowledge, general assumptions, or unlisted terms.
-3. Keep the response brief and warm. After answering, politely invite the user to continue with the survey when ready.
+3. Keep the response brief and warm. After answering the user's question, warmly ask if they would like to proceed with the survey question or if they would like to explore/discuss this further or ask anything else.
 RAG;
 
                 $promptForAssistant = $this->prompt['content'];
+            } elseif ($intent === 'consent') {
+                $this->response = ' ';
+                $this->updateSessionMessage();
+                $this->askQuestion();
+
+                return;
             } else {
                 switch ($intent) {
                     case 'progress-question':
                         $promptForAssistant = $this->getProgressPrompt($this->currentIndex, count($this->questions));
                         break;
-                    case 'consent':
-                        $this->response = ' ';
-                        $this->updateSessionMessage();
-                        $this->askQuestion();
-
-                        return;
                     case 'repeat':
                         $promptForAssistant = $this->getRepeatPrompt();
                         break;
@@ -234,7 +226,7 @@ RAG;
             $this->updateSessionMessage();
 
             $currentQ = $this->currentQuestion();
-            if ($this->surveyStarted && $currentQ && ! isset($this->responses[$currentQ['id']]['response'])) {
+            if ($relevantChunks->isEmpty() && $this->surveyStarted && $currentQ && ! isset($this->responses[$currentQ['id']]['response'])) {
                 $this->askQuestion();
             }
         } catch (\Throwable $e) {
@@ -277,12 +269,21 @@ RAG;
             'yes', 'yep', 'yeah', 'sure', 'ok', 'okay', 'ready', 'resume', 'continue',
             'start', 'let\'s start', 'lets start', 'let\'s continue', 'lets continue',
             'resume survey', 'continue survey', 'start survey', 'go ahead', 'begin',
+            'next', 'next question', 'proceed', 'lets proceed', 'let\'s proceed',
+            'move on', 'lets move on', 'let\'s move on', 'let\'s go', 'lets go',
+            'next please', 'continue with survey', 'proceed to survey', 'back to survey',
+            'survey', 'next one',
         ];
 
         if (in_array($cleanInput, $consentKeywords) ||
             str_contains($cleanInput, 'resume survey') ||
             str_contains($cleanInput, 'continue survey') ||
-            str_contains($cleanInput, 'start survey')) {
+            str_contains($cleanInput, 'start survey') ||
+            str_contains($cleanInput, 'next question') ||
+            str_contains($cleanInput, 'continue with survey') ||
+            str_contains($cleanInput, 'proceed to survey') ||
+            str_contains($cleanInput, 'back to survey') ||
+            str_contains($cleanInput, 'next please')) {
             return 'consent';
         }
 

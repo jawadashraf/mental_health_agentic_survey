@@ -4,7 +4,10 @@ namespace Tests\Feature;
 
 use App\Livewire\RaftChat;
 use App\Livewire\RaftChatResponse;
+use App\Models\DocumentChunk;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Artisan;
+use Laravel\Ai\Embeddings;
 use Livewire\Livewire;
 use Prism\Prism\Facades\Prism;
 use Tests\TestCase;
@@ -16,6 +19,7 @@ class RaftChatTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
+        Artisan::call('migrate', ['--database' => 'sqlite_vector']);
         Prism::fake();
     }
 
@@ -341,6 +345,57 @@ class RaftChatTest extends TestCase
 
         $this->assertFalse(session('raft_survey_started'));
         $this->assertSame([], session('raft_survey_responses'));
+    }
+
+    public function test_consent_response_triggers_ask_question_dispatch(): void
+    {
+        session(['raft_survey_started' => true]);
+
+        Livewire::test(RaftChatResponse::class, [
+            'message' => ['role' => 'assistant', 'content' => ''],
+            'metadata' => ['role' => 'assistant', 'content' => '', 'type' => 'stream'],
+            'prompt' => ['role' => 'user', 'content' => 'next question'],
+        ])
+            ->call('getResponse')
+            ->assertDispatched('askQuestion');
+    }
+
+    public function test_rag_question_answers_without_auto_resuming_survey_question(): void
+    {
+        session(['raft_survey_started' => true]);
+
+        Embeddings::fake();
+        DocumentChunk::create([
+            'source_file' => 'values.md',
+            'section_heading' => 'Core Values',
+            'content' => 'We are living it, We are together',
+            'embedding' => array_fill(0, 1536, 0.05),
+        ]);
+
+        $fakeStream = [
+            (object) [
+                'choices' => [
+                    (object) [
+                        'delta' => (object) ['content' => 'The Raft core values are...'],
+                        'toArray' => fn () => ['delta' => ['content' => 'The Raft core values are...']],
+                    ],
+                ],
+            ],
+        ];
+
+        $mockChat = \Mockery::mock();
+        $mockChat->shouldReceive('createStreamed')->andReturn($fakeStream);
+        $mockOpenAi = \Mockery::mock();
+        $mockOpenAi->shouldReceive('chat')->andReturn($mockChat);
+        $this->app->instance('openai', $mockOpenAi);
+
+        Livewire::test(RaftChatResponse::class, [
+            'message' => ['role' => 'assistant', 'content' => ''],
+            'metadata' => ['role' => 'assistant', 'content' => '', 'type' => 'stream'],
+            'prompt' => ['role' => 'user', 'content' => 'What are the core values?'],
+        ])
+            ->call('getResponse')
+            ->assertNotDispatched('askQuestion');
     }
 
     protected function answerViaChild(array $question, string $response)
