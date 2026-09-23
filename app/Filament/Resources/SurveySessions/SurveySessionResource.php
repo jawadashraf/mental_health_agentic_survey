@@ -4,7 +4,6 @@ namespace App\Filament\Resources\SurveySessions;
 
 use App\Filament\Exports\SurveySessionExporter;
 use App\Models\SurveySession;
-use App\Settings\PromptSettings;
 use BackedEnum;
 use Carbon\Carbon;
 use Filament\Actions\EditAction;
@@ -19,13 +18,22 @@ use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\HtmlString;
 
 class SurveySessionResource extends Resource
 {
     protected static ?string $model = SurveySession::class;
 
     protected static BackedEnum|string|null $navigationIcon = 'heroicon-o-rectangle-stack';
+
+    /**
+     * @return Builder<SurveySession>
+     */
+    public static function getEloquentQuery(): Builder
+    {
+        return parent::getEloquentQuery()
+            ->with('survey')
+            ->visibleTo(auth()->user());
+    }
 
     public static function form(Schema $schema): Schema
     {
@@ -35,6 +43,8 @@ class SurveySessionResource extends Resource
                     ->content(fn ($record): string => $record->id),
                 Forms\Components\Placeholder::make('session_id')
                     ->content(fn ($record): string => $record->session_id),
+                Forms\Components\Placeholder::make('survey')
+                    ->content(fn ($record): string => $record->survey?->name ?? $record->survey_type ?? '-'),
                 Forms\Components\Placeholder::make('created_at')
                     ->content(fn ($record): string => $record->created_at->toFormattedDateString()),
                 Forms\Components\Placeholder::make('updated_at')
@@ -44,23 +54,6 @@ class SurveySessionResource extends Resource
                 Forms\Components\Placeholder::make('completed')
                     ->content(fn ($record): string => $record->completed),
 
-                Forms\Components\Placeholder::make('intent_id')
-                    ->content(function ($record) {
-
-                        $questions = config('survey');
-                        $question = $questions[0]['question'];
-                        $options = $questions[0]['options'];
-
-                        $userInput = 'Some User Input';
-                        $stored_intent_classification_prompt = app(PromptSettings::class)
-                            ->intent_classification_prompt;
-
-                        return new HtmlString(str_replace(
-                            ['{{userInput}}', '{{question}}', '{{options}}'],
-                            [$userInput, $question, implode(', ', $options)],
-                            $stored_intent_classification_prompt
-                        ));
-                    }),
             ]);
     }
 
@@ -70,6 +63,10 @@ class SurveySessionResource extends Resource
             ->columns([
                 TextColumn::make('id'),
                 TextColumn::make('session_id'),
+                TextColumn::make('survey.name')
+                    ->label('Survey')
+                    ->placeholder('-')
+                    ->toggleable(),
                 TextColumn::make('survey_type')
                     ->badge()
                     ->label('Type')
@@ -94,7 +91,7 @@ class SurveySessionResource extends Resource
             ])
             ->filters([
                 SelectFilter::make('survey_type')
-                    ->options(fn () => SurveySession::distinct()->whereNotNull('survey_type')->pluck('survey_type', 'survey_type')->toArray())
+                    ->options(fn () => static::getEloquentQuery()->distinct()->whereNotNull('survey_type')->pluck('survey_type', 'survey_type')->toArray())
                     ->label('Type'),
                 SelectFilter::make('has_flags')
                     ->label('Flagged Sessions')
@@ -161,7 +158,6 @@ class SurveySessionResource extends Resource
     {
         return [
             'index' => Pages\ListSurveySessions::route('/'),
-            'create' => Pages\CreateSurveySession::route('/create'),
             'edit' => Pages\EditSurveySession::route('/{record}/edit'),
         ];
     }

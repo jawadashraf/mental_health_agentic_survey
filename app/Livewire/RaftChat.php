@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use App\Models\Survey;
 use App\Models\SurveySession;
 use Illuminate\Support\Facades\Session;
 use Livewire\Attributes\Renderless;
@@ -60,8 +61,11 @@ class RaftChat extends Component
         if ($mode && $storedMode && $mode !== $storedMode && Session::has('raft_survey_messages')) {
             $this->resetSurveyState();
 
+            $surveySlug = $mode === 'test' ? 'raft-test' : 'raft';
+
             SurveySession::query()->where('session_id', $sessionId)->update([
-                'survey_type' => $mode === 'test' ? 'raft-test' : 'raft',
+                'survey_type' => $surveySlug,
+                'survey_id' => Survey::query()->where('slug', $surveySlug)->value('id'),
             ]);
         }
 
@@ -70,18 +74,26 @@ class RaftChat extends Component
         }
         $mode = session('raft_survey_mode');
 
-        SurveySession::firstOrCreate(
+        $surveySlug = $mode === 'test' ? 'raft-test' : 'raft';
+        $survey = Survey::query()->where('slug', $surveySlug)->first();
+
+        $surveySession = SurveySession::firstOrCreate(
             [
                 'session_id' => $sessionId,
             ],
             [
-                'survey_type' => $mode === 'test' ? 'raft-test' : 'raft',
+                'survey_type' => $surveySlug,
+                'survey_id' => $survey?->id,
             ]
         );
 
-        $this->questions = $mode === 'test'
+        if ($survey && $surveySession->survey_id === null) {
+            $surveySession->update(['survey_id' => $survey->id]);
+        }
+
+        $this->questions = $survey?->questions() ?: ($mode === 'test'
             ? config('raft-survey-test')
-            : config('raft-survey');
+            : config('raft-survey'));
         $this->systemPrompt = <<<'EOT'
     You are a compassionate AI conducting a foster care support survey for Raft, a foster care charity.
     Your responses should be **warm, encouraging, and non-judgmental**.

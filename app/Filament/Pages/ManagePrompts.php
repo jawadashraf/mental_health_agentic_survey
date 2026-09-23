@@ -14,6 +14,11 @@ class ManagePrompts extends SettingsPage
 
     protected static string $settings = PromptSettings::class;
 
+    public static function canAccess(): bool
+    {
+        return auth()->user()?->isSuperAdmin() ?? false;
+    }
+
     public function form(Schema $schema): Schema
     {
         return $schema

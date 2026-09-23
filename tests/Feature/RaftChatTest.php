@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use App\Livewire\RaftChat;
 use App\Livewire\RaftChatResponse;
 use App\Models\DocumentChunk;
+use App\Models\Survey;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Artisan;
 use Laravel\Ai\Embeddings;
@@ -43,6 +44,19 @@ class RaftChatTest extends TestCase
             ->assertSet('surveyStarted', false)
             ->assertSet('surveyCompleted', false)
             ->assertSee('Raft AI Assistant');
+    }
+
+    public function test_raft_chat_links_session_to_raft_survey(): void
+    {
+        Livewire::withQueryParams(['mode' => 'test'])
+            ->withoutLazyLoading()
+            ->test(RaftChat::class);
+
+        $this->assertDatabaseHas('survey_sessions', [
+            'session_id' => session()->getId(),
+            'survey_type' => 'raft-test',
+            'survey_id' => Survey::query()->where('slug', 'raft-test')->value('id'),
+        ]);
     }
 
     public function test_raft_chat_shows_progress_bar_when_survey_started(): void

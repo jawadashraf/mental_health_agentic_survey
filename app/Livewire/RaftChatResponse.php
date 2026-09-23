@@ -2,16 +2,11 @@
 
 namespace App\Livewire;
 
-use App\Mail\SafeguardingAlertMail;
 use App\Models\Intent;
-use App\Models\SurveyResponse;
-use App\Models\SurveySession;
-use App\Services\RaftFlagDetectionService;
 use App\Services\RaftRagService;
-use App\Settings\MailSettings;
+use App\Services\SurveyResponseRecorder;
 use App\Settings\PromptSettings;
 use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Session;
 use Livewire\Component;
 use Prism\Prism\Enums\Provider;
@@ -509,88 +504,15 @@ The user seems disengaged or uninterested. Generate a gentle, empathetic message
 
     public function storeResponse($questionId, $response, $question): void
     {
-        $sessionId = session()->getId();
         $questionData = collect($this->questions)->firstWhere('id', $questionId) ?? ['question' => $question];
 
-        $flagService = app(RaftFlagDetectionService::class);
-        $flagEvaluation = $flagService->evaluateResponse($response, $questionData);
-
-        SurveyResponse::updateOrCreate(
-            [
-                'question_id' => $questionId,
-                'session_id' => $sessionId,
-            ],
-            [
-                'response' => $response,
-                'question' => $question,
-                'is_flagged' => $flagEvaluation['is_flagged'],
-                'flag_type' => $flagEvaluation['flag_type'],
-                'flag_severity' => $flagEvaluation['flag_severity'],
-                'flag_reason' => $flagEvaluation['flag_reason'],
-                'flag_action_taken' => $flagEvaluation['flag_action_taken'],
-                'flagged_at' => $flagEvaluation['is_flagged'] ? now() : null,
-            ]
+        app(SurveyResponseRecorder::class)->record(
+            sessionId: session()->getId(),
+            questionId: (int) $questionId,
+            questionText: (string) $question,
+            response: (string) $response,
+            questionData: $questionData,
         );
-
-        if ($flagEvaluation['is_flagged']) {
-            $session = SurveySession::query()->where('session_id', $sessionId)->first();
-            if ($session) {
-                $flagCount = SurveyResponse::query()->where('session_id', $sessionId)->where('is_flagged', true)->count();
-                $session->update([
-                    'has_flags' => true,
-                    'flag_count' => $flagCount,
-                ]);
-            }
-
-            /** @var MailSettings $mailSettings */
-            $mailSettings = app(MailSettings::class);
-
-            if ($flagEvaluation['flag_severity'] === 'critical' || $flagEvaluation['flag_type'] === 'safeguarding') {
-                try {
-                    $recipient = $mailSettings->safeguarding_recipient_email ?? 'jawadashraf78@gmail.com';
-                    $mailable = new SafeguardingAlertMail(
-                        sessionId: $sessionId,
-                        questionId: $questionId,
-                        questionText: $question,
-                        userResponse: $response,
-                        flagType: $flagEvaluation['flag_type'],
-                        flagSeverity: $flagEvaluation['flag_severity'],
-                        flagReason: $flagEvaluation['flag_reason'],
-                        recipientEmail: $recipient
-                    );
-
-                    if ($mailSettings->enable_background_queue ?? true) {
-                        Mail::to($recipient)->queue($mailable);
-                    } else {
-                        Mail::to($recipient)->send($mailable);
-                    }
-                } catch (\Throwable $e) {
-                    \Log::error('Failed sending safeguarding email alert: '.$e->getMessage());
-                }
-            } elseif (in_array($flagEvaluation['flag_type'], ['accessibility_complaint', 'event_safety'])) {
-                try {
-                    $recipient = $mailSettings->info_recipient_email ?? 'jawadashraf78@gmail.com';
-                    $mailable = new SafeguardingAlertMail(
-                        sessionId: $sessionId,
-                        questionId: $questionId,
-                        questionText: $question,
-                        userResponse: $response,
-                        flagType: $flagEvaluation['flag_type'],
-                        flagSeverity: $flagEvaluation['flag_severity'],
-                        flagReason: $flagEvaluation['flag_reason'],
-                        recipientEmail: $recipient
-                    );
-
-                    if ($mailSettings->enable_background_queue ?? true) {
-                        Mail::to($recipient)->queue($mailable);
-                    } else {
-                        Mail::to($recipient)->send($mailable);
-                    }
-                } catch (\Throwable $e) {
-                    \Log::error('Failed sending info email alert: '.$e->getMessage());
-                }
-            }
-        }
     }
 
     public function saveResponseInSession($response, $question, $questionId): void

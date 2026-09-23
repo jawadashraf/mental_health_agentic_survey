@@ -2,7 +2,10 @@
 
 namespace App\Filament\Widgets;
 
+use App\Models\Intent;
+use App\Models\SurveySession;
 use Filament\Widgets\ChartWidget;
+use Illuminate\Support\Facades\DB;
 
 class IntentsChart extends ChartWidget
 {
@@ -19,8 +22,11 @@ class IntentsChart extends ChartWidget
 
     protected function getData(): array
     {
-        $data = \App\Models\Intent::query()
-            ->select('intent', \Illuminate\Support\Facades\DB::raw('count(*) as count'))
+        $visibleSessionIds = SurveySession::query()->visibleTo(auth()->user())->select('session_id');
+
+        $data = Intent::query()
+            ->whereIn('session_id', $visibleSessionIds)
+            ->select('intent', DB::raw('count(*) as count'))
             ->groupBy('intent')
             ->pluck('count', 'intent')
             ->toArray();

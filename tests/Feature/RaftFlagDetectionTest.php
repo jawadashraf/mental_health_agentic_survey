@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Ai\Tools\RecordSurveyResponse;
 use App\Mail\SafeguardingAlertMail;
+use App\Models\Survey;
 use App\Models\SurveySession;
 use App\Services\RaftFlagDetectionService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -53,9 +54,13 @@ class RaftFlagDetectionTest extends TestCase
         Mail::fake();
         $sessionId = session()->getId();
 
+        $survey = Survey::query()->where('slug', 'raft')->firstOrFail();
+        $survey->update(['safeguarding_emails' => ['safeguarding@theraftleicester.co.uk']]);
+
         SurveySession::create([
             'session_id' => $sessionId,
             'survey_type' => 'raft',
+            'survey_id' => $survey->id,
         ]);
 
         $tool = new RecordSurveyResponse;
@@ -80,9 +85,10 @@ class RaftFlagDetectionTest extends TestCase
             'flag_count' => 1,
         ]);
 
-        Mail::assertSent(SafeguardingAlertMail::class, function ($mail) {
+        Mail::assertQueued(SafeguardingAlertMail::class, function ($mail) {
             return $mail->hasTo('safeguarding@theraftleicester.co.uk') &&
-                   $mail->flagType === 'safeguarding';
+                   $mail->flagType === 'safeguarding' &&
+                   $mail->organizationName === 'The Raft';
         });
     }
 
