@@ -19,7 +19,8 @@
         "livewire/livewire": "^4.0",
         "nwidart/laravel-modules": "^12.0",
         "openai-php/laravel": "^0.19.1",
-        "prism-php/prism": "^0.99.22"
+        "prism-php/prism": "^0.99.22",
+        "stechstudio/filament-impersonate": "^5.6"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",
