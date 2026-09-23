@@ -20,18 +20,22 @@ use Illuminate\Foundation\Http\Middleware\PreventRequestForgery;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
+use Elemind\PressFilamentTheme\PressFilamentTheme;
+use Elemind\PressFilamentTheme\Enums\PressVariant;
 
 class AdminPanelProvider extends PanelProvider
 {
     public function panel(Panel $panel): Panel
     {
         return $panel
+        ->plugin(PressFilamentTheme::make()->variant(PressVariant::Vellum))
             ->default()
             ->id('admin')
             ->path('admin')
             ->login()
             ->passwordReset()
             ->profile()
+            
             ->colors([
                 'primary' => Color::Purple,
             ])
