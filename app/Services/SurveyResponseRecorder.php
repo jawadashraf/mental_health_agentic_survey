@@ -26,9 +26,9 @@ class SurveyResponseRecorder
      */
     public function record(string $sessionId, int $questionId, string $questionText, string $response, array $questionData): array
     {
-        $flagEvaluation = $this->flagDetection->evaluateResponse($response, $questionData);
-
         $session = SurveySession::query()->with('survey.organization')->where('session_id', $sessionId)->first();
+
+        $flagEvaluation = $this->flagDetection->evaluateResponse($response, $questionData, $session?->survey);
 
         $recipients = $flagEvaluation['is_flagged']
             ? $this->alertRecipients->for($session?->survey, $flagEvaluation['flag_type'], $flagEvaluation['flag_severity'])

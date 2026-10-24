@@ -23,11 +23,43 @@ class FlagAlertRecipients
             return self::ChannelSafeguarding;
         }
 
+        if ($flagType === 'struggle_burnout' && $flagSeverity === 'high') {
+            return self::ChannelSafeguarding;
+        }
+
         if (in_array($flagType, ['accessibility_complaint', 'event_safety'], true)) {
             return self::ChannelInfo;
         }
 
         return null;
+    }
+
+    /**
+     * The email address participants are given for a channel: the first address in the survey's
+     * alert list for that channel, or the default from the raft config when none is set.
+     */
+    public function contactEmail(?Survey $survey, string $channel): string
+    {
+        $surveyEmails = $channel === self::ChannelSafeguarding
+            ? $survey?->safeguarding_emails
+            : $survey?->info_emails;
+
+        $surveyEmail = collect($surveyEmails ?? [])
+            ->map(fn (?string $email): string => trim((string) $email))
+            ->first(fn (string $email): bool => filter_var($email, FILTER_VALIDATE_EMAIL) !== false);
+
+        return $surveyEmail ?? config("raft.contacts.{$channel}_email");
+    }
+
+    /**
+     * Replace the {info_email} and {safeguarding_email} placeholders used in survey question config.
+     */
+    public function fillContactPlaceholders(?Survey $survey, string $text): string
+    {
+        return strtr($text, [
+            '{info_email}' => $this->contactEmail($survey, self::ChannelInfo),
+            '{safeguarding_email}' => $this->contactEmail($survey, self::ChannelSafeguarding),
+        ]);
     }
 
     /**

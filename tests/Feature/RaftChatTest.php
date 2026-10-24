@@ -225,6 +225,111 @@ class RaftChatTest extends TestCase
         $this->assertCount(1, $conclusions);
     }
 
+    public function test_conclusion_message_shares_raft_contact_emails(): void
+    {
+        $chat = Livewire::withQueryParams(['mode' => 'test'])
+            ->withoutLazyLoading()
+            ->test(RaftChat::class);
+
+        $chat->call('askQuestion');
+        $chat->call('finishSurvey');
+
+        $conclusion = collect(session('raft_survey_metadata'))->firstWhere('type', 'conclusion');
+
+        $this->assertStringContainsString('info@theraftleicester.co.uk', $conclusion['content']);
+        $this->assertStringContainsString('safeguarding@theraftleicester.co.uk', $conclusion['content']);
+        $this->assertStringNotContainsString('visit our website', $conclusion['content']);
+    }
+
+    public function test_chat_prompt_includes_raft_contacts_and_current_question_signposting(): void
+    {
+        $questions = config('raft-survey');
+        $barriersIndex = collect($questions)->search(fn ($question) => $question['label'] === 'Raft Activity Barriers');
+
+        session([
+            'raft_survey_started' => true,
+            'raft_survey_index' => $barriersIndex,
+        ]);
+
+        Embeddings::fake();
+
+        $sentMessages = $this->fakeOpenAiStream('Sorry to hear that.');
+
+        Livewire::test(RaftChatResponse::class, [
+            'message' => ['role' => 'assistant', 'content' => ''],
+            'metadata' => ['role' => 'assistant', 'content' => '', 'type' => 'stream'],
+            'prompt' => ['role' => 'user', 'content' => 'The venue had no lift so we could not attend.'],
+        ])->call('getResponse');
+
+        $userPrompt = collect($sentMessages->messages)->last()['content'];
+
+        $this->assertStringContainsString('info@theraftleicester.co.uk', $userPrompt);
+        $this->assertStringContainsString('safeguarding@theraftleicester.co.uk', $userPrompt);
+        $this->assertStringContainsString('Flag if user makes a complaint about accessibility of Raft services. Ask them to email info@theraftleicester.co.uk.', $userPrompt);
+        $this->assertStringNotContainsString('{info_email}', $userPrompt);
+    }
+
+    public function test_chat_and_conclusion_use_the_surveys_own_contact_emails(): void
+    {
+        $chat = Livewire::withQueryParams(['mode' => 'test'])
+            ->withoutLazyLoading()
+            ->test(RaftChat::class);
+
+        Survey::query()->where('slug', 'raft-test')->update([
+            'safeguarding_emails' => ['safety@charity.test'],
+            'info_emails' => ['hello@charity.test'],
+        ]);
+
+        Embeddings::fake();
+        $sentMessages = $this->fakeOpenAiStream('Sorry to hear that.');
+
+        Livewire::test(RaftChatResponse::class, [
+            'message' => ['role' => 'assistant', 'content' => ''],
+            'metadata' => ['role' => 'assistant', 'content' => '', 'type' => 'stream'],
+            'prompt' => ['role' => 'user', 'content' => 'The venue had no lift so we could not attend.'],
+        ])->call('getResponse');
+
+        $userPrompt = collect($sentMessages->messages)->last()['content'];
+
+        $this->assertStringContainsString('hello@charity.test', $userPrompt);
+        $this->assertStringContainsString('safety@charity.test', $userPrompt);
+        $this->assertStringNotContainsString('theraftleicester.co.uk', $userPrompt);
+
+        $chat->call('askQuestion');
+        $chat->call('finishSurvey');
+
+        $conclusion = collect(session('raft_survey_metadata'))->firstWhere('type', 'conclusion');
+
+        $this->assertStringContainsString('hello@charity.test', $conclusion['content']);
+        $this->assertStringContainsString('safety@charity.test', $conclusion['content']);
+    }
+
+    public function test_rag_prompt_includes_raft_contacts(): void
+    {
+        session(['raft_survey_started' => true]);
+
+        Embeddings::fake([[array_fill(0, 1536, 0.05)]]);
+        DocumentChunk::create([
+            'source_file' => 'values.md',
+            'section_heading' => 'Core Values',
+            'content' => 'We are living it, We are together',
+            'embedding' => array_fill(0, 1536, 0.05),
+        ]);
+
+        $sentMessages = $this->fakeOpenAiStream('The Raft core values are...');
+
+        Livewire::test(RaftChatResponse::class, [
+            'message' => ['role' => 'assistant', 'content' => ''],
+            'metadata' => ['role' => 'assistant', 'content' => '', 'type' => 'stream'],
+            'prompt' => ['role' => 'user', 'content' => 'Who do I contact about the core values?'],
+        ])->call('getResponse');
+
+        $systemPrompt = collect($sentMessages->messages)->firstWhere('role', 'system')['content'];
+
+        $this->assertStringContainsString('info@theraftleicester.co.uk', $systemPrompt);
+        $this->assertStringContainsString('safeguarding@theraftleicester.co.uk', $systemPrompt);
+    }
+
     public function test_out_of_order_answer_is_stored_against_its_own_question(): void
     {
         $chat = Livewire::withQueryParams(['mode' => 'test'])
@@ -410,6 +515,39 @@ class RaftChatTest extends TestCase
         ])
             ->call('getResponse')
             ->assertNotDispatched('askQuestion');
+    }
+
+    /**
+     * Fake the streamed OpenAI chat call and capture the messages sent to it.
+     */
+    protected function fakeOpenAiStream(string $content): object
+    {
+        $captured = (object) ['messages' => []];
+
+        $fakeStream = [
+            (object) [
+                'choices' => [
+                    (object) [
+                        'delta' => (object) ['content' => $content],
+                        'toArray' => fn () => ['delta' => ['content' => $content]],
+                    ],
+                ],
+            ],
+        ];
+
+        $mockChat = \Mockery::mock();
+        $mockChat->shouldReceive('createStreamed')
+            ->withArgs(function (array $payload) use ($captured): bool {
+                $captured->messages = $payload['messages'];
+
+                return true;
+            })
+            ->andReturn($fakeStream);
+        $mockOpenAi = \Mockery::mock();
+        $mockOpenAi->shouldReceive('chat')->andReturn($mockChat);
+        $this->app->instance('openai', $mockOpenAi);
+
+        return $captured;
     }
 
     protected function answerViaChild(array $question, string $response)

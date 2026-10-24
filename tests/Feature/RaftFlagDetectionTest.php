@@ -49,6 +49,51 @@ class RaftFlagDetectionTest extends TestCase
         $this->assertEquals('high', $result['flag_severity']);
     }
 
+    public function test_safeguarding_flag_signposts_the_raft_safeguarding_email(): void
+    {
+        $result = (new RaftFlagDetectionService)->evaluateResponse('There is domestic abuse at home.', ['id' => 1]);
+
+        $this->assertStringContainsString('safeguarding@theraftleicester.co.uk', $result['signpost_guidance']);
+    }
+
+    public function test_struggle_flag_signposts_the_raft_info_email(): void
+    {
+        $result = (new RaftFlagDetectionService)->evaluateResponse('Nothing has worked out for us.', ['id' => 6]);
+
+        $this->assertSame('struggle_burnout', $result['flag_type']);
+        $this->assertStringContainsString('info@theraftleicester.co.uk', $result['signpost_guidance']);
+    }
+
+    public function test_event_safety_flag_signposts_both_raft_emails(): void
+    {
+        $result = (new RaftFlagDetectionService)->evaluateResponse('I felt unsafe at the last Raft event.', ['id' => 7]);
+
+        $this->assertSame('event_safety', $result['flag_type']);
+        $this->assertStringContainsString('info@theraftleicester.co.uk', $result['signpost_guidance']);
+        $this->assertStringContainsString('safeguarding@theraftleicester.co.uk', $result['signpost_guidance']);
+    }
+
+    public function test_accessibility_flag_signposts_the_configured_info_email(): void
+    {
+        config(['raft.contacts.info_email' => 'hello@raft.test']);
+
+        $result = (new RaftFlagDetectionService)->evaluateResponse('The venue was inaccessible for us.', ['id' => 8]);
+
+        $this->assertSame('accessibility_complaint', $result['flag_type']);
+        $this->assertStringContainsString('hello@raft.test', $result['signpost_guidance']);
+    }
+
+    public function test_signposting_uses_the_surveys_own_contact_emails(): void
+    {
+        $survey = Survey::factory()->withAlertEmails(['safety@charity.test'], ['hello@charity.test'])->create();
+
+        $result = (new RaftFlagDetectionService)->evaluateResponse('I felt unsafe at the last Raft event.', ['id' => 7], $survey);
+
+        $this->assertStringContainsString('hello@charity.test', $result['signpost_guidance']);
+        $this->assertStringContainsString('safety@charity.test', $result['signpost_guidance']);
+        $this->assertStringNotContainsString('theraftleicester.co.uk', $result['signpost_guidance']);
+    }
+
     public function test_record_survey_response_tool_persists_flag_and_sends_email(): void
     {
         Mail::fake();

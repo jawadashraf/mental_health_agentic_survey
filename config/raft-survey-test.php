@@ -18,7 +18,7 @@ return [
         'transition_message' => 'Thank you for sharing about your child. Moving to parent experience.',
         'participant_behavior' => 'Needs suggestions/context',
         'ai_guidance' => 'This could be explored via context or themes.',
-        'red_flag_criteria' => 'Flag if someone mentions safeguarding concerns, risk of harming self or others.',
+        'red_flag_criteria' => 'Flag if someone mentions safeguarding concerns, risk of harming self or others (referral to {safeguarding_email}).',
     ],
     [
         'id' => 2,
@@ -33,7 +33,7 @@ return [
         'question' => 'What are the main challenges you are facing right now, as a parent or carer?',
         'participant_behavior' => 'Struggling / Overwhelmed',
         'ai_guidance' => 'Ideas: parenting, financial burdens, health issues, feeling isolated or in burnout.',
-        'red_flag_criteria' => 'Flag safeguarding concerns or overwhelm/burnout.',
+        'red_flag_criteria' => 'Flag safeguarding concerns ({safeguarding_email}) or overwhelm/burnout ({info_email}).',
     ],
     [
         'id' => 3,
@@ -48,6 +48,6 @@ return [
         'question' => 'What training would you like the Raft to offer?',
         'participant_behavior' => 'Ideas requested',
         'ai_guidance' => 'Ideas: therapeutic parenting, trauma, attachment.',
-        'red_flag_criteria' => 'Flag if user says they are overwhelmed and feel ill-equipped.',
+        'red_flag_criteria' => 'Flag if user says they are overwhelmed and feel ill-equipped. Ask them to seek help or contact Raft ({info_email}).',
     ],
 ];

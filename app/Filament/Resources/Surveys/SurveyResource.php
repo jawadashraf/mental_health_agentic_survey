@@ -94,7 +94,7 @@ class SurveyResource extends Resource
                     ->columns(2)
                     ->columnSpanFull(),
                 Section::make('Flag alert recipients')
-                    ->description('Who is emailed when a response is flagged. Organisation users who opted in to flag alerts are also emailed.')
+                    ->description('Who is emailed when a response is flagged. Organisation users who opted in to flag alerts are also emailed. The first address in each list is also shared with participants when they are signposted for support.')
                     ->schema([
                         TagsInput::make('safeguarding_emails')
                             ->label('Safeguarding / critical alerts')

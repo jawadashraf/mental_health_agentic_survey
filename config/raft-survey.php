@@ -15,7 +15,7 @@ return [
         'question' => 'What are the main challenges your child is facing right now?',
         'participant_behavior' => 'Needs suggestions/context',
         'ai_guidance' => 'This could be explored via context (e.g. at home, at school/college, in the community) or themes (e.g. education, mental/physical health, trauma related behaviours, identity and belonging).',
-        'red_flag_criteria' => 'Flag if someone mentions safeguarding concerns, risk of harming themselves or others. Trigger immediate referral to safeguarding@theraftleicester.co.uk.',
+        'red_flag_criteria' => 'Flag if someone mentions safeguarding concerns, risk of harming themselves or others. Trigger immediate referral to {safeguarding_email}.',
     ],
     [
         'id' => 2,
@@ -30,7 +30,7 @@ return [
         'question' => 'What support has helped your child so far, and what has not worked?',
         'participant_behavior' => 'Struggling for suggestions',
         'ai_guidance' => 'Supportive ideas: day care / respite, therapy (e.g. play, music, lego, DDP), school supports (e.g. EHCPs, meeting SEN needs, tutors), sensory interventions, emotional literacy. Not worked: wrong therapy, problems accessing services, self-sabotaging, long waiting lists.',
-        'red_flag_criteria' => 'Flag if user says something like "nothing has worked for my child, I can’t carry on". Suggest seeking help / contacting Raft.',
+        'red_flag_criteria' => 'Flag if user says something like "nothing has worked for my child, I can’t carry on". Suggest seeking help / contacting Raft ({info_email}).',
     ],
     [
         'id' => 3,
@@ -45,7 +45,7 @@ return [
         'question' => 'What activities could the Raft offer, that you feel would benefit your child or young person?',
         'participant_behavior' => 'Needs suggestions',
         'ai_guidance' => 'The Raft currently provides Lego-based therapeutic groups, cookery sessions and Christmas parties. Ideas: regular peer meet-ups, holiday clubs, independence skills / preparation for adulthood.',
-        'red_flag_criteria' => 'Flag if someone states they attended a previous Raft event and did not feel safe or included. Encourage them to contact Raft.',
+        'red_flag_criteria' => 'Flag if someone states they attended a previous Raft event and did not feel safe or included. Encourage them to contact Raft ({info_email}, or {safeguarding_email} if they felt unsafe).',
     ],
     [
         'id' => 4,
@@ -61,7 +61,7 @@ return [
         'transition_message' => 'Thank you for sharing your thoughts about your child’s needs. The next section focuses on your experiences as a parent or carer.',
         'participant_behavior' => 'Open ended',
         'ai_guidance' => 'Open ended question, no limits here.',
-        'red_flag_criteria' => 'Flag any acute safeguarding or self-harm concerns.',
+        'red_flag_criteria' => 'Flag any acute safeguarding or self-harm concerns (referral to {safeguarding_email}).',
     ],
 
     // SECTION 2: Parents & Carers
@@ -78,7 +78,7 @@ return [
         'question' => 'What are the main challenges you are facing right now, as a parent or carer, that are impacting your ability to care for your child?',
         'participant_behavior' => 'Struggling / Overwhelmed',
         'ai_guidance' => 'Ideas include: parenting, financial burdens, health issues, accessing support/services, feeling isolated, overwhelmed or in burnout, allegations / safeguarding concerns.',
-        'red_flag_criteria' => 'Flag safeguarding concerns / risk of harm (automatic referral to safeguarding@theraftleicester.co.uk). Flag overwhelm/burnout/tired (suggest contacting social worker, trusted adult, FosterTalk, Adoption UK, or Raft).',
+        'red_flag_criteria' => 'Flag safeguarding concerns / risk of harm (automatic referral to {safeguarding_email}). Flag overwhelm/burnout/tired (suggest contacting social worker, trusted adult, FosterTalk, Adoption UK, or Raft at {info_email}).',
     ],
     [
         'id' => 6,
@@ -93,7 +93,7 @@ return [
         'question' => 'What support has helped you so far, and what has not worked?',
         'participant_behavior' => 'Struggling for suggestions',
         'ai_guidance' => 'Ideas include: day care / respite, self care activities, advocacy, support groups, training, books and resources.',
-        'red_flag_criteria' => 'Flag if user says "nothing has worked, I can’t carry on". Suggest seeking help / contacting Raft.',
+        'red_flag_criteria' => 'Flag if user says "nothing has worked, I can’t carry on". Suggest seeking help / contacting Raft ({info_email}).',
     ],
     [
         'id' => 7,
@@ -108,7 +108,7 @@ return [
         'question' => 'What activities could the Raft offer, that you feel would benefit you as a parent or carer?',
         'participant_behavior' => 'Needs suggestions',
         'ai_guidance' => 'The Raft currently provides wellbeing sessions, a podcast, and signposting. Ideas: peer meet-ups, parenting groups, self care activities, practical needs/equipment, respite, befriending, toolkits, guidance sheets.',
-        'red_flag_criteria' => 'Flag if user states they attended a previous Raft event and did not feel safe or included. Encourage contacting Raft.',
+        'red_flag_criteria' => 'Flag if user states they attended a previous Raft event and did not feel safe or included. Encourage contacting Raft ({info_email}, or {safeguarding_email} if they felt unsafe).',
     ],
     [
         'id' => 8,
@@ -124,7 +124,7 @@ return [
         'transition_message' => 'Thank you for sharing your feedback as a parent or carer. The final section focuses on training and development opportunities.',
         'participant_behavior' => 'Accessibility or logistics issue',
         'ai_guidance' => 'Barriers: childcare, timing/location of events, language, accessibility, group size. Solutions: range of dates/times, include childcare, change format, range of locations.',
-        'red_flag_criteria' => 'Flag if user makes a complaint about accessibility of Raft services. Ask them to email info@theraftleicester.co.uk.',
+        'red_flag_criteria' => 'Flag if user makes a complaint about accessibility of Raft services. Ask them to email {info_email}.',
     ],
 
     // SECTION 3: Training & Development
@@ -141,7 +141,7 @@ return [
         'question' => 'What training would you like the Raft to offer?',
         'participant_behavior' => 'Ideas requested',
         'ai_guidance' => 'Ideas: therapeutic parenting, trauma, attachment, neuroscience, additional needs, PACE, NVR (Non-Violence Resistance), bereavement, PTSD, mental health, first aid, EHCP application, supporting cultural identity, parent/carer reflective practice.',
-        'red_flag_criteria' => 'Flag if user says they are overwhelmed and cannot continue as feel ill-equipped to do role effectively. Ask to seek help / contact social worker, trusted adult, or Raft (info@theraftleicester.co.uk).',
+        'red_flag_criteria' => 'Flag if user says they are overwhelmed and cannot continue as feel ill-equipped to do role effectively. Ask to seek help / contact social worker, trusted adult, or Raft ({info_email}).',
     ],
     [
         'id' => 10,
@@ -186,6 +186,6 @@ return [
         'question' => 'What other training and development opportunities do you need as a family or organisation?',
         'participant_behavior' => 'Ideas requested',
         'ai_guidance' => 'Ideas include: mentoring, written resources, signposting to helpful organisations, online communities.',
-        'red_flag_criteria' => 'Flag if someone says they are struggling. Ask them to seek help, or get in touch with Raft.',
+        'red_flag_criteria' => 'Flag if someone says they are struggling. Ask them to seek help, or get in touch with Raft ({info_email}).',
     ],
 ];

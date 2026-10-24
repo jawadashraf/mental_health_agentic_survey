@@ -3,6 +3,8 @@
 namespace App\Livewire;
 
 use App\Models\Intent;
+use App\Models\SurveySession;
+use App\Services\FlagAlertRecipients;
 use App\Services\RaftRagService;
 use App\Services\SurveyResponseRecorder;
 use App\Settings\PromptSettings;
@@ -97,6 +99,7 @@ class RaftChatResponse extends Component
             if ($relevantChunks->isNotEmpty()) {
                 $this->storeIntentForQuestion('rag-knowledge', $this->prompt['content']);
                 $contextText = $relevantChunks->map(fn ($c) => "Source: {$c->source_file} ({$c->section_heading})\n{$c->content}")->implode("\n\n---\n\n");
+                $contactGuidance = $this->getContactGuidance();
 
                 $ragSystemPrompt = <<<RAG
 You are the official Knowledge & Policy Assistant for The Raft.
@@ -116,6 +119,7 @@ STRICT RULES:
    - We’re fun
 2. Do NOT use outside knowledge, general assumptions, or unlisted terms.
 3. Keep the response brief and warm. After answering the user's question, warmly ask if they would like to proceed with the survey question or if they would like to explore/discuss this further or ask anything else.
+4. The contact details below are official and may always be shared, even if they are not in the context.{$contactGuidance}
 RAG;
 
                 $promptForAssistant = $this->prompt['content'];
@@ -183,6 +187,10 @@ RAG;
                 }
                 $guidancePrompt .= "{$aiGuidance}\nEnsure your response natively weaves this guidance into a comforting answer.";
                 $promptForAssistant .= $guidancePrompt;
+            }
+
+            if ($relevantChunks->isEmpty()) {
+                $promptForAssistant .= $this->getContactGuidance($questionObj);
             }
 
             $messages = Session::get('raft_survey_messages', []);
@@ -430,6 +438,33 @@ Generate a simple, empathetic, two-line explanation of this term in the context 
 The user asked about the survey\'s purpose, data usage, or background.
 
 Generate a two-line, friendly and reassuring explanation of the survey\'s purpose — helping Raft understand the experiences of families and carers to improve support services — and invite the user to continue.';
+    }
+
+    /**
+     * The survey's contact details, plus the current question's signposting rule, for the assistant to use when signposting.
+     *
+     * @param  array{red_flag_criteria?: string}|null  $question
+     */
+    public function getContactGuidance(?array $question = null): string
+    {
+        $survey = SurveySession::query()->with('survey')->where('session_id', session()->getId())->first()?->survey;
+        $contacts = app(FlagAlertRecipients::class);
+        $infoEmail = $contacts->contactEmail($survey, FlagAlertRecipients::ChannelInfo);
+        $safeguardingEmail = $contacts->contactEmail($survey, FlagAlertRecipients::ChannelSafeguarding);
+
+        $guidance = "\n\nOFFICIAL RAFT CONTACT DETAILS (only include them when signposting the user is relevant):
+- General questions, feedback, complaints or accessibility issues: {$infoEmail}
+- Safeguarding concerns, risk of harm, or feeling unsafe: {$safeguardingEmail}
+- If anyone is in immediate danger: contact emergency services.
+Always give the exact email address. Never refer the user to any other Raft contact, role or website.";
+
+        $criteria = $question['red_flag_criteria'] ?? null;
+
+        if ($criteria && $criteria !== 'None') {
+            $guidance .= "\nSignposting rule for the current question (apply only if the user's message matches it): ".$contacts->fillContactPlaceholders($survey, $criteria);
+        }
+
+        return $guidance;
     }
 
     public function getTechnicalIssuePrompt(): string

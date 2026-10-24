@@ -4,6 +4,7 @@ namespace App\Livewire;
 
 use App\Models\Survey;
 use App\Models\SurveySession;
+use App\Services\FlagAlertRecipients;
 use Illuminate\Support\Facades\Session;
 use Livewire\Attributes\Renderless;
 use Livewire\Attributes\Validate;
@@ -401,7 +402,9 @@ class RaftChat extends Component
             return;
         }
 
-        SurveySession::query()->where('session_id', session()->getId())->first()?->update([
+        $surveySession = SurveySession::query()->with('survey')->where('session_id', session()->getId())->first();
+
+        $surveySession?->update([
             'completed' => true,
             'completed_at' => now(),
         ]);
@@ -410,7 +413,11 @@ class RaftChat extends Component
         $this->inSkipPhase = false;
         Session::put('raft_survey_completed', true);
 
-        $conclusionMessage = "🎉 **Thank you so much for completing the survey!**\n\nYour responses are incredibly valuable and will help Raft understand the real experiences of foster and adoptive families. Every answer contributes to shaping better support services.\n\nIf you'd like to learn more about Raft or get in touch, please visit our website. Take care of yourself — you're doing an amazing job! 💜";
+        $contacts = app(FlagAlertRecipients::class);
+        $infoEmail = $contacts->contactEmail($surveySession?->survey, FlagAlertRecipients::ChannelInfo);
+        $safeguardingEmail = $contacts->contactEmail($surveySession?->survey, FlagAlertRecipients::ChannelSafeguarding);
+
+        $conclusionMessage = "🎉 **Thank you so much for completing the survey!**\n\nYour responses are incredibly valuable and will help Raft understand the real experiences of foster and adoptive families. Every answer contributes to shaping better support services.\n\nIf you'd like to learn more about Raft or get in touch, please email {$infoEmail}. For any safeguarding concerns, please email {$safeguardingEmail}. Take care of yourself — you're doing an amazing job! 💜";
 
         $this->metadata[] = [
             'role' => 'assistant',

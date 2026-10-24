@@ -55,12 +55,44 @@ class FlagAlertRecipientsTest extends TestCase
         $this->assertSame(['safeguarding@charity.test'], $recipients);
     }
 
+    public function test_high_severity_struggle_flags_are_routed_to_safeguarding(): void
+    {
+        $survey = Survey::factory()->withAlertEmails(['safeguarding@charity.test'], ['info@charity.test'])->create();
+
+        $recipients = app(FlagAlertRecipients::class)->for($survey, 'struggle_burnout', 'high');
+
+        $this->assertSame(['safeguarding@charity.test'], $recipients);
+    }
+
     public function test_flags_without_an_alert_channel_send_no_email(): void
     {
         $survey = Survey::factory()->withAlertEmails(['safeguarding@charity.test'], ['info@charity.test'])->create();
 
-        $this->assertSame([], app(FlagAlertRecipients::class)->for($survey, 'struggle_burnout', 'high'));
+        $this->assertSame([], app(FlagAlertRecipients::class)->for($survey, 'struggle_burnout', 'medium'));
         $this->assertSame([], app(FlagAlertRecipients::class)->for($survey, 'ill_equipped', 'high'));
+    }
+
+    public function test_contact_email_is_the_first_valid_address_in_the_surveys_list(): void
+    {
+        $survey = Survey::factory()
+            ->withAlertEmails(['not-an-email', ' help@charity.test ', 'second@charity.test'], ['hello@charity.test'])
+            ->create();
+
+        $contacts = app(FlagAlertRecipients::class);
+
+        $this->assertSame('help@charity.test', $contacts->contactEmail($survey, FlagAlertRecipients::ChannelSafeguarding));
+        $this->assertSame('hello@charity.test', $contacts->contactEmail($survey, FlagAlertRecipients::ChannelInfo));
+    }
+
+    public function test_contact_email_falls_back_to_the_raft_defaults(): void
+    {
+        $survey = Survey::factory()->create(['safeguarding_emails' => null, 'info_emails' => []]);
+
+        $contacts = app(FlagAlertRecipients::class);
+
+        $this->assertSame('safeguarding@theraftleicester.co.uk', $contacts->contactEmail($survey, FlagAlertRecipients::ChannelSafeguarding));
+        $this->assertSame('info@theraftleicester.co.uk', $contacts->contactEmail($survey, FlagAlertRecipients::ChannelInfo));
+        $this->assertSame('info@theraftleicester.co.uk', $contacts->contactEmail(null, FlagAlertRecipients::ChannelInfo));
     }
 
     public function test_falls_back_to_global_mail_settings_when_nothing_is_configured(): void

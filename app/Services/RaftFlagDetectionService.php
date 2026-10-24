@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\Survey;
 use Prism\Prism\Enums\Provider;
 use Prism\Prism\Facades\Prism;
 
@@ -12,11 +13,15 @@ class RaftFlagDetectionService
      *
      * @param  string  $userResponse  The response text provided by the user.
      * @param  array  $questionData  Question array from raft-survey configuration.
+     * @param  Survey|null  $survey  The survey being answered, whose contact emails are used for signposting.
      * @return array Result shape: [is_flagged, flag_type, flag_severity, flag_reason, flag_action_taken, signpost_guidance]
      */
-    public function evaluateResponse(string $userResponse, array $questionData): array
+    public function evaluateResponse(string $userResponse, array $questionData, ?Survey $survey = null): array
     {
         $responseLower = strtolower(trim($userResponse));
+        $contacts = app(FlagAlertRecipients::class);
+        $infoEmail = $contacts->contactEmail($survey, FlagAlertRecipients::ChannelInfo);
+        $safeguardingEmail = $contacts->contactEmail($survey, FlagAlertRecipients::ChannelSafeguarding);
 
         if (empty($responseLower)) {
             return $this->noFlag();
@@ -36,8 +41,8 @@ class RaftFlagDetectionService
                     'flag_type' => 'safeguarding',
                     'flag_severity' => 'critical',
                     'flag_reason' => "Explicit safeguarding keyword detected: '{$keyword}'",
-                    'flag_action_taken' => 'Automatic referral email sent to safeguarding@theraftleicester.co.uk',
-                    'signpost_guidance' => 'Please provide immediate supportive signposting: if anyone is in immediate danger or expressing self-harm/safeguarding risks, advise them to contact local emergency services or email safeguarding@theraftleicester.co.uk immediately.',
+                    'flag_action_taken' => "Automatic referral email sent to {$safeguardingEmail}",
+                    'signpost_guidance' => "Please provide immediate supportive signposting: if anyone is in immediate danger or expressing self-harm/safeguarding risks, advise them to contact local emergency services or email {$safeguardingEmail} immediately.",
                 ];
             }
         }
@@ -57,7 +62,7 @@ class RaftFlagDetectionService
                     'flag_severity' => 'high',
                     'flag_reason' => "Severe struggle / hopelessness phrase detected: '{$keyword}'",
                     'flag_action_taken' => 'Flagged for RAFT team attention and user signposted to support services',
-                    'signpost_guidance' => 'Acknowledge how overwhelming things feel, and gently encourage them to seek support from their social worker, trusted adult, support services like FosterTalk or Adoption UK, or The Raft.',
+                    'signpost_guidance' => "Acknowledge how overwhelming things feel, and gently encourage them to seek support from their social worker, trusted adult, support services like FosterTalk or Adoption UK, or The Raft ({$infoEmail}).",
                 ];
             }
         }
@@ -70,8 +75,8 @@ class RaftFlagDetectionService
                     'flag_type' => 'event_safety',
                     'flag_severity' => 'medium',
                     'flag_reason' => 'Reported feeling unsafe or excluded at a previous Raft event/activity',
-                    'flag_action_taken' => 'Flagged for RAFT attention and user encouraged to email info@theraftleicester.co.uk',
-                    'signpost_guidance' => 'Express sincere empathy that they felt unsafe or excluded at a Raft event, and encourage them to get in touch with Raft (info@theraftleicester.co.uk) so the team can address this immediately.',
+                    'flag_action_taken' => "Flagged for RAFT attention and user encouraged to email {$infoEmail}",
+                    'signpost_guidance' => "Express sincere empathy that they felt unsafe or excluded at a Raft event, and encourage them to get in touch with Raft ({$infoEmail}, or {$safeguardingEmail} if they felt unsafe) so the team can address this immediately.",
                 ];
             }
         }
@@ -83,14 +88,14 @@ class RaftFlagDetectionService
                 'flag_type' => 'accessibility_complaint',
                 'flag_severity' => 'medium',
                 'flag_reason' => 'Accessibility concern or complaint raised regarding services',
-                'flag_action_taken' => 'Flagged for RAFT attention and user invited to email info@theraftleicester.co.uk',
-                'signpost_guidance' => 'Thank them for pointing out accessibility barriers and invite them to email info@theraftleicester.co.uk so Raft can improve access.',
+                'flag_action_taken' => "Flagged for RAFT attention and user invited to email {$infoEmail}",
+                'signpost_guidance' => "Thank them for pointing out accessibility barriers and invite them to email {$infoEmail} so Raft can improve access.",
             ];
         }
 
         // 5. LLM Classification via Prism for nuanced responses against question red_flag_criteria
         try {
-            $criteria = $questionData['red_flag_criteria'] ?? 'Detect safeguarding concerns, severe burnout, or complaints.';
+            $criteria = $contacts->fillContactPlaceholders($survey, $questionData['red_flag_criteria'] ?? 'Detect safeguarding concerns, severe burnout, or complaints.');
             $questionText = $questionData['question'] ?? '';
 
             $prompt = <<<PROMPT
@@ -100,6 +105,7 @@ Analyze the user's survey response to determine if it should raise a red flag fo
 Question: "{$questionText}"
 Question Red Flag Criteria: "{$criteria}"
 User Response: "{$userResponse}"
+Raft contacts for signposting: {$infoEmail} (general support, feedback, complaints) and {$safeguardingEmail} (safeguarding concerns or risk of harm).
 
 Respond strictly in JSON format with no markdown wrappers:
 {
@@ -107,7 +113,7 @@ Respond strictly in JSON format with no markdown wrappers:
   "flag_type": "safeguarding" | "struggle_burnout" | "event_safety" | "accessibility_complaint" | "ill_equipped" | "none",
   "flag_severity": "critical" | "high" | "medium" | "none",
   "flag_reason": "string describing why it was flagged or empty string",
-  "signpost_guidance": "short instruction on how to signpost help to the user or empty string"
+  "signpost_guidance": "short instruction on how to signpost help to the user, including the relevant Raft email address, or empty string"
 }
 PROMPT;
 
@@ -123,7 +129,7 @@ PROMPT;
             if (is_array($parsed) && ($parsed['is_flagged'] ?? false) === true) {
                 $type = $parsed['flag_type'] ?? 'struggle_burnout';
                 $actionTaken = $type === 'safeguarding'
-                    ? 'Automatic referral email sent to safeguarding@theraftleicester.co.uk'
+                    ? "Automatic referral email sent to {$safeguardingEmail}"
                     : 'Flagged for RAFT team review and user signposted to support';
 
                 return [
@@ -132,7 +138,7 @@ PROMPT;
                     'flag_severity' => $parsed['flag_severity'] ?? 'high',
                     'flag_reason' => $parsed['flag_reason'] ?? 'Flagged based on question criteria evaluation',
                     'flag_action_taken' => $actionTaken,
-                    'signpost_guidance' => $parsed['signpost_guidance'] ?? 'Suggest seeking support or contacting Raft.',
+                    'signpost_guidance' => $parsed['signpost_guidance'] ?? "Suggest seeking support or contacting Raft ({$infoEmail}).",
                 ];
             }
         } catch (\Throwable $e) {
