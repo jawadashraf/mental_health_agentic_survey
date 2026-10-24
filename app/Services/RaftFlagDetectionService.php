@@ -9,6 +9,53 @@ use Prism\Prism\Facades\Prism;
 class RaftFlagDetectionService
 {
     /**
+     * Phrases that signal an immediate safeguarding risk.
+     */
+    protected const array SafeguardingKeywords = [
+        'harming', 'harming myself', 'harming others', 'self-harm', 'suicide', 'suicidal',
+        'abuse', 'abusing', 'neglect', 'safeguarding concern', 'unsafe at home',
+        'danger', 'violence', 'hit', 'hitting', 'domestic abuse',
+    ];
+
+    /**
+     * Phrases that signal hopelessness or that someone can't cope.
+     */
+    protected const array StruggleKeywords = [
+        'can\'t carry on', 'cannot carry on', 'cant carry on',
+        'nothing has worked', 'nothing works', 'i can\'t do this anymore',
+        'i cannot do this anymore', 'giving up',
+    ];
+
+    /**
+     * Find the first safeguarding or struggle phrase in the text, matched from the start of a word
+     * so that e.g. "hit" does not match "white".
+     *
+     * @return array{flag_type: 'safeguarding'|'struggle_burnout', keyword: string}|null
+     */
+    public function matchDistressKeyword(string $text): ?array
+    {
+        $normalized = str_replace(['’', '‘'], "'", strtolower(trim($text)));
+
+        foreach (['safeguarding' => self::SafeguardingKeywords, 'struggle_burnout' => self::StruggleKeywords] as $flagType => $keywords) {
+            foreach ($keywords as $keyword) {
+                if (preg_match('/(?<![a-z])'.preg_quote($keyword, '/').'/', $normalized) === 1) {
+                    return ['flag_type' => $flagType, 'keyword' => $keyword];
+                }
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Whether the text suggests the person may be at risk or struggling to cope.
+     */
+    public function detectsDistress(string $text): bool
+    {
+        return $this->matchDistressKeyword($text) !== null;
+    }
+
+    /**
      * Analyze a survey response and detect if a red flag should be raised.
      *
      * @param  string  $userResponse  The response text provided by the user.
@@ -27,44 +74,29 @@ class RaftFlagDetectionService
             return $this->noFlag();
         }
 
-        // 1. Direct Rule Checks for Immediate Safeguarding / Critical Keywords
-        $safeguardingKeywords = [
-            'harming', 'harming myself', 'harming others', 'self-harm', 'suicide', 'suicidal',
-            'abuse', 'abusing', 'neglect', 'safeguarding concern', 'unsafe at home',
-            'danger', 'violence', 'hit', 'hitting', 'domestic abuse',
-        ];
+        // 1 & 2. Direct rule checks for immediate safeguarding risk, then hopelessness / cannot carry on
+        $distress = $this->matchDistressKeyword($userResponse);
 
-        foreach ($safeguardingKeywords as $keyword) {
-            if (str_contains($responseLower, $keyword)) {
-                return [
-                    'is_flagged' => true,
-                    'flag_type' => 'safeguarding',
-                    'flag_severity' => 'critical',
-                    'flag_reason' => "Explicit safeguarding keyword detected: '{$keyword}'",
-                    'flag_action_taken' => "Automatic referral email sent to {$safeguardingEmail}",
-                    'signpost_guidance' => "Please provide immediate supportive signposting: if anyone is in immediate danger or expressing self-harm/safeguarding risks, advise them to contact local emergency services or email {$safeguardingEmail} immediately.",
-                ];
-            }
+        if ($distress !== null && $distress['flag_type'] === 'safeguarding') {
+            return [
+                'is_flagged' => true,
+                'flag_type' => 'safeguarding',
+                'flag_severity' => 'critical',
+                'flag_reason' => "Explicit safeguarding keyword detected: '{$distress['keyword']}'",
+                'flag_action_taken' => "Automatic referral email sent to {$safeguardingEmail}",
+                'signpost_guidance' => "Please provide immediate supportive signposting: if anyone is in immediate danger or expressing self-harm/safeguarding risks, advise them to contact local emergency services or email {$safeguardingEmail} immediately.",
+            ];
         }
 
-        // 2. Direct Rule Checks for Hopelessness / Cannot Carry On
-        $struggleKeywords = [
-            'can\'t carry on', 'cannot carry on', 'cant carry on',
-            'nothing has worked', 'nothing works', 'i can\'t do this anymore',
-            'i cannot do this anymore', 'giving up',
-        ];
-
-        foreach ($struggleKeywords as $keyword) {
-            if (str_contains($responseLower, $keyword)) {
-                return [
-                    'is_flagged' => true,
-                    'flag_type' => 'struggle_burnout',
-                    'flag_severity' => 'high',
-                    'flag_reason' => "Severe struggle / hopelessness phrase detected: '{$keyword}'",
-                    'flag_action_taken' => 'Flagged for RAFT team attention and user signposted to support services',
-                    'signpost_guidance' => "Acknowledge how overwhelming things feel, and gently encourage them to seek support from their social worker, trusted adult, support services like FosterTalk or Adoption UK, or The Raft ({$infoEmail}).",
-                ];
-            }
+        if ($distress !== null) {
+            return [
+                'is_flagged' => true,
+                'flag_type' => 'struggle_burnout',
+                'flag_severity' => 'high',
+                'flag_reason' => "Severe struggle / hopelessness phrase detected: '{$distress['keyword']}'",
+                'flag_action_taken' => 'Flagged for RAFT team attention and user signposted to support services',
+                'signpost_guidance' => "Acknowledge how overwhelming things feel, and gently encourage them to seek support from their social worker, trusted adult, support services like FosterTalk or Adoption UK, or The Raft ({$infoEmail}).",
+            ];
         }
 
         // 3. Direct Rule Checks for Event Safety / Inclusion Complaints

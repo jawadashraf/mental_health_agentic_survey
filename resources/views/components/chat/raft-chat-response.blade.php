@@ -36,7 +36,7 @@
             @php
                 $question = $metadata['content'];
             @endphp
-        <div class="max-w-[85%] sm:max-w-[75%] space-y-1 transition-all duration-300 ease-in-out">
+        <div class="max-w-[85%] sm:max-w-[75%] space-y-1 transition-all duration-300 ease-in-out" data-question-card="{{ $question['id'] }}">
             <div class="text-[11px] font-medium transition-colors duration-300"
                  :class="{
                      'text-purple-300/60': theme === 'aurora',
@@ -170,7 +170,7 @@
                          ? 'bg-amber-100 border border-amber-300/50 text-amber-800'
                          : 'bg-linear-to-r from-amber-500/15 to-orange-500/15 backdrop-blur-sm border border-amber-400/20 text-amber-100'">
                     <div class="flex items-start gap-2">
-                        <span class="text-lg leading-none mt-0.5">🔥</span>
+                        <span class="text-lg leading-none mt-0.5">🌟</span>
                         <span>{{ $message['content'] }}</span>
                     </div>
                 </div>

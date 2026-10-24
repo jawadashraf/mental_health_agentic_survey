@@ -393,6 +393,118 @@ class RaftChatTest extends TestCase
         $this->assertCount(1, $transitions);
     }
 
+    public function test_midpoint_message_shows_progress_and_leads_into_the_next_section(): void
+    {
+        $chat = Livewire::withQueryParams(['mode' => 'test'])
+            ->withoutLazyLoading()
+            ->test(RaftChat::class);
+
+        $questions = config('raft-survey-test');
+
+        $chat->call('askQuestion');
+        $this->answerViaChild($questions[0], 'School support');
+        $chat->call('incrementCurrentIndex');
+        $this->answerViaChild($questions[1], 'Feeling isolated');
+        $chat->call('incrementCurrentIndex');
+
+        $progress = collect(session('raft_survey_metadata'))->where('type', 'progress');
+
+        $this->assertCount(1, $progress);
+        $this->assertStringContainsString('2 of 3 questions answered', $progress->first()['content']);
+        $this->assertStringContainsString('Next, a few questions about Training & Development.', $progress->first()['content']);
+    }
+
+    public function test_guide_is_shown_until_dismissed(): void
+    {
+        Livewire::withoutLazyLoading()
+            ->test(RaftChat::class)
+            ->assertSet('showGuide', true)
+            ->assertSee('How this works')
+            ->call('dismissGuide');
+
+        $this->assertTrue(session('raft_chat_guide_dismissed'));
+
+        Livewire::withoutLazyLoading()
+            ->test(RaftChat::class)
+            ->assertSet('showGuide', false);
+    }
+
+    public function test_pending_question_is_shown_until_answered(): void
+    {
+        $chat = Livewire::withQueryParams(['mode' => 'test'])
+            ->withoutLazyLoading()
+            ->test(RaftChat::class);
+
+        $questions = config('raft-survey-test');
+
+        $chat->assertDontSee('Now answering:');
+
+        $chat->call('askQuestion')
+            ->assertSee('Now answering:')
+            ->assertSee('Go to question');
+        $this->assertSame($questions[0]['id'], $chat->instance()->pendingQuestion['id']);
+
+        $this->answerViaChild($questions[0], 'School support');
+        $chat->call('refreshChat');
+
+        $this->assertNull($chat->instance()->pendingQuestion);
+    }
+
+    public function test_participant_can_end_the_survey_early_keeping_their_answers(): void
+    {
+        $chat = Livewire::withQueryParams(['mode' => 'test'])
+            ->withoutLazyLoading()
+            ->test(RaftChat::class);
+
+        $chat->call('askQuestion')
+            ->assertSee('End');
+        $this->answerViaChild(config('raft-survey-test')[0], 'School support');
+
+        $chat->call('endSurvey')
+            ->assertSet('surveyCompleted', true);
+
+        $conclusion = collect(session('raft_survey_metadata'))->firstWhere('type', 'conclusion');
+
+        $this->assertStringContainsString("You've ended the survey", $conclusion['content']);
+        $this->assertStringContainsString('info@theraftleicester.co.uk', $conclusion['content']);
+        $this->assertDatabaseHas('survey_sessions', ['session_id' => session()->getId(), 'completed' => true]);
+        $this->assertDatabaseHas('survey_responses', ['session_id' => session()->getId(), 'response' => 'School support']);
+    }
+
+    public function test_end_survey_does_nothing_before_the_survey_starts(): void
+    {
+        Livewire::withQueryParams(['mode' => 'test'])
+            ->withoutLazyLoading()
+            ->test(RaftChat::class)
+            ->call('endSurvey')
+            ->assertSet('surveyCompleted', false);
+
+        $this->assertNull(collect(session('raft_survey_metadata'))->firstWhere('type', 'conclusion'));
+    }
+
+    public function test_distress_gets_a_supportive_reply_without_returning_to_the_survey(): void
+    {
+        session(['raft_survey_started' => true]);
+
+        Embeddings::fake();
+        $sentMessages = $this->fakeOpenAiStream('I am so sorry things feel this hard.');
+
+        Livewire::test(RaftChatResponse::class, [
+            'message' => ['role' => 'assistant', 'content' => ''],
+            'metadata' => ['role' => 'assistant', 'content' => '', 'type' => 'stream'],
+            'prompt' => ['role' => 'user', 'content' => 'Honestly nothing has worked out, I can’t carry on.'],
+        ])
+            ->call('getResponse')
+            ->assertNotDispatched('askQuestion');
+
+        $userPrompt = collect($sentMessages->messages)->last()['content'];
+
+        $this->assertStringContainsString('suggests they are struggling', $userPrompt);
+        $this->assertStringContainsString('Do NOT ask the survey question', $userPrompt);
+        $this->assertStringContainsString('safeguarding@theraftleicester.co.uk', $userPrompt);
+        Embeddings::assertNothingGenerated();
+    }
+
     public function test_radio_inputs_are_grouped_per_question(): void
     {
         Livewire::withQueryParams(['mode' => 'test'])

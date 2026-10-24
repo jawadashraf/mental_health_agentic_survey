@@ -49,6 +49,17 @@ class RaftFlagDetectionTest extends TestCase
         $this->assertEquals('high', $result['flag_severity']);
     }
 
+    public function test_distress_keywords_match_from_the_start_of_a_word_only(): void
+    {
+        $service = new RaftFlagDetectionService;
+
+        $this->assertFalse($service->detectsDistress('We used a white board and a lot of patience.'));
+        $this->assertTrue($service->detectsDistress('He has been hitting his brother.'));
+        $this->assertTrue($service->detectsDistress('I was abused as a child.'));
+        $this->assertTrue($service->detectsDistress('I can’t carry on like this.'));
+        $this->assertSame('struggle_burnout', $service->matchDistressKeyword('Honestly nothing has worked out')['flag_type']);
+    }
+
     public function test_safeguarding_flag_signposts_the_raft_safeguarding_email(): void
     {
         $result = (new RaftFlagDetectionService)->evaluateResponse('There is domestic abuse at home.', ['id' => 1]);

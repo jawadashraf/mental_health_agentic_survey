@@ -3,6 +3,20 @@
          loaded: false,
          theme: @js($theme),
          showThemePicker: false,
+         showGuide: @js($showGuide),
+         confirmEnd: false,
+         dismissGuide() {
+             this.showGuide = false;
+             $wire.dismissGuide();
+         },
+         scrollToQuestion(id) {
+             const cards = document.querySelectorAll('[data-question-card=&quot;' + id + '&quot;]');
+             const card = cards[cards.length - 1];
+             if (card) {
+                 card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                 card.querySelector('textarea, input')?.focus({ preventScroll: true });
+             }
+         },
          themes: {
              aurora:   { label: 'Aurora',     icon: '🌌', bg: 'from-indigo-950 via-purple-900 to-slate-900' },
              ocean:    { label: 'Ocean',      icon: '🌊', bg: 'from-slate-900 via-cyan-900 to-blue-950' },
@@ -157,6 +171,39 @@
                    :class="isLight ? 'text-gray-500' : 'text-white/50'">Foster care survey · Anonymous</p>
             </div>
 
+            {{-- Help toggle --}}
+            <button type="button"
+                    @click="showGuide = !showGuide"
+                    class="flex items-center justify-center size-9 rounded-xl border transition-all duration-200 group"
+                    :class="isLight
+                        ? 'bg-black/5 border-black/10 hover:bg-black/10'
+                        : 'bg-white/10 border-white/10 hover:bg-white/20 hover:border-white/20'"
+                    title="How this works"
+                    aria-label="How this works">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
+                     class="size-4 transition-colors duration-200"
+                     :class="isLight ? 'text-gray-500 group-hover:text-gray-700' : 'text-white/60 group-hover:text-white'">
+                    <path fill-rule="evenodd" d="M18 10a8 8 0 1 1-16 0 8 8 0 0 1 16 0ZM8.94 6.94a.75.75 0 1 1-1.061-1.061 3 3 0 1 1 2.871 5.026v.345a.75.75 0 0 1-1.5 0v-.5c0-.72.57-1.172 1.081-1.287A1.5 1.5 0 1 0 8.94 6.94ZM10 15a1 1 0 1 0 0-2 1 1 0 0 0 0 2Z" clip-rule="evenodd" />
+                </svg>
+            </button>
+
+            {{-- End survey --}}
+            @if($surveyStarted && !$surveyCompleted)
+                <button type="button"
+                        @click="confirmEnd = true"
+                        class="flex items-center gap-1.5 h-9 px-3 rounded-xl border text-xs font-semibold transition-all duration-200"
+                        :class="isLight
+                            ? 'bg-black/5 border-black/10 text-gray-600 hover:bg-rose-50 hover:border-rose-200 hover:text-rose-700'
+                            : 'bg-white/10 border-white/10 text-white/70 hover:bg-rose-500/20 hover:border-rose-400/30 hover:text-white'"
+                        title="End the survey">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="size-4">
+                        <path fill-rule="evenodd" d="M3 4.25A2.25 2.25 0 0 1 5.25 2h5.5A2.25 2.25 0 0 1 13 4.25v2a.75.75 0 0 1-1.5 0v-2a.75.75 0 0 0-.75-.75h-5.5a.75.75 0 0 0-.75.75v11.5c0 .414.336.75.75.75h5.5a.75.75 0 0 0 .75-.75v-2a.75.75 0 0 1 1.5 0v2A2.25 2.25 0 0 1 10.75 18h-5.5A2.25 2.25 0 0 1 3 15.75V4.25Z" clip-rule="evenodd" />
+                        <path fill-rule="evenodd" d="M19 10a.75.75 0 0 0-.75-.75H8.704l1.048-.943a.75.75 0 1 0-1.004-1.114l-2.5 2.25a.75.75 0 0 0 0 1.114l2.5 2.25a.75.75 0 1 0 1.004-1.114l-1.048-.943h9.546A.75.75 0 0 0 19 10Z" clip-rule="evenodd" />
+                    </svg>
+                    <span class="hidden sm:inline">End</span>
+                </button>
+            @endif
+
             {{-- Theme switcher --}}
             <div class="relative" @click.stop>
                 <button @click="showThemePicker = !showThemePicker"
@@ -217,6 +264,37 @@
             @endif
         </div>
 
+        {{-- How this works --}}
+        <div x-show="showGuide" x-cloak
+             x-transition:enter="transition ease-out duration-200"
+             x-transition:enter-start="opacity-0 -translate-y-1"
+             x-transition:enter-end="opacity-100 translate-y-0"
+             class="px-4 sm:px-6 py-4 border-b transition-colors duration-500"
+             :class="isLight ? 'border-black/5 bg-indigo-50/70' : 'border-white/5 bg-indigo-500/10'">
+            <div class="flex items-start justify-between gap-3 mb-3">
+                <h2 class="text-sm font-bold" :class="isLight ? 'text-gray-800' : 'text-white'">How this works</h2>
+                <button type="button" @click="dismissGuide()"
+                        class="shrink-0 px-3 py-1 rounded-lg text-xs font-semibold transition-colors duration-200"
+                        :class="isLight ? 'bg-white text-gray-700 border border-black/10 hover:bg-gray-50' : 'bg-white/10 text-white border border-white/10 hover:bg-white/20'">
+                    Got it
+                </button>
+            </div>
+            <ol class="grid gap-2.5 sm:grid-cols-3 text-xs leading-relaxed" :class="isLight ? 'text-gray-600' : 'text-white/70'">
+                <li class="flex gap-2">
+                    <span class="shrink-0 flex items-center justify-center size-5 rounded-full text-[10px] font-bold" :class="isLight ? 'bg-indigo-600 text-white' : 'bg-indigo-400 text-indigo-950'">1</span>
+                    <span><strong :class="isLight ? 'text-gray-800' : 'text-white'">Chat with me</strong> using the message box at the bottom. Ask anything, such as what Raft does or how your answers are used.</span>
+                </li>
+                <li class="flex gap-2">
+                    <span class="shrink-0 flex items-center justify-center size-5 rounded-full text-[10px] font-bold" :class="isLight ? 'bg-indigo-600 text-white' : 'bg-indigo-400 text-indigo-950'">2</span>
+                    <span><strong :class="isLight ? 'text-gray-800' : 'text-white'">Answer in the question cards.</strong> Each survey question has its own answer box. Press Submit to save your answer.</span>
+                </li>
+                <li class="flex gap-2">
+                    <span class="shrink-0 flex items-center justify-center size-5 rounded-full text-[10px] font-bold" :class="isLight ? 'bg-indigo-600 text-white' : 'bg-indigo-400 text-indigo-950'">3</span>
+                    <span><strong :class="isLight ? 'text-gray-800' : 'text-white'">You're in control.</strong> Skip any question, or press End to stop at any time. Your answers are anonymous.</span>
+                </li>
+            </ol>
+        </div>
+
         {{-- Progress bar --}}
         @if($surveyStarted && !$surveyCompleted)
             @php
@@ -255,6 +333,21 @@
                          }"
                          style="width: {{ $progressPercent }}%"></div>
                 </div>
+
+                @if($this->pendingQuestion)
+                    <div class="mt-2 flex items-center gap-2 text-xs">
+                        <span class="shrink-0 font-semibold" :class="isLight ? 'text-gray-500' : 'text-white/50'">Now answering:</span>
+                        <span class="truncate" :class="isLight ? 'text-gray-700' : 'text-white/80'" title="{{ $this->pendingQuestion['question'] }}">
+                            Q{{ $this->pendingQuestion['id'] }}. {{ $this->pendingQuestion['question'] }}
+                        </span>
+                        <button type="button"
+                                @click="scrollToQuestion(@js($this->pendingQuestion['id']))"
+                                class="shrink-0 ml-auto px-2.5 py-1 rounded-lg font-semibold transition-colors duration-200"
+                                :class="isLight ? 'bg-white text-indigo-700 border border-indigo-200 hover:bg-indigo-50' : 'bg-white/10 text-white border border-white/15 hover:bg-white/20'">
+                            Go to question
+                        </button>
+                    </div>
+                @endif
             </div>
         @endif
 
@@ -291,9 +384,36 @@
             </div>
         </div>
 
+        {{-- End survey confirmation --}}
+        <div x-show="confirmEnd" x-cloak
+             x-transition.opacity
+             class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm"
+             @keydown.escape.window="confirmEnd = false">
+            <div @click.outside="confirmEnd = false"
+                 class="w-full max-w-sm rounded-2xl p-5 shadow-2xl"
+                 :class="isLight ? 'bg-white text-gray-800' : 'bg-gray-900 text-white border border-white/10'"
+                 role="dialog" aria-modal="true" aria-labelledby="end-survey-title">
+                <h2 id="end-survey-title" class="text-base font-bold mb-2">End the survey?</h2>
+                <p class="text-sm leading-relaxed mb-5" :class="isLight ? 'text-gray-600' : 'text-white/70'">
+                    The answers you've already given are saved anonymously. You won't be able to come back and finish the rest.
+                </p>
+                <div class="flex justify-end gap-2">
+                    <button type="button" @click="confirmEnd = false"
+                            class="px-4 py-2 rounded-xl text-sm font-semibold border transition-colors duration-200"
+                            :class="isLight ? 'border-black/10 text-gray-700 hover:bg-gray-50' : 'border-white/15 text-white hover:bg-white/10'">
+                        Keep going
+                    </button>
+                    <button type="button" @click="confirmEnd = false; $wire.endSurvey()"
+                            class="px-4 py-2 rounded-xl text-sm font-semibold text-white bg-rose-600 hover:bg-rose-700 transition-colors duration-200">
+                        End survey
+                    </button>
+                </div>
+            </div>
+        </div>
+
         {{-- Input bar (hidden when survey is completed) --}}
         @if($surveyCompleted)
-            <div class="p-4 sm:p-6 border-t transition-colors duration-500"
+            <div class="p-4 sm:p-6 border-t transition-colors duration-500 space-y-4"
                  :class="isLight ? 'border-black/10 bg-white/50' : 'border-white/10 bg-white/5'">
                 <div class="text-center">
                     <div class="inline-flex items-center gap-2 px-5 py-3 rounded-2xl bg-emerald-500/15 border border-emerald-500/25">
@@ -302,6 +422,32 @@
                         </svg>
                         <span class="text-sm font-medium" :class="isLight ? 'text-emerald-700' : 'text-emerald-300'">Survey complete — thank you for your time!</span>
                     </div>
+                </div>
+
+                {{-- Optional mailing list sign-up --}}
+                <div class="max-w-lg mx-auto rounded-2xl border p-4"
+                     :class="isLight ? 'bg-white/80 border-black/10' : 'bg-white/5 border-white/10'">
+                    @if($joinedMailingList)
+                        <p class="text-sm text-center font-medium" :class="isLight ? 'text-gray-700' : 'text-white/80'">
+                            Thanks! You're on the mailing list.
+                        </p>
+                    @else
+                        <p class="text-sm font-semibold mb-1" :class="isLight ? 'text-gray-800' : 'text-white'">Want to hear about Raft's events and support?</p>
+                        <p class="text-xs mb-3" :class="isLight ? 'text-gray-500' : 'text-white/50'">Optional. Your email is kept separately and is never linked to your survey answers.</p>
+                        <form wire:submit="joinMailingList" class="flex gap-2">
+                            <input type="email" wire:model="mailingListEmail" placeholder="you@example.com"
+                                   aria-label="Email address"
+                                   class="flex-1 min-w-0 rounded-xl border px-3 py-2 text-sm focus:outline-none"
+                                   :class="isLight ? 'bg-white border-black/10 text-gray-800 placeholder-gray-400 focus:border-black/25' : 'bg-white/10 border-white/10 text-white placeholder-white/30 focus:border-white/30'">
+                            <button type="submit" wire:loading.attr="disabled" wire:target="joinMailingList"
+                                    class="shrink-0 px-4 py-2 rounded-xl text-sm font-semibold text-white bg-indigo-600 hover:bg-indigo-700 transition-colors duration-200 disabled:opacity-50">
+                                Join
+                            </button>
+                        </form>
+                        @error('mailingListEmail')
+                            <p class="mt-2 text-xs text-rose-600">{{ $message }}</p>
+                        @enderror
+                    @endif
                 </div>
             </div>
         @else
@@ -380,6 +526,10 @@
 </div>
 
 <style>
+    [x-cloak] {
+        display: none !important;
+    }
+
     @keyframes fadeInLeft {
         from {
             opacity: 0;

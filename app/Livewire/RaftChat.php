@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use App\Models\MailingListSubscriber;
 use App\Models\Survey;
 use App\Models\SurveySession;
 use App\Services\FlagAlertRecipients;
@@ -44,6 +45,12 @@ class RaftChat extends Component
     public bool $isProcessing = false;
 
     public string $theme = 'alabaster';
+
+    public bool $showGuide = true;
+
+    public string $mailingListEmail = '';
+
+    public bool $joinedMailingList = false;
 
     #[Validate('required|max:1000')]
     public string $body = '';
@@ -145,6 +152,10 @@ class RaftChat extends Component
 
         $this->theme = Session::get('raft_chat_theme', 'alabaster');
 
+        $this->showGuide = ! Session::get('raft_chat_guide_dismissed', false);
+
+        $this->joinedMailingList = Session::get('raft_mailing_list_joined', false);
+
         $this->updateSkipPhaseState();
     }
 
@@ -163,6 +174,26 @@ class RaftChat extends Component
         return $this->questions[$this->currentIndex]['total_sections'] ?? 3;
     }
 
+    /**
+     * The question currently waiting for an answer, or null when there is none.
+     *
+     * @return array<string, mixed>|null
+     */
+    public function getPendingQuestionProperty(): ?array
+    {
+        if (! $this->surveyStarted || $this->surveyCompleted) {
+            return null;
+        }
+
+        $question = $this->questions[Session::get('raft_survey_asking_index', 0)] ?? null;
+
+        if ($question === null || isset(Session::get('raft_survey_responses', [])[$question['id']]['response'])) {
+            return null;
+        }
+
+        return $question;
+    }
+
     protected function resetSurveyState(): void
     {
         foreach ([
@@ -176,6 +207,7 @@ class RaftChat extends Component
             'raft_survey_started',
             'raft_survey_completed',
             'raft_survey_midpoint_shown',
+            'raft_mailing_list_joined',
         ] as $key) {
             Session::forget($key);
         }
@@ -247,6 +279,62 @@ class RaftChat extends Component
         Session::put('raft_survey_skipped', []);
 
         $this->askQuestion();
+    }
+
+    /**
+     * Let the participant leave at any point, keeping the answers they have already given.
+     */
+    public function endSurvey(): void
+    {
+        if ($this->surveyCompleted || ! $this->surveyStarted) {
+            return;
+        }
+
+        $this->messages = Session::get('raft_survey_messages', []);
+        $this->metadata = Session::get('raft_survey_metadata', []);
+
+        Session::put('raft_survey_index', count($this->questions));
+        Session::put('raft_survey_skipped', []);
+
+        $this->completeSurvey(endedEarly: true);
+    }
+
+    #[Renderless]
+    public function dismissGuide(): void
+    {
+        $this->showGuide = false;
+        Session::put('raft_chat_guide_dismissed', true);
+    }
+
+    /**
+     * Add the participant's email to the organisation's mailing list, without linking it to their answers.
+     */
+    public function joinMailingList(): void
+    {
+        if (! $this->surveyCompleted || $this->joinedMailingList) {
+            return;
+        }
+
+        $this->mailingListEmail = trim($this->mailingListEmail);
+
+        $this->validate(['mailingListEmail' => 'required|email|max:255'], [], ['mailingListEmail' => 'email address']);
+
+        $organizationId = SurveySession::query()->with('survey')->where('session_id', session()->getId())->first()?->survey?->organization_id;
+
+        if ($organizationId === null) {
+            $this->addError('mailingListEmail', 'Sorry, we could not add you to the mailing list right now.');
+
+            return;
+        }
+
+        MailingListSubscriber::firstOrCreate([
+            'organization_id' => $organizationId,
+            'email' => strtolower($this->mailingListEmail),
+        ]);
+
+        $this->mailingListEmail = '';
+        $this->joinedMailingList = true;
+        Session::put('raft_mailing_list_joined', true);
     }
 
     public function incrementCurrentIndex(): void
@@ -338,19 +426,21 @@ class RaftChat extends Component
             }
         }
 
-        // Inject progress encouragement at the midpoint
+        // Inject progress encouragement at the midpoint, leading into the next question
         $answeredCount = count(Session::get('raft_survey_responses', []));
         $midpoint = (int) ceil($totalQuestions / 2);
 
         if ($answeredCount === $midpoint && $totalQuestions > 2 && ! Session::get('raft_survey_midpoint_shown', false)) {
+            $midpointMessage = $this->midpointMessage($answeredCount, $totalQuestions, $question);
+
             $this->metadata[] = [
                 'role' => 'assistant',
-                'content' => "You're doing great! You're halfway through. Your responses are really valuable. 💪",
+                'content' => $midpointMessage,
                 'type' => 'progress',
             ];
             $this->messages[] = [
                 'role' => 'assistant',
-                'content' => "You're doing great! You're halfway through. Your responses are really valuable. 💪",
+                'content' => $midpointMessage,
             ];
             Session::put('raft_survey_midpoint_shown', true);
         }
@@ -392,9 +482,28 @@ class RaftChat extends Component
     }
 
     /**
+     * The halfway encouragement, tied to the participant's progress and the question that follows.
+     *
+     * @param  array<string, mixed>  $nextQuestion
+     */
+    protected function midpointMessage(int $answeredCount, int $totalQuestions, array $nextQuestion): string
+    {
+        $message = "Thank you, that's {$answeredCount} of {$totalQuestions} questions answered, so you're halfway there. Your answers are really helping Raft understand what families need.";
+
+        $previousQuestion = $this->questions[$this->currentIndex - 1] ?? null;
+        $startsNewSection = isset($nextQuestion['section_title']) && ($previousQuestion['section_title'] ?? null) !== $nextQuestion['section_title'];
+
+        if ($startsNewSection) {
+            return $message." Next, a few questions about {$nextQuestion['section_title']}.";
+        }
+
+        return $message." Here's the next one, whenever you're ready.";
+    }
+
+    /**
      * Mark the survey as completed, persist the flag, and inject a conclusion message.
      */
-    protected function completeSurvey(): void
+    protected function completeSurvey(bool $endedEarly = false): void
     {
         if (Session::get('raft_survey_completed', false)) {
             $this->surveyCompleted = true;
@@ -417,7 +526,9 @@ class RaftChat extends Component
         $infoEmail = $contacts->contactEmail($surveySession?->survey, FlagAlertRecipients::ChannelInfo);
         $safeguardingEmail = $contacts->contactEmail($surveySession?->survey, FlagAlertRecipients::ChannelSafeguarding);
 
-        $conclusionMessage = "🎉 **Thank you so much for completing the survey!**\n\nYour responses are incredibly valuable and will help Raft understand the real experiences of foster and adoptive families. Every answer contributes to shaping better support services.\n\nIf you'd like to learn more about Raft or get in touch, please email {$infoEmail}. For any safeguarding concerns, please email {$safeguardingEmail}. Take care of yourself — you're doing an amazing job! 💜";
+        $conclusionMessage = $endedEarly
+            ? "💜 **Thank you for your time today.**\n\nYou've ended the survey, and the answers you've already given have been saved anonymously. They will still help Raft improve support for families.\n\nIf you'd like to talk to someone, please email {$infoEmail}. For any safeguarding concerns, please email {$safeguardingEmail}. Take care of yourself."
+            : "🎉 **Thank you so much for completing the survey!**\n\nYour responses are incredibly valuable and will help Raft understand the real experiences of foster and adoptive families. Every answer contributes to shaping better support services.\n\nIf you'd like to learn more about Raft or get in touch, please email {$infoEmail}. For any safeguarding concerns, please email {$safeguardingEmail}. Take care of yourself — you're doing an amazing job! 💜";
 
         $this->metadata[] = [
             'role' => 'assistant',

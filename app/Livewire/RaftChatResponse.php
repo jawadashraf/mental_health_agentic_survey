@@ -5,6 +5,7 @@ namespace App\Livewire;
 use App\Models\Intent;
 use App\Models\SurveySession;
 use App\Services\FlagAlertRecipients;
+use App\Services\RaftFlagDetectionService;
 use App\Services\RaftRagService;
 use App\Services\SurveyResponseRecorder;
 use App\Settings\PromptSettings;
@@ -78,8 +79,14 @@ class RaftChatResponse extends Component
         try {
             $this->dispatch('stream-started')->to(RaftChat::class);
 
-            $intent = $this->detectIntentWithAI($this->prompt['content']);
-            $intent = strtolower(trim(str_replace("'", '', $intent)));
+            $isDistressed = app(RaftFlagDetectionService::class)->detectsDistress($this->prompt['content']);
+
+            if ($isDistressed) {
+                $intent = 'distress';
+            } else {
+                $intent = $this->detectIntentWithAI($this->prompt['content']);
+                $intent = strtolower(trim(str_replace("'", '', $intent)));
+            }
             $promptForAssistant = '';
 
             $questionObj = $this->currentQuestion() ?? [];
@@ -91,7 +98,7 @@ class RaftChatResponse extends Component
             $relevantChunks = collect();
             $ragSystemPrompt = null;
 
-            if ($isQuestion || ! in_array($intent, ['consent', 'progress-question', 'repeat'])) {
+            if (! $isDistressed && ($isQuestion || ! in_array($intent, ['consent', 'progress-question', 'repeat']))) {
                 $ragService = app(RaftRagService::class);
                 $relevantChunks = $ragService->searchSimilarChunks($this->prompt['content'], topK: 3, minScore: 0.05);
             }
@@ -131,6 +138,10 @@ RAG;
                 return;
             } else {
                 switch ($intent) {
+                    case 'distress':
+                        $this->storeIntentForQuestion($intent, $this->prompt['content']);
+                        $promptForAssistant = $this->getDistressPrompt();
+                        break;
                     case 'progress-question':
                         $promptForAssistant = $this->getProgressPrompt($this->currentIndex, count($this->questions));
                         break;
@@ -178,7 +189,7 @@ RAG;
                 }
             }
 
-            if ($relevantChunks->isEmpty() && $aiGuidance && ! in_array($intent, ['progress-question', 'technical-issue', 'clarify'])) {
+            if ($relevantChunks->isEmpty() && $aiGuidance && ! in_array($intent, ['distress', 'progress-question', 'technical-issue', 'clarify'])) {
                 $guidancePrompt = "\n\nCRITICAL CONTEXT FOR THIS QUESTION: ";
                 if ($expectedBehavior) {
                     $guidancePrompt .= "If the user exhibits the behavior/intent '{$expectedBehavior}', you MUST prioritize this guidance: ";
@@ -229,7 +240,7 @@ RAG;
             $this->updateSessionMessage();
 
             $currentQ = $this->currentQuestion();
-            if ($relevantChunks->isEmpty() && $this->surveyStarted && $currentQ && ! isset($this->responses[$currentQ['id']]['response'])) {
+            if (! $isDistressed && $relevantChunks->isEmpty() && $this->surveyStarted && $currentQ && ! isset($this->responses[$currentQ['id']]['response'])) {
                 $this->askQuestion();
             }
         } catch (\Throwable $e) {
@@ -465,6 +476,23 @@ Always give the exact email address. Never refer the user to any other Raft cont
         }
 
         return $guidance;
+    }
+
+    /**
+     * Respond with care when someone shares that they are struggling or at risk, without steering them back to the survey.
+     */
+    public function getDistressPrompt(): string
+    {
+        return 'You are a compassionate AI conducting a foster care support survey for Raft charity.
+
+The user has shared something that suggests they are struggling, overwhelmed, or that someone may be at risk.
+
+**Respond with genuine warmth in three or four short sentences:**
+- Acknowledge what they shared and thank them for trusting you with it.
+- Gently suggest they reach out for support, giving the exact Raft contact email from the contact details below. Use the safeguarding email if anyone may be at risk of harm, and suggest emergency services if anyone is in immediate danger.
+- Reassure them there is no rush: they can take a break, carry on with the survey whenever they feel ready, or end the conversation at any time.
+
+Do NOT ask the survey question, ask whether they want to continue the survey, or ask them to rate or explain their feelings.';
     }
 
     public function getTechnicalIssuePrompt(): string
