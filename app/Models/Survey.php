@@ -8,16 +8,27 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Str;
 
 class Survey extends Model
 {
     /** @use HasFactory<SurveyFactory> */
     use HasFactory;
 
+    protected static function booted(): void
+    {
+        static::creating(function (Survey $survey): void {
+            if (empty($survey->access_code)) {
+                $survey->access_code = Str::lower(Str::random(10));
+            }
+        });
+    }
+
     protected $fillable = [
         'organization_id',
         'name',
         'slug',
+        'access_code',
         'config_key',
         'is_active',
         'safeguarding_emails',
@@ -61,6 +72,20 @@ class Survey extends Model
     public function questions(): array
     {
         return config($this->config_key, []);
+    }
+
+    /**
+     * Get the direct access URL for this survey including its access code.
+     */
+    public function accessUrl(): string
+    {
+        $params = ['survey' => $this->slug];
+
+        if ($this->access_code) {
+            $params['access_code'] = $this->access_code;
+        }
+
+        return route('raft-chat', $params);
     }
 
     /**

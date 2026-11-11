@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ChatAccessController;
 use App\Http\Controllers\HomeController;
 use App\Livewire\AiAssistant;
 use App\Livewire\Chat;
@@ -24,6 +25,9 @@ Route::get('/clear/Session', function (Request $request) {
     return '...';
 });
 Route::get('/chatbot-access', ChatbotAccess::class)->name('chatbot-access');
+
+Route::middleware(['auth'])->get('/admin/chat-access/qr-code/download', [ChatAccessController::class, 'downloadQrCode'])
+    ->name('admin.chat-access.qr-code.download');
 
 Route::middleware('chatbot.access')->group(function () {
     Route::get('/chat', Chat::class)->name('chat');

@@ -87,6 +87,30 @@ class SurveyResourceTest extends TestCase
         $this->assertSame($this->raft->id, $this->raftSurvey->organization_id);
     }
 
+    public function test_organization_admin_can_edit_survey_access_code(): void
+    {
+        $this->actingAs(User::factory()->organizationAdmin($this->raft)->create());
+
+        Livewire::test(EditSurvey::class, ['record' => $this->raftSurvey->getRouteKey()])
+            ->fillForm([
+                'access_code' => 'org-secret-456',
+            ])
+            ->call('save')
+            ->assertHasNoFormErrors()
+            ->assertNotified();
+
+        $this->raftSurvey->refresh();
+        $this->assertSame('org-secret-456', $this->raftSurvey->access_code);
+    }
+
+    public function test_access_qr_code_action_is_available_for_organization_admin(): void
+    {
+        $this->actingAs(User::factory()->organizationAdmin($this->raft)->create());
+
+        Livewire::test(ListSurveys::class)
+            ->assertTableActionExists('accessQrCode');
+    }
+
     public function test_organization_member_cannot_edit_surveys(): void
     {
         $this->actingAs(User::factory()->organizationMember($this->raft)->create());

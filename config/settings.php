@@ -1,5 +1,6 @@
 <?php
 
+use App\Settings\ChatSettings;
 use App\Settings\MailSettings;
 use App\Settings\PromptSettings;
 use Spatie\LaravelData\Data;
@@ -18,6 +19,8 @@ return [
     'settings' => [
         PromptSettings::class,
         MailSettings::class,
+        ChatSettings::class,
+        ChatSettings::class,
     ],
 
     /*

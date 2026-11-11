@@ -3,6 +3,7 @@
 namespace App\Livewire;
 
 use App\Models\Intent;
+use App\Models\Survey;
 use App\Models\SurveySession;
 use App\Services\FlagAlertRecipients;
 use App\Services\RaftFlagDetectionService;
@@ -44,9 +45,12 @@ class RaftChatResponse extends Component
     public function mount()
     {
         $mode = session('raft_survey_mode');
-        $this->questions = $mode === 'test'
+        $surveySlug = session('raft_survey_slug');
+        $survey = $surveySlug ? Survey::query()->where('slug', $surveySlug)->first() : null;
+
+        $this->questions = $survey?->questions() ?: ($mode === 'test'
             ? config('raft-survey-test')
-            : config('raft-survey');
+            : config('raft-survey'));
         $this->currentIndex = $this->resolveAskingIndex();
         $this->surveyStarted = Session::get('raft_survey_started', false);
         $this->responses = Session::get('raft_survey_responses', []);

@@ -13,8 +13,7 @@ class Chat extends Component
 
     protected $listeners = ['incrementCurrentIndex' => 'incrementCurrentIndex', 'askQuestion' => 'askQuestion', 'refreshChat' => 'refreshChat'];
 
-    public string $greetings = "Hi there! I'm here to chat about mental health awareness.
-    Would you be interested in taking a short survey to help us understand your perspective better?";
+    public string $greetings = "Hi there! This conversation is part of an AI trial project exploring mental health awareness. Your responses are anonymous.\n\n⚠️ **Important notice:** Please do not enter confidential, sensitive, or personal private information in this chat.\n\nWould you be interested in taking a short survey to help us understand your perspective better?";
 
     public $systemPrompt;
 
@@ -110,6 +109,7 @@ class Chat extends Component
                     ]);
                 }
                 session()->flush();
+
                 return;
             }
         } else {

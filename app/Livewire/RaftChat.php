@@ -6,6 +6,7 @@ use App\Models\MailingListSubscriber;
 use App\Models\Survey;
 use App\Models\SurveySession;
 use App\Services\FlagAlertRecipients;
+use App\Settings\ChatSettings;
 use Illuminate\Support\Facades\Session;
 use Livewire\Attributes\Renderless;
 use Livewire\Attributes\Validate;
@@ -26,7 +27,9 @@ class RaftChat extends Component
         'stream-finished' => 'setProcessingOff',
     ];
 
-    public string $greetings = "Hi there! This conversation is designed to help Raft understand the experiences of families and carers. Your responses are anonymous and will only be used to understand common themes and improve support services.\n\nWould you be interested in taking a short survey?";
+    public string $greetings = "Hi there! This conversation is part of an AI trial project designed to help Raft understand the experiences of families and carers. Your responses are anonymous and will only be used to understand common themes and improve support services.\n\n⚠️ **Important notice:** Please do not share any confidential, sensitive, or private personal information in this chat.\n\nWould you be interested in taking a short survey?";
+
+    public bool $disclaimerAccepted = false;
 
     public $systemPrompt;
 
@@ -64,26 +67,29 @@ class RaftChat extends Component
         $sessionId = session()->getId();
 
         $mode = request()->query('mode');
+        $surveyParam = request()->query('survey') ?? session('active_survey_slug');
+
         $storedMode = session('raft_survey_mode');
+        $storedSlug = session('raft_survey_slug');
 
-        if ($mode && $storedMode && $mode !== $storedMode && Session::has('raft_survey_messages')) {
-            $this->resetSurveyState();
+        $surveySlug = $surveyParam ?? ($mode === 'test' ? 'raft-test' : 'raft');
+        $survey = Survey::query()->where('slug', $surveySlug)->first();
 
-            $surveySlug = $mode === 'test' ? 'raft-test' : 'raft';
+        if (($storedSlug && $storedSlug !== $surveySlug) || ($mode && $storedMode && $mode !== $storedMode)) {
+            if (Session::has('raft_survey_messages')) {
+                $this->resetSurveyState();
 
-            SurveySession::query()->where('session_id', $sessionId)->update([
-                'survey_type' => $surveySlug,
-                'survey_id' => Survey::query()->where('slug', $surveySlug)->value('id'),
-            ]);
+                SurveySession::query()->where('session_id', $sessionId)->update([
+                    'survey_type' => $surveySlug,
+                    'survey_id' => $survey?->id,
+                ]);
+            }
         }
 
+        session(['raft_survey_slug' => $surveySlug]);
         if ($mode) {
             session(['raft_survey_mode' => $mode]);
         }
-        $mode = session('raft_survey_mode');
-
-        $surveySlug = $mode === 'test' ? 'raft-test' : 'raft';
-        $survey = Survey::query()->where('slug', $surveySlug)->first();
 
         $surveySession = SurveySession::firstOrCreate(
             [
@@ -153,6 +159,8 @@ class RaftChat extends Component
         $this->theme = Session::get('raft_chat_theme', 'alabaster');
 
         $this->showGuide = ! Session::get('raft_chat_guide_dismissed', false);
+
+        $this->disclaimerAccepted = Session::get('raft_survey_disclaimer_accepted', false);
 
         $this->joinedMailingList = Session::get('raft_mailing_list_joined', false);
 
@@ -641,8 +649,21 @@ class RaftChat extends Component
         $this->isProcessing = false;
     }
 
+    public function acceptDisclaimer(): void
+    {
+        $this->disclaimerAccepted = true;
+        Session::put('raft_survey_disclaimer_accepted', true);
+    }
+
     public function render()
     {
-        return view('components.chat.raft-chat');
+        $settings = app(ChatSettings::class);
+
+        return view('components.chat.raft-chat', [
+            'privacyNotice' => $settings->privacy_notice,
+            'disclaimerTitle' => $settings->disclaimer_title,
+            'disclaimerContent' => $settings->disclaimer_content,
+            'requireDisclaimer' => $settings->require_disclaimer,
+        ]);
     }
 }

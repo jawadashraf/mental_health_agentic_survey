@@ -4,10 +4,15 @@
          theme: @js($theme),
          showThemePicker: false,
          showGuide: @js($showGuide),
+         showDisclaimer: @js(!$disclaimerAccepted && $requireDisclaimer),
          confirmEnd: false,
          dismissGuide() {
              this.showGuide = false;
              $wire.dismissGuide();
+         },
+         acceptDisclaimer() {
+             this.showDisclaimer = false;
+             $wire.acceptDisclaimer();
          },
          scrollToQuestion(id) {
              const cards = document.querySelectorAll('[data-question-card=&quot;' + id + '&quot;]');
@@ -170,6 +175,22 @@
                 <p class="text-xs transition-colors duration-500"
                    :class="isLight ? 'text-gray-500' : 'text-white/50'">Foster care survey · Anonymous</p>
             </div>
+
+            {{-- Disclaimer toggle --}}
+            <button type="button"
+                    @click="showDisclaimer = true"
+                    class="flex items-center justify-center size-9 rounded-xl border transition-all duration-200 group"
+                    :class="isLight
+                        ? 'bg-black/5 border-black/10 hover:bg-black/10'
+                        : 'bg-white/10 border-white/10 hover:bg-white/20 hover:border-white/20'"
+                    title="AI Trial Disclaimer & Privacy"
+                    aria-label="AI Trial Disclaimer">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
+                     class="size-4 transition-colors duration-200"
+                     :class="isLight ? 'text-gray-500 group-hover:text-gray-700' : 'text-white/60 group-hover:text-white'">
+                    <path fill-rule="evenodd" d="M10 1a4.5 4.5 0 0 0-4.5 4.5V9H5a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-6a2 2 0 0 0-2-2h-.5V5.5A4.5 4.5 0 0 0 10 1Zm3 8V5.5a3 3 0 1 0-6 0V9h6Z" clip-rule="evenodd" />
+                </svg>
+            </button>
 
             {{-- Help toggle --}}
             <button type="button"
@@ -411,6 +432,62 @@
             </div>
         </div>
 
+        {{-- AI Trial Disclaimer Modal --}}
+        <div x-show="showDisclaimer" x-cloak
+             x-transition.opacity
+             class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
+             @keydown.escape.window="showDisclaimer = false">
+            <div @click.outside="showDisclaimer = false"
+                 class="w-full max-w-2xl rounded-3xl p-6 sm:p-7 shadow-2xl flex flex-col max-h-[88vh]"
+                 :class="isLight ? 'bg-white text-gray-900 border border-black/10' : 'bg-gray-900 text-white border border-white/10'"
+                 role="dialog" aria-modal="true" aria-labelledby="disclaimer-title">
+                <div class="flex items-start justify-between gap-3 pb-3 border-b"
+                     :class="isLight ? 'border-black/10' : 'border-white/10'">
+                    <div class="flex items-center gap-3">
+                        <div class="flex items-center justify-center size-10 rounded-2xl bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="size-5" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M10 1a4.5 4.5 0 0 0-4.5 4.5V9H5a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-6a2 2 0 0 0-2-2h-.5V5.5A4.5 4.5 0 0 0 10 1Zm3 8V5.5a3 3 0 1 0-6 0V9h6Z" clip-rule="evenodd" />
+                            </svg>
+                        </div>
+                        <div>
+                            <h2 id="disclaimer-title" class="text-base sm:text-lg font-bold">{{ $disclaimerTitle }}</h2>
+                            <span class="text-[11px] font-semibold px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-800 dark:bg-amber-900/40 dark:text-amber-300">
+                                Experimental Trial Project
+                            </span>
+                        </div>
+                    </div>
+                    <button type="button" @click="showDisclaimer = false"
+                            class="p-1 rounded-lg text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="size-5" viewBox="0 0 20 20" fill="currentColor">
+                            <path d="M6.28 5.22a.75.75 0 0 0-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 1 0 1.06 1.06L10 11.06l3.72 3.72a.75.75 0 1 0 1.06-1.06L11.06 10l3.72-3.72a.75.75 0 0 0-1.06-1.06L10 8.94 6.28 5.22Z" />
+                        </svg>
+                    </button>
+                </div>
+
+                {{-- Privacy Alert Callout --}}
+                <div class="mt-4 p-3.5 rounded-xl border text-xs leading-relaxed"
+                     :class="isLight ? 'bg-amber-50 border-amber-200 text-amber-900' : 'bg-amber-500/10 border-amber-500/20 text-amber-200'">
+                    <strong class="font-bold block mb-0.5">⚠️ Confidentiality & Privacy Notice:</strong>
+                    Users should not enter confidential, sensitive, personal, medical, financial, safeguarding, or commercially sensitive information into this trial service.
+                </div>
+
+                {{-- Disclaimer Body --}}
+                <div class="my-4 overflow-y-auto space-y-3 text-xs sm:text-sm leading-relaxed pr-2 whitespace-pre-line"
+                     :class="isLight ? 'text-gray-700' : 'text-white/80'">{{ $disclaimerContent }}</div>
+
+                <div class="pt-3 border-t flex items-center justify-between gap-3"
+                     :class="isLight ? 'border-black/10' : 'border-white/10'">
+                    <span class="text-[11px]" :class="isLight ? 'text-gray-500' : 'text-white/50'">
+                        By proceeding, you acknowledge this experimental service.
+                    </span>
+                    <button type="button" @click="acceptDisclaimer()"
+                            class="px-5 py-2.5 rounded-xl text-xs sm:text-sm font-semibold text-white bg-indigo-600 hover:bg-indigo-700 shadow-md transition cursor-pointer">
+                        I Understand & Accept
+                    </button>
+                </div>
+            </div>
+        </div>
+
         {{-- Input bar (hidden when survey is completed) --}}
         @if($surveyCompleted)
             <div class="p-4 sm:p-6 border-t transition-colors duration-500 space-y-4"
@@ -453,6 +530,19 @@
         @else
         <form @submit.prevent="if($wire.body.trim() !== '') { $wire.send(); isProcessing = true; }" class="p-3 sm:p-4 border-t transition-colors duration-500"
               :class="isLight ? 'border-black/10 bg-white/50' : 'border-white/10 bg-white/5'">
+            {{-- Privacy reminder banner above input --}}
+            <div class="mb-2 px-3 py-1.5 rounded-xl text-xs flex items-center justify-between gap-2 transition-colors duration-500"
+                 :class="isLight ? 'bg-amber-50/90 text-amber-900 border border-amber-200/80' : 'bg-amber-500/10 text-amber-200 border border-amber-500/20'">
+                <div class="flex items-center gap-2 overflow-hidden">
+                    <span class="text-sm shrink-0">🔒</span>
+                    <span class="truncate"><strong>Privacy:</strong> {{ $privacyNotice }}</span>
+                </div>
+                <button type="button" @click="showDisclaimer = true"
+                        class="text-[11px] font-bold underline hover:no-underline shrink-0 cursor-pointer">
+                    Disclaimer
+                </button>
+            </div>
+
             <div class="flex items-center gap-2 sm:gap-3">
                 <div class="relative flex-1 flex items-center rounded-2xl border transition-all duration-300 focus-within:shadow-lg"
                      :class="isLight
