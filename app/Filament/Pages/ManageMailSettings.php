@@ -23,6 +23,8 @@ class ManageMailSettings extends SettingsPage
     protected static BackedEnum|string|null $navigationIcon = 'heroicon-o-envelope';
 
     protected static ?string $navigationLabel = 'Email Settings';
+    protected static bool $shouldRegisterNavigation = false;
+
 
     protected static ?string $title = 'Email Settings & Background Queue';
 

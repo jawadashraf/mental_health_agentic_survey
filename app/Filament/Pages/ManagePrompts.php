@@ -12,6 +12,8 @@ class ManagePrompts extends SettingsPage
 {
     protected static BackedEnum|string|null $navigationIcon = 'heroicon-o-cog-6-tooth';
 
+    protected static bool $shouldRegisterNavigation = false;
+
     protected static string $settings = PromptSettings::class;
 
     public static function canAccess(): bool
