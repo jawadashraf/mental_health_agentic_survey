@@ -11,8 +11,11 @@ use Filament\Actions\Action;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
+use Filament\Forms\Components\ColorPicker;
+use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TagsInput;
+use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Notifications\Notification;
@@ -95,6 +98,35 @@ class SurveyResource extends Resource
                         Toggle::make('is_active')
                             ->default(true)
                             ->visible($isSuperAdmin),
+                    ])
+                    ->columns(2)
+                    ->columnSpanFull(),
+                Section::make('Welcome Screen & Branding')
+                    ->description('Customise the logo, brand colour, and welcome message participants see before starting the survey.')
+                    ->schema([
+                        FileUpload::make('logo_path')
+                            ->label('Organisation / Survey Logo')
+                            ->image()
+                            ->disk('public')
+                            ->directory('survey-logos')
+                            ->visibility('public')
+                            ->maxSize(2048)
+                            ->helperText('Shown on the welcome screen and chat header. PNG or SVG with a transparent background works best.'),
+                        ColorPicker::make('brand_color')
+                            ->label('Brand Accent Colour')
+                            ->placeholder(Survey::DEFAULT_BRAND_COLOR)
+                            ->helperText('Used for buttons, highlights, and accents. Leave blank for the default bright teal.'),
+                        TextInput::make('welcome_title')
+                            ->label('Welcome Heading')
+                            ->maxLength(150)
+                            ->placeholder('e.g. Welcome to The Raft Family & Carer Survey')
+                            ->columnSpanFull(),
+                        Textarea::make('welcome_message')
+                            ->label('Welcome Invitation Message')
+                            ->rows(3)
+                            ->maxLength(1000)
+                            ->placeholder(Survey::DEFAULT_WELCOME_MESSAGE)
+                            ->columnSpanFull(),
                     ])
                     ->columns(2)
                     ->columnSpanFull(),

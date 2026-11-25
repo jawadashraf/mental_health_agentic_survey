@@ -14,6 +14,13 @@ class ChatbotAccess extends Component
 
     public bool $showDisclaimerModal = false;
 
+    public ?string $surveySlug = null;
+
+    public function mount(): void
+    {
+        $this->surveySlug = request()->query('survey');
+    }
+
     public function verify(): void
     {
         $this->validate();
@@ -43,7 +50,7 @@ class ChatbotAccess extends Component
 
             $params = array_filter([
                 'mode' => request()->query('mode'),
-                'survey' => request()->query('survey'),
+                'survey' => $this->surveySlug ?? request()->query('survey'),
             ]);
 
             $this->redirectIntended(route('raft-chat', $params));
@@ -51,17 +58,27 @@ class ChatbotAccess extends Component
             return;
         }
 
-        $this->addError('code', 'Invalid access code.');
+        $this->addError('code', 'That access code didn\'t match. Please double-check and try again.');
     }
 
     public function render()
     {
         $settings = app(ChatSettings::class);
 
+        $survey = $this->surveySlug
+            ? Survey::query()->with('organization')->where('slug', $this->surveySlug)->first()
+            : Survey::query()->with('organization')->where('slug', 'raft')->first();
+
         return view('livewire.chatbot-access', [
             'privacyNotice' => $settings->privacy_notice,
             'disclaimerTitle' => $settings->disclaimer_title,
             'disclaimerContent' => $settings->disclaimer_content,
+            'surveyName' => $survey?->name ?? 'The Raft Survey',
+            'organizationName' => $survey?->organization?->name ?? 'The Raft',
+            'logoUrl' => $survey?->logoUrl(),
+            'brandColor' => $survey?->effectiveBrandColor() ?? Survey::DEFAULT_BRAND_COLOR,
+            'welcomeTitle' => $survey?->effectiveWelcomeTitle() ?? 'Welcome to The Raft Survey',
+            'welcomeMessage' => $survey?->effectiveWelcomeMessage() ?? Survey::DEFAULT_WELCOME_MESSAGE,
         ]);
     }
 }

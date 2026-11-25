@@ -11,11 +11,11 @@ class RaftChatThemeTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_raft_chat_defaults_to_aurora_theme(): void
+    public function test_raft_chat_defaults_to_bright_theme(): void
     {
         Livewire::withoutLazyLoading()
             ->test(RaftChat::class)
-            ->assertSet('theme', 'aurora');
+            ->assertSet('theme', 'bright');
     }
 
     public function test_raft_chat_can_switch_to_valid_theme(): void
@@ -35,7 +35,7 @@ class RaftChatThemeTest extends TestCase
             ->test(RaftChat::class);
 
         $component->call('setTheme', 'invalid-theme')
-            ->assertSet('theme', 'aurora');
+            ->assertSet('theme', 'bright');
 
         $this->assertNull(session('raft_chat_theme'));
     }
@@ -54,7 +54,7 @@ class RaftChatThemeTest extends TestCase
         $component = Livewire::withoutLazyLoading()
             ->test(RaftChat::class);
 
-        $validThemes = ['aurora', 'ocean', 'sunset', 'forest', 'midnight', 'skyblue', 'peach'];
+        $validThemes = ['bright', 'aurora', 'ocean', 'sunset', 'forest', 'midnight', 'skyblue', 'peach', 'alabaster'];
 
         foreach ($validThemes as $theme) {
             $component->call('setTheme', $theme)
@@ -64,6 +64,8 @@ class RaftChatThemeTest extends TestCase
 
     public function test_raft_chat_theme_switcher_is_visible(): void
     {
+        session(['raft_survey_entered_chat' => true]);
+
         Livewire::withoutLazyLoading()
             ->test(RaftChat::class)
             ->assertSee('Choose Theme');

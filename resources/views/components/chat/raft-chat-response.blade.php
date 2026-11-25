@@ -2,7 +2,7 @@
     @if(empty($message['content']) && ($metadata['type'] ?? '') !== 'question') wire:init="getResponse" @endif
     x-data="{
         theme: @js($theme),
-        get isLight() { return this.theme === 'skyblue' || this.theme === 'peach' || this.theme === 'alabaster'; },
+        get isLight() { return ['bright', 'skyblue', 'peach', 'alabaster'].includes(this.theme); },
     }"
     @theme-changed.window="theme = $event.detail.theme">
 
@@ -12,6 +12,7 @@
 
             <div class="text-[11px] font-medium transition-colors duration-300"
                  :class="{
+                     'text-teal-700/80': theme === 'bright',
                      'text-purple-300/60': theme === 'aurora',
                      'text-cyan-300/60': theme === 'ocean',
                      'text-rose-300/60': theme === 'sunset',
@@ -39,6 +40,7 @@
         <div class="max-w-[85%] sm:max-w-[75%] space-y-1 transition-all duration-300 ease-in-out" data-question-card="{{ $question['id'] }}">
             <div class="text-[11px] font-medium transition-colors duration-300"
                  :class="{
+                     'text-teal-700/80': theme === 'bright',
                      'text-purple-300/60': theme === 'aurora',
                      'text-cyan-300/60': theme === 'ocean',
                      'text-rose-300/60': theme === 'sunset',
@@ -78,6 +80,7 @@
                                                wire:target="handleUserInput"
                                                class="size-4 shrink-0"
                                                :class="{
+                                                   'accent-teal-600': theme === 'bright',
                                                    'accent-purple-500': theme === 'aurora',
                                                    'accent-cyan-500': theme === 'ocean',
                                                    'accent-rose-500': theme === 'sunset',
@@ -122,6 +125,7 @@
                                 wire:target="handleUserInput"
                                 class="mt-3 inline-flex items-center gap-2 bg-linear-to-r text-white text-sm font-medium px-5 py-2 rounded-xl shadow-lg hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 disabled:opacity-50 disabled:scale-100"
                                 :class="{
+                                    'from-teal-600 to-sky-600 shadow-teal-500/25 hover:shadow-teal-500/40': theme === 'bright',
                                     'from-purple-500 to-indigo-600 shadow-purple-500/20 hover:shadow-purple-500/40': theme === 'aurora',
                                     'from-cyan-500 to-blue-600 shadow-cyan-500/30 hover:shadow-cyan-500/40': theme === 'ocean',
                                     'from-rose-500 to-orange-600 shadow-rose-500/20 hover:shadow-rose-500/40': theme === 'sunset',
@@ -156,6 +160,7 @@
             <div class="max-w-[85%] sm:max-w-[75%] space-y-1 transition-all duration-300 ease-in-out animate-[fadeInUp_0.3s_ease-out]">
                 <div class="text-[11px] font-medium transition-colors duration-300"
                      :class="{
+                         'text-teal-700/80': theme === 'bright',
                          'text-purple-300/60': theme === 'aurora',
                          'text-cyan-300/60': theme === 'ocean',
                          'text-rose-300/60': theme === 'sunset',
@@ -180,6 +185,7 @@
             <div class="max-w-[90%] sm:max-w-[80%] space-y-1 transition-all duration-300 ease-in-out animate-[fadeInUp_0.4s_ease-out]">
                 <div class="text-[11px] font-medium transition-colors duration-300"
                      :class="{
+                         'text-teal-700/80': theme === 'bright',
                          'text-purple-300/60': theme === 'aurora',
                          'text-cyan-300/60': theme === 'ocean',
                          'text-rose-300/60': theme === 'sunset',
@@ -200,6 +206,7 @@
         <div class="max-w-[85%] sm:max-w-[75%] space-y-1 transition-all duration-300 ease-in-out">
             <div class="text-[11px] font-medium transition-colors duration-300"
                  :class="{
+                     'text-teal-700/80': theme === 'bright',
                      'text-purple-300/60': theme === 'aurora',
                      'text-cyan-300/60': theme === 'ocean',
                      'text-rose-300/60': theme === 'sunset',

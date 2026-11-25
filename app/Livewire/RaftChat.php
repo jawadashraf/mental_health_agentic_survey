@@ -31,6 +31,10 @@ class RaftChat extends Component
 
     public bool $disclaimerAccepted = false;
 
+    public bool $disclaimerCheckbox = false;
+
+    public bool $hasEnteredChat = false;
+
     public $systemPrompt;
 
     public $currentIndex;
@@ -47,7 +51,7 @@ class RaftChat extends Component
 
     public bool $isProcessing = false;
 
-    public string $theme = 'alabaster';
+    public string $theme = 'bright';
 
     public bool $showGuide = true;
 
@@ -156,11 +160,15 @@ class RaftChat extends Component
 
         $this->surveyCompleted = Session::get('raft_survey_completed', false);
 
-        $this->theme = Session::get('raft_chat_theme', 'alabaster');
+        $this->theme = Session::get('raft_chat_theme', 'bright');
 
         $this->showGuide = ! Session::get('raft_chat_guide_dismissed', false);
 
-        $this->disclaimerAccepted = Session::get('raft_survey_disclaimer_accepted', false);
+        $this->disclaimerAccepted = (bool) Session::get('raft_survey_disclaimer_accepted', false);
+        $this->disclaimerCheckbox = $this->disclaimerAccepted;
+        $this->hasEnteredChat = (bool) Session::get('raft_survey_entered_chat', false)
+            || (bool) $this->surveyStarted
+            || (bool) $this->surveyCompleted;
 
         $this->joinedMailingList = Session::get('raft_mailing_list_joined', false);
 
@@ -214,6 +222,7 @@ class RaftChat extends Component
             'raft_survey_skip_counts',
             'raft_survey_started',
             'raft_survey_completed',
+            'raft_survey_entered_chat',
             'raft_survey_midpoint_shown',
             'raft_mailing_list_joined',
         ] as $key) {
@@ -410,7 +419,9 @@ class RaftChat extends Component
             }
         } else {
             $this->surveyStarted = true;
+            $this->hasEnteredChat = true;
             Session::put('raft_survey_started', true);
+            Session::put('raft_survey_entered_chat', true);
         }
 
         $this->currentIndex = $askingIndex;
@@ -631,7 +642,7 @@ class RaftChat extends Component
     #[Renderless]
     public function setTheme(string $theme): void
     {
-        $allowedThemes = ['aurora', 'ocean', 'sunset', 'forest', 'midnight', 'skyblue', 'peach', 'alabaster'];
+        $allowedThemes = ['bright', 'aurora', 'ocean', 'sunset', 'forest', 'midnight', 'skyblue', 'peach', 'alabaster'];
 
         if (in_array($theme, $allowedThemes)) {
             $this->theme = $theme;
@@ -652,18 +663,85 @@ class RaftChat extends Component
     public function acceptDisclaimer(): void
     {
         $this->disclaimerAccepted = true;
+        $this->disclaimerCheckbox = true;
+        $this->resetErrorBag('disclaimerCheckbox');
         Session::put('raft_survey_disclaimer_accepted', true);
+    }
+
+    /**
+     * Confirm disclaimer consent (when required), leave the welcome screen, and start Question 1 immediately.
+     */
+    public function startSurvey(): void
+    {
+        if (! $this->confirmDisclaimerConsent()) {
+            return;
+        }
+
+        $this->hasEnteredChat = true;
+        $this->showGuide = false;
+        Session::put('raft_survey_entered_chat', true);
+        Session::put('raft_chat_guide_dismissed', true);
+
+        if (! $this->surveyStarted && ! $this->surveyCompleted) {
+            $this->askQuestion();
+        }
+    }
+
+    /**
+     * Confirm disclaimer consent (when required) and open the chat without immediately launching Question 1.
+     */
+    public function enterChat(): void
+    {
+        if (! $this->confirmDisclaimerConsent()) {
+            return;
+        }
+
+        $this->hasEnteredChat = true;
+        $this->showGuide = false;
+        Session::put('raft_survey_entered_chat', true);
+        Session::put('raft_chat_guide_dismissed', true);
+    }
+
+    protected function confirmDisclaimerConsent(): bool
+    {
+        $requireDisclaimer = (bool) app(ChatSettings::class)->require_disclaimer;
+
+        if ($requireDisclaimer && ! $this->disclaimerAccepted && ! $this->disclaimerCheckbox) {
+            $this->addError('disclaimerCheckbox', 'Please tick the box to confirm you agree to the disclaimer before starting.');
+
+            return false;
+        }
+
+        if ($requireDisclaimer || $this->disclaimerCheckbox) {
+            $this->disclaimerAccepted = true;
+            $this->disclaimerCheckbox = true;
+            Session::put('raft_survey_disclaimer_accepted', true);
+        }
+
+        $this->resetErrorBag('disclaimerCheckbox');
+
+        return true;
     }
 
     public function render()
     {
         $settings = app(ChatSettings::class);
+        $surveySlug = session('raft_survey_slug');
+        $survey = $surveySlug
+            ? Survey::query()->with('organization')->where('slug', $surveySlug)->first()
+            : null;
 
         return view('components.chat.raft-chat', [
             'privacyNotice' => $settings->privacy_notice,
             'disclaimerTitle' => $settings->disclaimer_title,
             'disclaimerContent' => $settings->disclaimer_content,
             'requireDisclaimer' => $settings->require_disclaimer,
+            'surveyName' => $survey?->name ?? 'The Raft Survey',
+            'organizationName' => $survey?->organization?->name ?? 'The Raft',
+            'logoUrl' => $survey?->logoUrl(),
+            'brandColor' => $survey?->effectiveBrandColor() ?? Survey::DEFAULT_BRAND_COLOR,
+            'welcomeTitle' => $survey?->effectiveWelcomeTitle() ?? 'Welcome to The Raft Survey',
+            'welcomeMessage' => $survey?->effectiveWelcomeMessage() ?? Survey::DEFAULT_WELCOME_MESSAGE,
         ]);
     }
 }

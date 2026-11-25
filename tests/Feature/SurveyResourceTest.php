@@ -103,6 +103,26 @@ class SurveyResourceTest extends TestCase
         $this->assertSame('org-secret-456', $this->raftSurvey->access_code);
     }
 
+    public function test_organization_admin_can_edit_survey_branding_and_welcome_copy(): void
+    {
+        $this->actingAs(User::factory()->organizationAdmin($this->raft)->create());
+
+        Livewire::test(EditSurvey::class, ['record' => $this->raftSurvey->getRouteKey()])
+            ->fillForm([
+                'brand_color' => '#0D9488',
+                'welcome_title' => 'Welcome to The Raft Survey',
+                'welcome_message' => 'We would love to hear from you.',
+            ])
+            ->call('save')
+            ->assertHasNoFormErrors()
+            ->assertNotified();
+
+        $this->raftSurvey->refresh();
+        $this->assertSame('#0D9488', $this->raftSurvey->brand_color);
+        $this->assertSame('Welcome to The Raft Survey', $this->raftSurvey->welcome_title);
+        $this->assertSame('We would love to hear from you.', $this->raftSurvey->welcome_message);
+    }
+
     public function test_access_qr_code_action_is_available_for_organization_admin(): void
     {
         $this->actingAs(User::factory()->organizationAdmin($this->raft)->create());
